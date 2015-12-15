@@ -59,6 +59,12 @@ bool
 PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
+  //Pruebo a rotar
+  //Seleciono el nodo
+  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("Node1"));
+
+
+
   return true;
 }
 
