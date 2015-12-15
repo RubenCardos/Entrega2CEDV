@@ -62,7 +62,7 @@ PlayState::frameStarted
   //Pruebo a rotar
   //Seleciono el nodo
   SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("Node1"));
-
+  aux ->rotate(Ogre::Quaternion(Ogre::Degree(1), Ogre::Vector3(10,0,0)));
 
 
   return true;
