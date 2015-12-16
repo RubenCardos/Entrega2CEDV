@@ -15,9 +15,9 @@ PlayState::enter ()
   // Nuevo background colour.
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
 
-
   //Pruebo a crear algo y ponerlo
-  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8)); 
+  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
+   
   //Camara
   _camera->setPosition(Ogre::Vector3(50,50,50));//el tercer parametro hace que se aleje mas la camara, el segundo para que rote hacia arriba o hacia abajo
   _camera->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
@@ -59,12 +59,11 @@ bool
 PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
-  //Pruebo a rotar
-  //Seleciono el nodo
+
+  Real _deltaT = evt.timeSinceLastFrame;
+
   SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("Node1"));
-  aux ->rotate(Ogre::Quaternion(Ogre::Degree(1), Ogre::Vector3(10,0,0)));
-
-
+  aux->yaw(Degree(_deltaT*10));
   return true;
 }
 
