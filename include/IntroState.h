@@ -25,6 +25,8 @@
 #include <OIS/OIS.h>
 
 #include "GameState.h"
+#include <CEGUI.h>
+ #include <RendererModules/Ogre/Renderer.h>
 
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
@@ -50,11 +52,18 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   static IntroState& getSingleton ();
   static IntroState* getSingletonPtr ();
 
+  void createGUI();
+  bool play(const CEGUI::EventArgs &e);
+  
+  CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
+
  protected:
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+
+  CEGUI::OgreRenderer* renderer;
 
   bool _exitGame;
 };
