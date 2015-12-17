@@ -26,6 +26,9 @@
 
 #include "GameState.h"
 
+ #include <CEGUI.h>
+ #include <RendererModules/Ogre/Renderer.h>
+
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
  public:
@@ -49,6 +52,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   // Heredados de Ogre::Singleton.
   static PlayState& getSingleton ();
   static PlayState* getSingletonPtr ();
+
+  CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
  protected:
   Ogre::Root* _root;
