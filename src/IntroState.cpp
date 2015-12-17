@@ -19,6 +19,7 @@ IntroState::enter ()
 
   //Creamos interfaces en CEGUI
   createGUI();
+  //---------------------------
 }
 
 void
