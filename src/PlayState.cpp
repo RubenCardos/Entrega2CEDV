@@ -38,7 +38,7 @@ PlayState::enter ()
 
   // Interfaz ----
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-
+  sheet->getChildAtIdx(0)->setVisible(false);
 
   //-------
 
