@@ -61,6 +61,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
 
+  bool quit(const CEGUI::EventArgs &e);
+
   bool _exitGame;
 };
 

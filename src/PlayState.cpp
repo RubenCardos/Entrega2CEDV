@@ -36,11 +36,20 @@ PlayState::enter ()
   node1->setScale(20,20,20);
   // -----------------------------
 
-  // Interfaz ----
+  // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   sheet->getChildAtIdx(0)->setVisible(false);
-
-  //-------
+  
+  //Boton Salir Juego---------------------------------------
+  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
+  quitButton->setText("Exit");
+  quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.05,0)));
+  quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.05,0),CEGUI::UDim(0.8,0)));
+  quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
+  //-------------------------------------------------------
+  
+  sheet->addChild(quitButton);
+  //------------------------------
 
   _exitGame = false;
 }
@@ -183,4 +192,11 @@ CEGUI::MouseButton PlayState::convertMouseButton(OIS::MouseButtonID id)//METODOS
     }
   return ceguiId;
   //------------------------------
+}
+
+bool
+PlayState::quit(const CEGUI::EventArgs &e)
+{
+  _exitGame=true;
+  return true;
 }
