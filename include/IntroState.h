@@ -27,6 +27,7 @@
 #include "GameState.h"
 #include <CEGUI.h>
  #include <RendererModules/Ogre/Renderer.h>
+ #include <RendererModules/Ogre/Texture.h>
 
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
@@ -62,8 +63,10 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::Camera* _camBack;
 
   CEGUI::OgreRenderer* renderer;
+
 
   bool _exitGame;
 };

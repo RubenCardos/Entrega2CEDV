@@ -17,9 +17,13 @@ IntroState::enter ()
 
   _exitGame = false;
 
+  //Camra miniMapa-------------
+  _camBack = _sceneMgr->createCamera("MiniMapCamera");
+  //---------------------------
+  
   //Creamos interfaces en CEGUI
   createGUI();
-  //---------------------------
+  
 }
 
 void
@@ -132,6 +136,9 @@ void IntroState::createGUI()
 
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
+  CEGUI::Vector2f mousePos = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().getPosition();
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(-mousePos.d_x,-mousePos.d_y);
+
   // load all the fonts (if they are not loaded yet)
   CEGUI::FontManager::getSingleton().createAll("*.font", "Fonts");
     
@@ -146,6 +153,41 @@ void IntroState::createGUI()
   quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
   //Attaching buttons
   sheet->addChild(quitButton);
+  
+  //Render a Textura(Minimapa)-----------------
+ TexturePtr rtt_texture = TextureManager::getSingleton().createManual(
+     "RttTex", ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, 
+     TEX_TYPE_2D, 512, 512, 0, PF_R8G8B8, TU_RENDERTARGET);
+
+  RenderTexture *rtex = rtt_texture->getBuffer()->getRenderTarget();
+
+  rtex->addViewport(_camBack);
+  rtex->getViewport(0)->setClearEveryFrame(true);
+  rtex->getViewport(0)->setBackgroundColour(ColourValue::Black);
+  rtex->getViewport(0)->setOverlaysEnabled(false);
+  rtex->setAutoUpdated(true);
+
+  CEGUI::Texture& guiTex = renderer->createTexture("CEGUITex", rtt_texture);
+  CEGUI::OgreTexture& rendererTex = static_cast<CEGUI::OgreTexture&>(guiTex);
+
+  rendererTex.setOgreTexture(rtt_texture, false);
+
+  CEGUI::BasicImage* image = static_cast<CEGUI::BasicImage*>(&CEGUI::ImageManager::getSingleton().create("BasicImage", "RTTImage"));
+
+  CEGUI::Rectf  imageArea= CEGUI::Rectf(0.0f, 0.0f, guiTex.getSize().d_width, guiTex.getSize().d_height);
+  
+  image->setArea(imageArea);
+  image->setAutoScaled(CEGUI::ASM_Disabled);
+  image->setTexture(&rendererTex);
+  
+  CEGUI::Window* ex1 = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("render.layout");
+  CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
+
+  RTTWindow->setProperty("Image","RTTImage");
+  
+  sheet->addChild(ex1);
+
+  //-----------------------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
   

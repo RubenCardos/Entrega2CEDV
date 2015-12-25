@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GUILayout version="4">
+    <Window type="TaharezLook/FrameWindow" name="CamWin" >
+        <Property name="Text" value="Back Camera" />
+        <Property name="TitlebarFont" value="DejaVuSans-10" />
+        <Property name="TitlebarEnabled" value="True" />
+        <Property name="Area" value="{{0.6,0},{0.6,0},{0.99,0},{0.99,0}}" />
+        <Window type="TaharezLook/StaticImage" name="RTTWindow" >
+            <Property name="Area" value="{{0,0},{0,0},{1,0},{1,0}}" />
+    	</Window>
+	
+   </Window>
+</GUILayout>

@@ -12,8 +12,7 @@ PlayState::enter ()
   _sceneMgr = _root->getSceneManager("SceneManager");
   _camera = _sceneMgr->getCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
-  // Nuevo background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
   //-------------------------------------
 
   //Pruebo a crear algo y ponerlo---------
@@ -26,6 +25,14 @@ PlayState::enter ()
   _camera->setNearClipDistance(5);
   _camera->setFarClipDistance(10000);
   //-----------------------------
+
+  //Camara MiniMapa-------------------
+  _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
+  _cameraMiniMap->setPosition(Ogre::Vector3(50,50,50));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
+  _cameraMiniMap->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
+  _cameraMiniMap->setNearClipDistance(5);
+  _cameraMiniMap->setFarClipDistance(10000);
+  //--------------------------------
   
   //Nodo------------------------
   SceneNode* node1 = _sceneMgr->createSceneNode("Node1");
@@ -83,7 +90,11 @@ PlayState::frameStarted
   //Actualizacion de Variables----------------
   Real _deltaT = evt.timeSinceLastFrame;
   //------------------------------
-  
+  CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  CEGUI::Window* ex1 = rootWin->getChild("CamWin");
+  CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
+  RTTWindow->invalidate();
+
   //Nodo de prueba----------------
   SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("Node1"));
   aux->yaw(Degree(_deltaT*10));

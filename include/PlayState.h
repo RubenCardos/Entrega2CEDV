@@ -28,6 +28,7 @@
 
  #include <CEGUI.h>
  #include <RendererModules/Ogre/Renderer.h>
+ #include <RendererModules/Ogre/Texture.h>
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
@@ -60,6 +61,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
+  Ogre::Camera* _cameraMiniMap;
 
   bool quit(const CEGUI::EventArgs &e);
 
