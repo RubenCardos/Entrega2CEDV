@@ -28,20 +28,33 @@ PlayState::enter ()
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
-  _cameraMiniMap->setPosition(Ogre::Vector3(50,50,50));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
+  _cameraMiniMap->setPosition(Ogre::Vector3(200,200,0));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
   _cameraMiniMap->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
   _cameraMiniMap->setNearClipDistance(5);
   _cameraMiniMap->setFarClipDistance(10000);
   //--------------------------------
   
   //Nodo------------------------
-  SceneNode* node1 = _sceneMgr->createSceneNode("Node1");
-  Entity *ent1 =_sceneMgr->createEntity("Cubo1", "cube.mesh");
-  node1->attachObject(ent1);
-  _sceneMgr->getRootSceneNode()->addChild(node1);
-  node1->setPosition(0,0,0);
-  node1->setScale(20,20,20);
+  Entity* _entPj = _sceneMgr->createEntity("Cube.002.mesh");
+  SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
+  _snPj->attachObject(_entPj);
+  _snPj->setPosition(0,20,0); //x,y,z
+  _snPj->setScale(8,8,8);
+  _sceneMgr->getRootSceneNode()->addChild(_snPj);
   // -----------------------------
+
+  //Plano ------------------------
+  Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, -5);
+  Ogre::MeshManager::getSingleton().createPlane("plane1", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane1,
+  200,200,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
+
+  SceneNode* _nodePlane1 = _sceneMgr->createSceneNode("Tablero");
+  Entity* _groundEnt1 = _sceneMgr->createEntity("planeEnt1", "plane1");
+  _groundEnt1->setMaterialName("Ground"); 
+  _nodePlane1->attachObject(_groundEnt1);
+  _nodePlane1->setPosition(0,0,0);
+  _sceneMgr->getRootSceneNode()->addChild(_nodePlane1);
+  //-----------------------------
 
   // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -90,14 +103,17 @@ PlayState::frameStarted
   //Actualizacion de Variables----------------
   Real _deltaT = evt.timeSinceLastFrame;
   //------------------------------
+  
+  //CEGUI --------------------------------------
   CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   CEGUI::Window* ex1 = rootWin->getChild("CamWin");
   CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
   RTTWindow->invalidate();
+  //-------------------------------------------
 
   //Nodo de prueba----------------
-  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("Node1"));
-  aux->yaw(Degree(_deltaT*10));
+  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
+  
   //-------------------------------------
   return true;
 }
@@ -117,6 +133,7 @@ void
 PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
+
   // Tecla p --> PauseState.-------
   if (e.key == OIS::KC_P) {
     pushState(PauseState::getSingletonPtr());
@@ -127,6 +144,24 @@ PlayState::keyPressed
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
   CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
   //-------------------------------
+
+  //Movimiento PJ----------------
+  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
+  switch(e.key){
+    case OIS::KC_A:
+      aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,1));
+      break;
+    case OIS::KC_D:
+      aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,-1));
+      break;
+    case OIS::KC_W:
+      aux->setPosition(Vector3(aux->getPosition())+=Vector3(-1,0,0));
+      break;
+    case OIS::KC_S:
+      aux->setPosition(Vector3(aux->getPosition())+=Vector3(1,0,0));
+      break;
+  }
+  //----------------------------
 }
 
 void

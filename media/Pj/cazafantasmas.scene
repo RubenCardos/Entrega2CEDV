@@ -1,0 +1,60 @@
+<scene exported_by="lucia" previous_export_time="1451075448.6775444" formatVersion="1.0.1" export_time="1451075723.700577" >
+  <nodes >
+    <node name="personaje" >
+      <position x="-1.585057" z="0.574770" y="3.836997" />
+      <rotation qx="0.000000" qy="0.000000" qz="-0.000000" qw="1.000000" />
+      <scale x="1.000000" z="1.000000" y="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity lock_trans_x="False" friction_x="1.0" velocity_max="0.0" lock_rot_x="False" ghost="False" meshFile="Cube.002.mesh" friction_y="1.0" anisotropic_friction="False" damping_trans="0.02539999969303608" actor="False" inertia_tensor="0.4000000059604645" physics_type="STATIC" name="Cube.002" mass_radius="1.0" lock_rot_z="False" velocity_min="0.0" lock_trans_z="False" mass="1.0" lock_rot_y="False" lock_trans_y="False" damping_rot="0.1589999943971634" friction_z="1.0" />
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/ABRIGO.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/BOTAS.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/ENTRECEJO_Y_MANOS.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/Material.001.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/Material.004.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/Material.002.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/rueda.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/blancoRueda.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/CINTURON.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/PAÑUELO.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/sombrero.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/correas.material" />
+    </item>
+    <item type="material" >
+      <file name="/home/lucia/Escritorio/cazafantasmasOgreExport/pelo.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourAmbient r="0.0" b="0.0" g="0.0" />
+    <colourDiffuse r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+    <colourBackground r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+  </environment>
+</scene>
