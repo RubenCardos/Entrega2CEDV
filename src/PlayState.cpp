@@ -150,15 +150,19 @@ PlayState::keyPressed
   switch(e.key){
     case OIS::KC_A:
       aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,1));
+      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,1));
       break;
     case OIS::KC_D:
       aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,-1));
+      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,-1));
       break;
     case OIS::KC_W:
       aux->setPosition(Vector3(aux->getPosition())+=Vector3(-1,0,0));
+      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(-1,0,0));
       break;
     case OIS::KC_S:
       aux->setPosition(Vector3(aux->getPosition())+=Vector3(1,0,0));
+      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(1,0,0));
       break;
   }
   //----------------------------

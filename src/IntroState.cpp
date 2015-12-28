@@ -21,9 +21,9 @@ IntroState::enter ()
   _camBack = _sceneMgr->createCamera("MiniMapCamera");
   //---------------------------
   
-  //Creamos interfaces en CEGUI
+  //Creamos interfaces en CEGUI----
   createGUI();
-  
+  //-------------------------------
 }
 
 void
