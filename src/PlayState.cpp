@@ -35,11 +35,11 @@ PlayState::enter ()
   //--------------------------------
   
   //Nodo------------------------
-  Entity* _entPj = _sceneMgr->createEntity("Cube.002.mesh");
+  Entity* _entPj = _sceneMgr->createEntity("Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setPosition(0,20,0); //x,y,z
-  _snPj->setScale(8,8,8);
+  _snPj->setScale(4,4,4);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   // -----------------------------
 
@@ -146,23 +146,26 @@ PlayState::keyPressed
   //-------------------------------
 
   //Movimiento PJ----------------
-  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
+  SceneNode* _aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
   switch(e.key){
     case OIS::KC_A:
-      aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,1));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,1));
       _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,1));
       break;
     case OIS::KC_D:
-      aux->setPosition(Vector3(aux->getPosition())+=Vector3(0,0,-1));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-1));
       _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,-1));
       break;
     case OIS::KC_W:
-      aux->setPosition(Vector3(aux->getPosition())+=Vector3(-1,0,0));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-1,0,0));
       _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(-1,0,0));
       break;
     case OIS::KC_S:
-      aux->setPosition(Vector3(aux->getPosition())+=Vector3(1,0,0));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(1,0,0));
       _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(1,0,0));
+      break;
+   	case OIS::KC_R:
+      _aux->yaw(Ogre::Degree(-90));
       break;
   }
   //----------------------------

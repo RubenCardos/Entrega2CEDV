@@ -1,0 +1,206 @@
+<scene exported_by="Lucia" formatVersion="1.0.1" previous_export_time="1451734956.126989" export_time="1451736519.316" >
+  <nodes >
+    <node name="Lamp.006" >
+      <position y="4.403950" x="2.377697" z="-1.752090" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.006", name="cycles_visibility", address=0x000000000D4EAC28&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.006" powerScale="1.0" >
+        <position y="4.403950" x="2.377697" z="-1.752090" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp.005" >
+      <position y="3.541405" x="-2.621930" z="-0.807324" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.005", name="cycles_visibility", address=0x000000000D4EAB58&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.005" powerScale="1.0" >
+        <position y="3.541405" x="-2.621930" z="-0.807324" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="personaje" >
+      <position y="1.861127" x="-0.651513" z="-0.000002" />
+      <rotation qy="0.000000" qx="0.000000" qz="-0.000000" qw="1.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBpersonaje", name="cycles_visibility", address=0x000000000D4EAE98&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity anisotropic_friction="False" lock_trans_y="False" damping_trans="0.03999999910593033" damping_rot="0.10000000149011612" inertia_tensor="0.4000000059604645" actor="False" velocity_min="0.0" lock_trans_z="False" physics_type="STATIC" lock_trans_x="False" meshFile="Circle.mesh" friction_y="1.0" friction_x="1.0" friction_z="1.0" velocity_max="0.0" ghost="False" name="Circle" mass_radius="1.0" mass="1.0" lock_rot_x="False" lock_rot_y="False" lock_rot_z="False" >
+        <user_data type="IDPropertyGroup" name="cycles" value='&lt;bpy id prop: owner="MECircle", name="cycles", address=0x000000000D4EF6E8&gt;' />
+      </entity>
+    </node>
+    <node name="Lamp.004" >
+      <position y="2.767321" x="0.321507" z="-3.280501" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.004", name="cycles_visibility", address=0x000000000D4EA9B8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.004" powerScale="1.0" >
+        <position y="2.767321" x="0.321507" z="-3.280501" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp.003" >
+      <position y="5.004241" x="-8.138083" z="-5.561872" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.003", name="cycles_visibility", address=0x000000000D4EB6B8&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.003" powerScale="1.0" >
+        <position y="5.004241" x="-8.138083" z="-5.561872" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp.002" >
+      <position y="8.698056" x="-4.302261" z="1.819454" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.002", name="cycles_visibility", address=0x000000000D4EB788&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.002" powerScale="1.0" >
+        <position y="8.698056" x="-4.302261" z="1.819454" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp.001" >
+      <position y="5.590141" x="-0.222366" z="7.478731" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp.001", name="cycles_visibility", address=0x000000000D4EDA78&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp.001" powerScale="1.0" >
+        <position y="5.590141" x="-0.222366" z="7.478731" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Lamp" >
+      <position y="9.401018" x="4.727118" z="0.054058" />
+      <rotation qy="0.755880" qx="0.169076" qz="-0.272171" qw="0.570947" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <user_data type="IDPropertyGroup" name="cycles_visibility" value='&lt;bpy id prop: owner="OBLamp", name="cycles_visibility", address=0x000000000D4EDC18&gt;' />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light shadow="true" type="point" name="Lamp" powerScale="1.0" >
+        <position y="9.401018" x="4.727118" z="0.054058" />
+        <lightAttenuation range="5000" quadratic="0.0" constant="1.0" linear="0.03333335240683057" />
+        <colourDiffuse r="1.0" b="1.0" g="1.0" />
+        <colourSpecular r="1.0" b="1.0" g="1.0" />
+        <colourShadow r="1.0" b="1.0" g="1.0" />
+      </light>
+    </node>
+    <node name="Camera" >
+      <position y="6.991928" x="5.531203" z="-21.016293" />
+      <rotation qy="-0.845553" qx="0.067478" qz="0.520502" qw="0.097803" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <camera projectionType="perspective" fov="0.5033799435163735" name="Camera" >
+        <clipping far="100.0" nearPlaneDist="0.10000000149011612" near="0.10000000149011612" farPlaneDist="100.0" />
+      </camera>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatSombrero.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatSombrero2.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatCristal.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatHebilla.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatCinturon.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatBotones.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatEnergia.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatAspiradora.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatRueda.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatBlancoRueda.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatBotas.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatAbrigo.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatCabeza.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatPañuelo.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatManos.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatPelo.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Lucia\Desktop\PersonajeOgre\MatCorreas.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourBackground r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+    <colourAmbient r="0.0" b="0.0" g="0.0" />
+    <colourDiffuse r="0.05087608844041824" b="0.05087608844041824" g="0.05087608844041824" />
+  </environment>
+</scene>
