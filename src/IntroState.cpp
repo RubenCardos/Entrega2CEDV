@@ -183,6 +183,8 @@ void IntroState::createGUI()
   CEGUI::Window* ex1 = CEGUI::WindowManager::getSingleton().loadLayoutFromFile("render.layout");
   CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
 
+  ex1->setVisible(false);
+
   RTTWindow->setProperty("Image","RTTImage");
   
   sheet->addChild(ex1);

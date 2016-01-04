@@ -59,7 +59,7 @@ PlayState::enter ()
   // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   sheet->getChildAtIdx(0)->setVisible(false);
-  
+  sheet->getChildAtIdx(1)->setVisible(true);
   //Boton Salir Juego---------------------------------------
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
   quitButton->setText("Exit");
