@@ -35,11 +35,11 @@ PlayState::enter ()
   //--------------------------------
   
   //Nodo------------------------
-  Entity* _entPj = _sceneMgr->createEntity("Circle.mesh");
+  Entity* _entPj = _sceneMgr->createEntity("Plane.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setPosition(0,20,0); //x,y,z
-  _snPj->setScale(4,4,4);
+  _snPj->setScale(5,1,1);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   // -----------------------------
 

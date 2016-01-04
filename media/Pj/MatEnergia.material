@@ -1,4 +1,4 @@
-// MatEnergia genrated by blender2ogre 0.5.8
+// MatEnergia genrated by blender2ogre 0.6.0
 
 material MatEnergia 
 {
@@ -35,6 +35,7 @@ material MatEnergia
                 texture spiral1.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
+                rotate_anim 0.8
                 colour_op_ex subtract src_texture src_current
             }
         }
