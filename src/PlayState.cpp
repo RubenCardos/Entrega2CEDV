@@ -20,7 +20,7 @@ PlayState::enter ()
   //-------------------------------------
    
   //Camara--------------------
-  _camera->setPosition(Ogre::Vector3(50,50,50));//el tercer parametro hace que se aleje mas la camara, el segundo para que rote hacia arriba o hacia abajo
+  _camera->setPosition(Ogre::Vector3(150,150,150));//el tercer parametro hace que se aleje mas la camara, el segundo para que rote hacia arriba o hacia abajo
   _camera->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
   _camera->setNearClipDistance(5);
   _camera->setFarClipDistance(10000);
@@ -39,7 +39,7 @@ PlayState::enter ()
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setPosition(0,20,0); //x,y,z
-  _snPj->setScale(5,1,1);
+  _snPj->setScale(25,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   // -----------------------------
 
@@ -69,6 +69,40 @@ PlayState::enter ()
   //-------------------------------------------------------
   
   sheet->addChild(quitButton);
+  //------------------------------
+
+  //Mapa Colisiones --------------
+
+  //Nodo Extra-------------------------------------------------------
+  Ogre::SceneNode *nodecol = _sceneMgr->createSceneNode("Nodo_Suelo");
+  _sceneMgr->getRootSceneNode()->addChild(nodecol);
+  //----------------------------------------------------------------
+
+  Ogre::SceneNode *nodefloor = _sceneMgr->createSceneNode("Col_Suelo");
+  Ogre::Entity *entfloor = _sceneMgr->createEntity("Col_Suelo", "Col_Suelo.mesh");
+  //entcol->setQueryFlags(STAGE);   // Usamos flags propios! para Escenario
+  nodefloor->setScale(15,15,15);
+  nodefloor->attachObject(entfloor);
+  nodefloor->setVisible(false);
+  nodecol->addChild(nodefloor);
+
+  // Cajas del escenario (baja poligonalizacion)------------------------------- 
+  std::stringstream sauxnode, sauxmesh;
+  std::string s = "Col_Box";
+  for (int i=1; i<27; i++) {
+    sauxnode << s << i; sauxmesh << s << i << ".mesh";
+    cout << "\nsauxnode:" << sauxnode.str() << endl;
+    cout << "sauxmesh:" << sauxmesh.str() << "\n" << endl;
+    Ogre::SceneNode *nodebox = _sceneMgr->createSceneNode(sauxnode.str());
+    Ogre::Entity *entboxcol = _sceneMgr->createEntity(sauxnode.str(), sauxmesh.str());
+    //entboxcol->setQueryFlags(STAGE);    // Escenario
+    nodebox->setScale(15,15,15);
+    nodebox->attachObject(entboxcol);
+    //nodebox->setVisible(false);
+    nodecol->addChild(nodebox);
+    sauxnode.str(""); sauxmesh.str(""); // Limpiamos el stream
+  }
+
   //------------------------------
 
   _exitGame = false;
@@ -112,7 +146,7 @@ PlayState::frameStarted
   //-------------------------------------------
 
   //Nodo de prueba----------------
-  SceneNode* aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
+ 
   
   //-------------------------------------
   return true;
@@ -146,7 +180,7 @@ PlayState::keyPressed
   //-------------------------------
 
   //Movimiento PJ----------------
-  SceneNode* _aux =static_cast<SceneNode*>(_sceneMgr->getRootSceneNode()->getChild("PjSceneNode"));
+  SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
     case OIS::KC_A:
       _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,1));
