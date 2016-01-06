@@ -3,6 +3,10 @@
 
 template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
 
+// Prueba de animacion -----
+Ogre::AnimationState *_animState;
+//--------------------------
+
 void
 PlayState::enter ()
 {
@@ -35,11 +39,12 @@ PlayState::enter ()
   //--------------------------------
   
   //Nodo------------------------
-  Entity* _entPj = _sceneMgr->createEntity("Plane.mesh");
+  Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setPosition(0,20,0); //x,y,z
-  _snPj->setScale(25,5,5);
+  _snPj->pitch(Ogre::Degree(-90));
+  _snPj->setScale(5,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   // -----------------------------
 
@@ -105,6 +110,9 @@ PlayState::enter ()
 
   //------------------------------
 
+  
+
+
   _exitGame = false;
 }
 
@@ -145,9 +153,17 @@ PlayState::frameStarted
   RTTWindow->invalidate();
   //-------------------------------------------
 
-  //Nodo de prueba----------------
- 
-  
+  //Animacion (Prueba)----------------
+  if (_animState != NULL) {
+    if (_animState->hasEnded()) {
+      _animState->setTimePosition(0.0);
+      _animState->setEnabled(false);
+    }
+    else {
+      _animState->addTime(_deltaT);
+    }
+  }
+    
   //-------------------------------------
   return true;
 }
@@ -200,6 +216,12 @@ PlayState::keyPressed
       break;
    	case OIS::KC_R:
       _aux->yaw(Ogre::Degree(-90));
+      break;
+    case OIS::KC_SPACE:
+      _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("MoverCabeza");
+      _animState->setEnabled(true);
+      _animState->setLoop(true);
+      _animState->setTimePosition(0.0);
       break;
   }
   //----------------------------

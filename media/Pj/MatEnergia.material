@@ -1,4 +1,4 @@
-// MatEnergia genrated by blender2ogre 0.6.0
+// MatEnergia genrated by blender2ogre 0.5.8
 
 material MatEnergia 
 {
@@ -8,9 +8,9 @@ material MatEnergia
     {
         pass MatEnergia
         {
-            ambient 0.7676339745521545 0.8000000715255737 0.0070463670417666435 1.0
-            diffuse 0.6141071887926337 0.640000066757203 0.005637093717412556 1.0
-            specular 0.5 0.5 0.5 1.0 12.5
+            ambient 1.0 1.0 1.0 1.0
+            diffuse 1.0 1.0 1.0 1.0
+            specular 1.0 1.0 1.0 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
             alpha_to_coverage off
@@ -35,8 +35,7 @@ material MatEnergia
                 texture spiral1.jpg
                 tex_address_mode wrap
                 scale 1.0 1.0
-                rotate_anim 0.8
-                colour_op_ex subtract src_texture src_current
+                colour_op modulate
             }
         }
     }
