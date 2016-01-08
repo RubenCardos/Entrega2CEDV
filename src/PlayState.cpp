@@ -76,50 +76,15 @@ PlayState::enter ()
   sheet->addChild(quitButton);
   //------------------------------
 
-  //Mapa Colisiones --------------
-
-  //Nodo Extra-------------------------------------------------------
-  Ogre::SceneNode *nodecol = _sceneMgr->createSceneNode("Nodo_Suelo");
-  _sceneMgr->getRootSceneNode()->addChild(nodecol);
-  //----------------------------------------------------------------
-
-  Ogre::SceneNode *nodefloor = _sceneMgr->createSceneNode("Col_Suelo");
-  Ogre::Entity *entfloor = _sceneMgr->createEntity("Col_Suelo", "Col_Suelo.mesh");
-  //entcol->setQueryFlags(STAGE);   // Usamos flags propios! para Escenario
-  nodefloor->setScale(15,15,15);
-  nodefloor->attachObject(entfloor);
-  nodefloor->setVisible(false);
-  nodecol->addChild(nodefloor);
-
-  // Cajas del escenario (baja poligonalizacion)------------------------------- 
-  std::stringstream sauxnode, sauxmesh;
-  std::string s = "Col_Box";
-  for (int i=1; i<27; i++) {
-    sauxnode << s << i; sauxmesh << s << i << ".mesh";
-    cout << "\nsauxnode:" << sauxnode.str() << endl;
-    cout << "sauxmesh:" << sauxmesh.str() << "\n" << endl;
-    Ogre::SceneNode *nodebox = _sceneMgr->createSceneNode(sauxnode.str());
-    Ogre::Entity *entboxcol = _sceneMgr->createEntity(sauxnode.str(), sauxmesh.str());
-    //entboxcol->setQueryFlags(STAGE);    // Escenario
-    nodebox->setScale(15,15,15);
-    nodebox->attachObject(entboxcol);
-    //nodebox->setVisible(false);
-    nodecol->addChild(nodebox);
-    sauxnode.str(""); sauxmesh.str(""); // Limpiamos el stream
-  }
-
-  //------------------------------
-
   
-
-
+  
   _exitGame = false;
 }
 
 void
 PlayState::exit ()
 {
-  //Sago del estado------------------------------
+  //Salgo del estado------------------------------
   _sceneMgr->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
   //--------------------------------------------

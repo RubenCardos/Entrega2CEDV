@@ -1,0 +1,480 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<data>
+
+<graph>
+  <vertex index="1" type="">
+    <x>-2.500000</x> <y>-2.499999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="2" type="">
+    <x>2.500000</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="3" type="">
+    <x>-3.750000</x> <y>-2.499999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="4" type="">
+    <x>3.750000</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="5" type="">
+    <x>-2.499999</x> <y>4.375000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="6" type="">
+    <x>-2.499999</x> <y>3.125000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="7" type="">
+    <x>2.500000</x> <y>4.374998</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="8" type="">
+    <x>2.500000</x> <y>3.124999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="9" type="">
+    <x>-4.375000</x> <y>-2.499999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="10" type="">
+    <x>-0.625000</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="11" type="">
+    <x>0.625000</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="12" type="">
+    <x>4.375000</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="13" type="">
+    <x>-0.624999</x> <y>1.250000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="14" type="">
+    <x>0.625001</x> <y>1.250000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="15" type="">
+    <x>-4.374998</x> <y>4.375000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="16" type="">
+    <x>-4.374998</x> <y>3.125000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="17" type="">
+    <x>-0.624999</x> <y>4.374999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="18" type="">
+    <x>-0.624999</x> <y>3.125000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="19" type="">
+    <x>0.625001</x> <y>4.374999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="20" type="">
+    <x>0.625001</x> <y>3.124999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="21" type="">
+    <x>4.375000</x> <y>4.374998</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="22" type="">
+    <x>4.375000</x> <y>3.124998</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="23" type="">
+    <x>-4.375000</x> <y>-4.374999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="24" type="">
+    <x>-0.625000</x> <y>-4.374999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="25" type="">
+    <x>0.625000</x> <y>-4.374999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="26" type="">
+    <x>4.375000</x> <y>-4.375000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="27" type="">
+    <x>-2.499999</x> <y>0.312500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="28" type="">
+    <x>-2.499999</x> <y>2.187500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="29" type="">
+    <x>2.500000</x> <y>0.312499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="30" type="">
+    <x>2.500000</x> <y>2.187499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="31" type="">
+    <x>-2.500000</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="32" type="">
+    <x>-1.562500</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="33" type="">
+    <x>-2.500000</x> <y>-3.437499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="34" type="">
+    <x>1.562500</x> <y>-2.500000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="35" type="">
+    <x>2.500000</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="36" type="">
+    <x>2.500000</x> <y>-3.437500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="37" type="">
+    <x>-1.562499</x> <y>1.250000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="38" type="">
+    <x>1.562500</x> <y>1.249999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="39" type="">
+    <x>-3.750000</x> <y>-3.437499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="40" type="">
+    <x>3.750000</x> <y>-3.437500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="41" type="">
+    <x>-1.562499</x> <y>3.125000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="42" type="">
+    <x>-4.374999</x> <y>2.187500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="43" type="">
+    <x>-0.624999</x> <y>2.187500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="44" type="">
+    <x>1.562501</x> <y>3.124999</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="45" type="">
+    <x>0.625001</x> <y>2.187499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="46" type="">
+    <x>4.375000</x> <y>2.187499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="47" type="">
+    <x>-4.374999</x> <y>-1.562499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="48" type="">
+    <x>-1.562500</x> <y>-0.625000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="49" type="">
+    <x>-0.625000</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="50" type="">
+    <x>-4.375000</x> <y>-3.437499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="51" type="">
+    <x>-0.625000</x> <y>-3.437499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="52" type="">
+    <x>1.562500</x> <y>-0.625000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="53" type="">
+    <x>0.625000</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="54" type="">
+    <x>4.375000</x> <y>-1.562501</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="55" type="">
+    <x>0.625000</x> <y>-3.437500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="56" type="">
+    <x>4.375000</x> <y>-3.437500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="57" type ="drain">
+    <x>-4.687499</x> <y>0.312501</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="58" type="">
+    <x>-1.562499</x> <y>2.187500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="59" type="">
+    <x>-1.562499</x> <y>0.312500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="60" type="">
+    <x>1.562500</x> <y>2.187499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="61" type="">
+    <x>1.562500</x> <y>0.312499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="62" type ="drain">
+    <x>4.687500</x> <y>0.312499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="63" type="">
+    <x>-1.562500</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="64" type="">
+    <x>-1.562500</x> <y>-3.437499</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="65" type="">
+    <x>1.562500</x> <y>-3.437500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="66" type="">
+    <x>1.562500</x> <y>-1.562500</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="67" type ="spawn">
+    <x>-4.374998</x> <y>3.750000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="68" type ="spawn">
+    <x>4.375000</x> <y>3.749998</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="69" type ="spawn">
+    <x>4.375000</x> <y>-2.031250</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="70" type ="spawn">
+    <x>-4.374999</x> <y>-2.031249</y> <z>0.000000</z>
+  </vertex>
+  <edge>
+    <vertex>4</vertex> <vertex>14</vertex>
+  </edge>
+  <edge>
+    <vertex>4</vertex> <vertex>16</vertex>
+  </edge>
+  <edge>
+    <vertex>4</vertex> <vertex>5</vertex>
+  </edge>
+  <edge>
+    <vertex>5</vertex> <vertex>27</vertex>
+  </edge>
+  <edge>
+    <vertex>5</vertex> <vertex>15</vertex>
+  </edge>
+  <edge>
+    <vertex>15</vertex> <vertex>41</vertex>
+  </edge>
+  <edge>
+    <vertex>27</vertex> <vertex>41</vertex>
+  </edge>
+  <edge>
+    <vertex>26</vertex> <vertex>27</vertex>
+  </edge>
+  <edge>
+    <vertex>26</vertex> <vertex>58</vertex>
+  </edge>
+  <edge>
+    <vertex>26</vertex> <vertex>56</vertex>
+  </edge>
+  <edge>
+    <vertex>26</vertex> <vertex>30</vertex>
+  </edge>
+  <edge>
+    <vertex>30</vertex> <vertex>46</vertex>
+  </edge>
+  <edge>
+    <vertex>2</vertex> <vertex>8</vertex>
+  </edge>
+  <edge>
+    <vertex>2</vertex> <vertex>38</vertex>
+  </edge>
+  <edge>
+    <vertex>32</vertex> <vertex>38</vertex>
+  </edge>
+  <edge>
+    <vertex>0</vertex> <vertex>32</vertex>
+  </edge>
+  <edge>
+    <vertex>0</vertex> <vertex>30</vertex>
+  </edge>
+  <edge>
+    <vertex>30</vertex> <vertex>62</vertex>
+  </edge>
+  <edge>
+    <vertex>47</vertex> <vertex>62</vertex>
+  </edge>
+  <edge>
+    <vertex>47</vertex> <vertex>58</vertex>
+  </edge>
+  <edge>
+    <vertex>36</vertex> <vertex>58</vertex>
+  </edge>
+  <edge>
+    <vertex>12</vertex> <vertex>36</vertex>
+  </edge>
+  <edge>
+    <vertex>12</vertex> <vertex>42</vertex>
+  </edge>
+  <edge>
+    <vertex>42</vertex> <vertex>57</vertex>
+  </edge>
+  <edge>
+    <vertex>40</vertex> <vertex>57</vertex>
+  </edge>
+  <edge>
+    <vertex>5</vertex> <vertex>40</vertex>
+  </edge>
+  <edge>
+    <vertex>17</vertex> <vertex>40</vertex>
+  </edge>
+  <edge>
+    <vertex>16</vertex> <vertex>17</vertex>
+  </edge>
+  <edge>
+    <vertex>17</vertex> <vertex>19</vertex>
+  </edge>
+  <edge>
+    <vertex>18</vertex> <vertex>19</vertex>
+  </edge>
+  <edge>
+    <vertex>6</vertex> <vertex>18</vertex>
+  </edge>
+  <edge>
+    <vertex>6</vertex> <vertex>20</vertex>
+  </edge>
+  <edge>
+    <vertex>21</vertex> <vertex>45</vertex>
+  </edge>
+  <edge>
+    <vertex>29</vertex> <vertex>45</vertex>
+  </edge>
+  <edge>
+    <vertex>7</vertex> <vertex>29</vertex>
+  </edge>
+  <edge>
+    <vertex>6</vertex> <vertex>7</vertex>
+  </edge>
+  <edge>
+    <vertex>7</vertex> <vertex>21</vertex>
+  </edge>
+  <edge>
+    <vertex>7</vertex> <vertex>43</vertex>
+  </edge>
+  <edge>
+    <vertex>19</vertex> <vertex>43</vertex>
+  </edge>
+  <edge>
+    <vertex>43</vertex> <vertex>59</vertex>
+  </edge>
+  <edge>
+    <vertex>44</vertex> <vertex>59</vertex>
+  </edge>
+  <edge>
+    <vertex>13</vertex> <vertex>44</vertex>
+  </edge>
+  <edge>
+    <vertex>13</vertex> <vertex>37</vertex>
+  </edge>
+  <edge>
+    <vertex>37</vertex> <vertex>60</vertex>
+  </edge>
+  <edge>
+    <vertex>28</vertex> <vertex>60</vertex>
+  </edge>
+  <edge>
+    <vertex>28</vertex> <vertex>29</vertex>
+  </edge>
+  <edge>
+    <vertex>28</vertex> <vertex>61</vertex>
+  </edge>
+  <edge>
+    <vertex>28</vertex> <vertex>34</vertex>
+  </edge>
+  <edge>
+    <vertex>51</vertex> <vertex>60</vertex>
+  </edge>
+  <edge>
+    <vertex>47</vertex> <vertex>51</vertex>
+  </edge>
+  <edge>
+    <vertex>34</vertex> <vertex>65</vertex>
+  </edge>
+  <edge>
+    <vertex>52</vertex> <vertex>65</vertex>
+  </edge>
+  <edge>
+    <vertex>51</vertex> <vertex>65</vertex>
+  </edge>
+  <edge>
+    <vertex>10</vertex> <vertex>52</vertex>
+  </edge>
+  <edge>
+    <vertex>10</vertex> <vertex>33</vertex>
+  </edge>
+  <edge>
+    <vertex>1</vertex> <vertex>33</vertex>
+  </edge>
+  <edge>
+    <vertex>1</vertex> <vertex>34</vertex>
+  </edge>
+  <edge>
+    <vertex>34</vertex> <vertex>53</vertex>
+  </edge>
+  <edge>
+    <vertex>3</vertex> <vertex>11</vertex>
+  </edge>
+  <edge>
+    <vertex>3</vertex> <vertex>39</vertex>
+  </edge>
+  <edge>
+    <vertex>39</vertex> <vertex>55</vertex>
+  </edge>
+  <edge>
+    <vertex>25</vertex> <vertex>55</vertex>
+  </edge>
+  <edge>
+    <vertex>35</vertex> <vertex>39</vertex>
+  </edge>
+  <edge>
+    <vertex>1</vertex> <vertex>35</vertex>
+  </edge>
+  <edge>
+    <vertex>33</vertex> <vertex>64</vertex>
+  </edge>
+  <edge>
+    <vertex>54</vertex> <vertex>64</vertex>
+  </edge>
+  <edge>
+    <vertex>24</vertex> <vertex>54</vertex>
+  </edge>
+  <edge>
+    <vertex>24</vertex> <vertex>25</vertex>
+  </edge>
+  <edge>
+    <vertex>23</vertex> <vertex>24</vertex>
+  </edge>
+  <edge>
+    <vertex>22</vertex> <vertex>23</vertex>
+  </edge>
+  <edge>
+    <vertex>22</vertex> <vertex>49</vertex>
+  </edge>
+  <edge>
+    <vertex>38</vertex> <vertex>49</vertex>
+  </edge>
+  <edge>
+    <vertex>0</vertex> <vertex>31</vertex>
+  </edge>
+  <edge>
+    <vertex>31</vertex> <vertex>63</vertex>
+  </edge>
+  <edge>
+    <vertex>50</vertex> <vertex>63</vertex>
+  </edge>
+  <edge>
+    <vertex>23</vertex> <vertex>50</vertex>
+  </edge>
+  <edge>
+    <vertex>9</vertex> <vertex>31</vertex>
+  </edge>
+  <edge>
+    <vertex>9</vertex> <vertex>48</vertex>
+  </edge>
+  <edge>
+    <vertex>48</vertex> <vertex>62</vertex>
+  </edge>
+  <edge>
+    <vertex>14</vertex> <vertex>66</vertex>
+  </edge>
+  <edge>
+    <vertex>15</vertex> <vertex>66</vertex>
+  </edge>
+  <edge>
+    <vertex>20</vertex> <vertex>67</vertex>
+  </edge>
+  <edge>
+    <vertex>21</vertex> <vertex>67</vertex>
+  </edge>
+  <edge>
+    <vertex>11</vertex> <vertex>68</vertex>
+  </edge>
+  <edge>
+    <vertex>53</vertex> <vertex>68</vertex>
+  </edge>
+  <edge>
+    <vertex>8</vertex> <vertex>69</vertex>
+  </edge>
+  <edge>
+    <vertex>46</vertex> <vertex>69</vertex>
+  </edge>
+</graph>
+
+
+</data>

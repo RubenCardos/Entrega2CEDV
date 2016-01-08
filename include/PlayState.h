@@ -30,6 +30,7 @@
  #include <RendererModules/Ogre/Renderer.h>
  #include <RendererModules/Ogre/Texture.h>
 
+
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
  public:

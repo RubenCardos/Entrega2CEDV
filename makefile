@@ -15,7 +15,7 @@ CXXFLAGS := -I $(DIRHEA) -Wall `pkg-config --cflags OIS OGRE OGRE-Overlay` -I/us
 
 # Flags del linker ---------------------------------------------------
 LDFLAGS := `pkg-config --libs OGRE` -L/usr/local/lib
-LDLIBS := `pkg-config --libs-only-l gl OIS OGRE OGRE-Overlay SDL2_mixer` -lstdc++ -lboost_system -lCEGUIBase-0 -lCEGUIOgreRenderer-0
+LDLIBS := `pkg-config --libs-only-l gl OIS OGRE xerces-c OGRE-Overlay SDL2_mixer` -lstdc++ -lboost_system -lCEGUIBase-0 -lCEGUIOgreRenderer-0
 
 # Modo de compilación (-mode=release -mode=debug) --------------------
 ifeq ($(mode), release) 
