@@ -154,7 +154,7 @@ Pacman::PlayState::frameStarted
   //------------------------------
   
   // La camara sigue al personaje ------
-  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y,_snPj->getPosition().z-200);
+  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y+50,_snPj->getPosition().z-200);
   //----------------------------------
 
   //CEGUI --------------------------------------
@@ -163,6 +163,16 @@ Pacman::PlayState::frameStarted
   CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
   RTTWindow->invalidate();
   //-------------------------------------------
+
+  // Movimiento (Prueba)----------
+
+  if(_pj->isMoving()){
+    _snPj->setPosition(Vector3(_snPj->getPosition())+=_pj->getDesp());
+  }else{
+
+  }
+
+  //--------------------
 
   //Animacion (Prueba)----------------
   if (_animState != NULL) {
@@ -174,7 +184,6 @@ Pacman::PlayState::frameStarted
       _animState->addTime(_deltaT);
     }
   }
-    
   //-------------------------------------
   return true;
 }
@@ -210,16 +219,24 @@ Pacman::PlayState::keyPressed
   SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
     case OIS::KC_A:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,_deltaT));
+      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,_deltaT));
+      _pj->setDesp(Vector3(0,0,_deltaT));
+      _pj->setMoving(true);
       break;
     case OIS::KC_D:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-_deltaT));
+      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-_deltaT));
+      _pj->setDesp(Vector3(0,0,-_deltaT));
+      _pj->setMoving(true);
       break;
     case OIS::KC_W:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
+      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
+      _pj->setDesp(Vector3(-_deltaT,0,0));
+      _pj->setMoving(true);
       break;
     case OIS::KC_S:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
+      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
+      _pj->setDesp(Vector3(_deltaT,0,0));
+      _pj->setMoving(true);
       break;
    	case OIS::KC_R:
       _aux->roll(Ogre::Degree(-90));
