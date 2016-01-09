@@ -22,13 +22,6 @@ Pacman::PlayState::enter ()
   //Pruebo a crear algo y ponerlo---------
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
   //-------------------------------------
-   
-  //Camara--------------------
-  _camera->setPosition(Ogre::Vector3(150,150,150));//el tercer parametro hace que se aleje mas la camara, el segundo para que rote hacia arriba o hacia abajo
-  _camera->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
-  _camera->setNearClipDistance(5);
-  _camera->setFarClipDistance(10000);
-  //-----------------------------
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
@@ -38,7 +31,7 @@ Pacman::PlayState::enter ()
   _cameraMiniMap->setFarClipDistance(10000);
   //--------------------------------
   
-  //Nodo------------------------
+  //Pj------------------------
   Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
@@ -46,7 +39,17 @@ Pacman::PlayState::enter ()
   _snPj->pitch(Ogre::Degree(-90));
   _snPj->setScale(5,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
+
+  _pj=new Pj;
+
   // -----------------------------
+
+  //Camara--------------------
+  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y,_snPj->getPosition().z-200);
+  _camera->setNearClipDistance(5);
+  _camera->setFarClipDistance(10000);
+  _camera->yaw(Ogre::Degree(180));
+  //-----------------------------
 
   //Plano ------------------------
   Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, -5);
@@ -88,6 +91,23 @@ Pacman::PlayState::enter ()
       cout << "\nGraph info..." << endl;
       cout << "\t#Vertexes: " << _scene->getGraph()->getVertexes().size() << endl;
       cout << "\t#Edges: " << _scene->getGraph()->getEdges().size() << endl;
+
+      cout << "Vertices" << endl; 
+
+      std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
+      std::vector<GraphVertex*>::const_iterator it;
+      int i =1;
+      for (it = _vertices.begin();it != _vertices.end();++it){
+        Node _aux=(*it)->getData();
+        cout << "\t" << static_cast<std::string>(_aux)  << endl;
+        Entity* _entPoint = _sceneMgr->createEntity("entPoint"+Ogre::StringConverter::toString(i),"cube.mesh");
+        SceneNode* _snPoint = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
+        _snPoint->attachObject(_entPoint);
+        _snPoint->setPosition(_aux.getPosition()); //x,y,z
+        _snPoint->setScale(5,5,5);
+        _sceneMgr->getRootSceneNode()->addChild(_snPoint);
+        i+=1;
+      }
   }
   catch (...){
       cerr << "Unexpected exception!" << endl;
@@ -95,6 +115,10 @@ Pacman::PlayState::enter ()
 
   // ------------------------------------------
   
+  //Prueba de cambio de posicion segun el vertice ---
+  _snPj->setPosition(_scene->getGraph()->getVertex(2)->getData().getPosition());
+  //------------------------------------------------
+
   _exitGame = false;
 }
 
@@ -125,9 +149,14 @@ Pacman::PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
   //Actualizacion de Variables----------------
-  Real _deltaT = evt.timeSinceLastFrame;
+  _deltaT = evt.timeSinceLastFrame;
+  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
   //------------------------------
   
+  // La camara sigue al personaje ------
+  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y,_snPj->getPosition().z-200);
+  //----------------------------------
+
   //CEGUI --------------------------------------
   CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   CEGUI::Window* ex1 = rootWin->getChild("CamWin");
@@ -181,23 +210,19 @@ Pacman::PlayState::keyPressed
   SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
     case OIS::KC_A:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,1));
-      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,1));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,_deltaT));
       break;
     case OIS::KC_D:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-1));
-      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(0,0,-1));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-_deltaT));
       break;
     case OIS::KC_W:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-1,0,0));
-      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(-1,0,0));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
       break;
     case OIS::KC_S:
-      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(1,0,0));
-      _camera->setPosition(Vector3(_camera->getPosition())+=Vector3(1,0,0));
+      _aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
       break;
    	case OIS::KC_R:
-      _aux->yaw(Ogre::Degree(-90));
+      _aux->roll(Ogre::Degree(-90));
       break;
     case OIS::KC_SPACE:
       _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("MoverCabeza");

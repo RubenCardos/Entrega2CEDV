@@ -34,6 +34,8 @@
 #include <Scene.h>
 #include <Camera.h>
 
+#include "Pj.h"
+
 namespace Pacman {
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
@@ -70,6 +72,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::Camera* _cameraMiniMap;
   Importer* _importer;
   Scene* _scene;
+  Real _deltaT;
+  Pj* _pj;
 
   bool quit(const CEGUI::EventArgs &e);
 
