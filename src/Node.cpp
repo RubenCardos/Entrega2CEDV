@@ -7,11 +7,11 @@
 
 #include <Node.h>
 
-Node::Node ()
+Pacman::Node::Node ()
 {
 }
 
-Node::Node
+Pacman::Node::Node
 (const int& index, const string& type, const Ogre::Vector3& position)
 {
   _index = index;
@@ -19,11 +19,11 @@ Node::Node
   _position = position;
 }
 
-Node::~Node ()
+Pacman::Node::~Node ()
 {
 }
 
-Node::operator
+Pacman::Node::operator
 std::string() const
 {
   std::stringstream r;

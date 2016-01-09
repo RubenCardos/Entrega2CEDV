@@ -7,12 +7,12 @@
 
 #include <GraphEdge.h>
 
-GraphEdge::GraphEdge
-(GraphVertex* origin, GraphVertex* dest)
+Pacman::GraphEdge::GraphEdge
+(Pacman::GraphVertex* origin, Pacman::GraphVertex* dest)
   :_pOrigin(origin), _pDestination(dest)
 {
 }
 
-GraphEdge::~GraphEdge () 
+Pacman::GraphEdge::~GraphEdge () 
 {
 }

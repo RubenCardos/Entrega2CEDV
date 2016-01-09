@@ -13,6 +13,8 @@
 #include <GraphVertex.h>
 #include <GraphEdge.h>
 
+namespace Pacman {
+
 class Graph
 {
  public:
@@ -34,5 +36,7 @@ class Graph
   std::vector<GraphVertex*> _vertexes;
   std::vector<GraphEdge*> _edges;
 };
+
+}
 
 #endif

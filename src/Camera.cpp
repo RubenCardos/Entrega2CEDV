@@ -7,16 +7,16 @@
 
 #include <Camera.h>
 
-Camera::Camera 
+Pacman::Camera::Camera 
 (int index, int fps):
   _index(index), _fps(fps)
 {
 }
 
-Camera::~Camera ()
+Pacman::Camera::~Camera ()
 {
   // Liberar el path.
-  typename std::vector<Frame*>::iterator it;
+  typename std::vector<Pacman::Frame*>::iterator it;
   for (it = _path.begin();
        it != _path.end();
        ++it)
@@ -24,13 +24,13 @@ Camera::~Camera ()
 }
 
 void
-Camera::addFrameToPath
-(Frame* frame)
+Pacman::Camera::addFrameToPath
+(Pacman::Frame* frame)
 {
   _path.push_back(frame);
 }
 
-Camera::operator
+Pacman::Camera::operator
 std::string() const
 {
   std::stringstream r;

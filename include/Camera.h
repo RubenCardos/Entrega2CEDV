@@ -12,6 +12,8 @@
 #include <vector>
 #include <Frame.h>
 
+namespace Pacman {
+
 class Camera
 {
  public:
@@ -34,5 +36,7 @@ class Camera
   // Secuencia de frames que conforman el camino de la cámara.
   std::vector<Frame*> _path;
 };
+
+}
 
 #endif

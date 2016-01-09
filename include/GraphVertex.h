@@ -15,6 +15,8 @@
 
 using namespace std;
 
+namespace Pacman {
+
 class GraphEdge;
 
 class GraphVertex
@@ -33,5 +35,7 @@ class GraphVertex
   Node _data;
   std::vector<GraphEdge*> _edges;
 };
+
+}
 
 #endif

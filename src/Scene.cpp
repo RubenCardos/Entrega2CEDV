@@ -1,17 +1,17 @@
 #include <Scene.h>
 
-Scene::Scene ()
+Pacman::Scene::Scene ()
 {
-  _graph = new Graph;
+  _graph = new Pacman::Graph;
 }
 
-Scene::~Scene ()
+Pacman::Scene::~Scene ()
 {
 }
 
 void
-Scene::addCamera
-(Camera* camera)
+Pacman::Scene::addCamera
+(Pacman::Camera* camera)
 {
   _cameras.push_back(camera);
 }

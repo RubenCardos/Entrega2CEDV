@@ -1,9 +1,9 @@
 #include "PauseState.h"
 
-template<> PauseState* Ogre::Singleton<PauseState>::msSingleton = 0;
+template<> Pacman::PauseState* Ogre::Singleton<Pacman::PauseState>::msSingleton = 0;
 
 void
-PauseState::enter ()
+Pacman::PauseState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
@@ -18,29 +18,29 @@ PauseState::enter ()
 }
 
 void
-PauseState::exit ()
+Pacman::PauseState::exit ()
 {
 }
 
 void
-PauseState::pause ()
+Pacman::PauseState::pause ()
 {
 }
 
 void
-PauseState::resume ()
+Pacman::PauseState::resume ()
 {
 }
 
 bool
-PauseState::frameStarted
+Pacman::PauseState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
   return true;
 }
 
 bool
-PauseState::frameEnded
+Pacman::PauseState::frameEnded
 (const Ogre::FrameEvent& evt)
 {
   if (_exitGame)
@@ -50,7 +50,7 @@ PauseState::frameEnded
 }
 
 void
-PauseState::keyPressed
+Pacman::PauseState::keyPressed
 (const OIS::KeyEvent &e) {
   // Tecla p --> Estado anterior.
   if (e.key == OIS::KC_P) {
@@ -59,37 +59,37 @@ PauseState::keyPressed
 }
 
 void
-PauseState::keyReleased
+Pacman::PauseState::keyReleased
 (const OIS::KeyEvent &e)
 {
 }
 
 void
-PauseState::mouseMoved
+Pacman::PauseState::mouseMoved
 (const OIS::MouseEvent &e)
 {
 }
 
 void
-PauseState::mousePressed
+Pacman::PauseState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
 }
 
 void
-PauseState::mouseReleased
+Pacman::PauseState::mouseReleased
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
 }
 
-PauseState*
-PauseState::getSingletonPtr ()
+Pacman::PauseState*
+Pacman::PauseState::getSingletonPtr ()
 {
 return msSingleton;
 }
 
-PauseState&
-PauseState::getSingleton ()
+Pacman::PauseState&
+Pacman::PauseState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;

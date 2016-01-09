@@ -31,10 +31,10 @@ using namespace std;
 
 int main () {
 
-  GameManager* game = new GameManager();
-  IntroState* introState = new IntroState();
-  PlayState* playState = new PlayState();
-  PauseState* pauseState = new PauseState();
+  Pacman::GameManager* game = new Pacman::GameManager();
+  Pacman::IntroState* introState = new Pacman::IntroState();
+  Pacman::PlayState* playState = new Pacman::PlayState();
+  Pacman::PauseState* pauseState = new Pacman::PauseState();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
@@ -43,7 +43,7 @@ int main () {
   try
     {
       // Inicializa el juego y transición al primer estado.
-      game->start(IntroState::getSingletonPtr());
+      game->start(Pacman::IntroState::getSingletonPtr());
     }
   catch (Ogre::Exception& e)
     {

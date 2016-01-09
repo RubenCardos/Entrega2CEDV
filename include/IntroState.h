@@ -29,6 +29,8 @@
  #include <RendererModules/Ogre/Renderer.h>
  #include <RendererModules/Ogre/Texture.h>
 
+namespace Pacman {
+
 class IntroState : public Ogre::Singleton<IntroState>, public GameState
 {
  public:
@@ -70,5 +72,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
 
   bool _exitGame;
 };
+
+}
 
 #endif

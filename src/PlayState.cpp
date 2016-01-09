@@ -1,14 +1,14 @@
 #include "PlayState.h"
 #include "PauseState.h"
 
-template<> PlayState* Ogre::Singleton<PlayState>::msSingleton = 0;
+template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 0;
 
 // Prueba de animacion -----
 Ogre::AnimationState *_animState;
 //--------------------------
 
 void
-PlayState::enter ()
+Pacman::PlayState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
@@ -76,13 +76,30 @@ PlayState::enter ()
   sheet->addChild(quitButton);
   //------------------------------
 
-  
+  // Prueba Grafo ------------------------------
+  try{
+    _importer = new Importer;
+    _scene = new Scene;
+
+    // Parse data...
+    _importer->parseScene("./data/sample.xml", _scene);
+
+    // Print some data...
+      cout << "\nGraph info..." << endl;
+      cout << "\t#Vertexes: " << _scene->getGraph()->getVertexes().size() << endl;
+      cout << "\t#Edges: " << _scene->getGraph()->getEdges().size() << endl;
+  }
+  catch (...){
+      cerr << "Unexpected exception!" << endl;
+  }
+
+  // ------------------------------------------
   
   _exitGame = false;
 }
 
 void
-PlayState::exit ()
+Pacman::PlayState::exit ()
 {
   //Salgo del estado------------------------------
   _sceneMgr->clearScene();
@@ -91,12 +108,12 @@ PlayState::exit ()
 }
 
 void
-PlayState::pause()
+Pacman::PlayState::pause()
 {
 }
 
 void
-PlayState::resume()
+Pacman::PlayState::resume()
 {
   //Se restaura el background colour.------------------------------
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
@@ -104,7 +121,7 @@ PlayState::resume()
 }
 
 bool
-PlayState::frameStarted
+Pacman::PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
   //Actualizacion de Variables----------------
@@ -134,7 +151,7 @@ PlayState::frameStarted
 }
 
 bool
-PlayState::frameEnded
+Pacman::PlayState::frameEnded
 (const Ogre::FrameEvent& evt)
 {
   //Salir del juego--
@@ -145,7 +162,7 @@ PlayState::frameEnded
 }
 
 void
-PlayState::keyPressed
+Pacman::PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
 
@@ -193,7 +210,7 @@ PlayState::keyPressed
 }
 
 void
-PlayState::keyReleased
+Pacman::PlayState::keyReleased
 (const OIS::KeyEvent &e)
 {
   //Salgo del juego---------------
@@ -207,7 +224,7 @@ PlayState::keyReleased
 }
 
 void
-PlayState::mouseMoved
+Pacman::PlayState::mouseMoved
 (const OIS::MouseEvent &e)
 {
   //CEGUI--------------------------
@@ -216,7 +233,7 @@ PlayState::mouseMoved
 }
 
 void
-PlayState::mousePressed
+Pacman::PlayState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   //CEGUI--------------------------
@@ -225,7 +242,7 @@ PlayState::mousePressed
 }
 
 void
-PlayState::mouseReleased
+Pacman::PlayState::mouseReleased
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   //CEGUI--------------------------
@@ -233,20 +250,20 @@ PlayState::mouseReleased
   //-------------------------------
 }
 
-PlayState*
-PlayState::getSingletonPtr ()
+Pacman::PlayState*
+Pacman::PlayState::getSingletonPtr ()
 {
 return msSingleton;
 }
 
-PlayState&
-PlayState::getSingleton ()
+Pacman::PlayState&
+Pacman::PlayState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
 }
 
-CEGUI::MouseButton PlayState::convertMouseButton(OIS::MouseButtonID id)//METODOS DE CEGUI
+CEGUI::MouseButton Pacman::PlayState::convertMouseButton(OIS::MouseButtonID id)//METODOS DE CEGUI
 {
   //CEGUI--------------------------
   CEGUI::MouseButton ceguiId;
@@ -269,7 +286,7 @@ CEGUI::MouseButton PlayState::convertMouseButton(OIS::MouseButtonID id)//METODOS
 }
 
 bool
-PlayState::quit(const CEGUI::EventArgs &e)
+Pacman::PlayState::quit(const CEGUI::EventArgs &e)
 {
   _exitGame=true;
   return true;

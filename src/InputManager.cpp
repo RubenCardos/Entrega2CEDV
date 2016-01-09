@@ -1,15 +1,15 @@
 #include "InputManager.h"
 
-template<> InputManager* Ogre::Singleton<InputManager>::msSingleton = 0;
+template<> Pacman::InputManager* Ogre::Singleton<Pacman::InputManager>::msSingleton = 0;
 
-InputManager::InputManager ():
+Pacman::InputManager::InputManager ():
   _inputSystem(0),
   _keyboard(0),
   _mouse(0)
 {
 }
 
-InputManager::~InputManager ()
+Pacman::InputManager::~InputManager ()
 {
   if (_inputSystem) {
 
@@ -34,7 +34,7 @@ InputManager::~InputManager ()
 }
 
 void
-InputManager::initialise
+Pacman::InputManager::initialise
 (Ogre::RenderWindow *renderWindow)
 {
   if(!_inputSystem) {
@@ -85,7 +85,7 @@ InputManager::initialise
 }
 
 void
-InputManager::capture ()
+Pacman::InputManager::capture ()
 {
   // Capturar y actualizar cada frame.
   if (_mouse)
@@ -96,7 +96,7 @@ InputManager::capture ()
 }
 
 void
-InputManager::addKeyListener
+Pacman::InputManager::addKeyListener
 (OIS::KeyListener *keyListener, const std::string& instanceName)
 {
   if (_keyboard) {
@@ -112,7 +112,7 @@ InputManager::addKeyListener
 }
 
 void
-InputManager::addMouseListener
+Pacman::InputManager::addMouseListener
 (OIS::MouseListener *mouseListener, const std::string& instanceName)
 {
   if (_mouse) {
@@ -128,7 +128,7 @@ InputManager::addMouseListener
 }
 
 void
-InputManager::removeKeyListener
+Pacman::InputManager::removeKeyListener
 (const std::string& instanceName)
 {
   // Comprobar si el listener existe.
@@ -142,7 +142,7 @@ InputManager::removeKeyListener
 }
 
 void
-InputManager::removeMouseListener 
+Pacman::InputManager::removeMouseListener 
 (const std::string& instanceName)
 {
   // Comprobar si el listener existe.
@@ -156,7 +156,7 @@ InputManager::removeMouseListener
 }
 
 void
-InputManager::removeKeyListener
+Pacman::InputManager::removeKeyListener
 (OIS::KeyListener *keyListener)
 {
   itKeyListener = _keyListeners.begin();
@@ -170,7 +170,7 @@ InputManager::removeKeyListener
 }
 
 void
-InputManager::removeMouseListener
+Pacman::InputManager::removeMouseListener
 (OIS::MouseListener *mouseListener)
 {
   itMouseListener = _mouseListeners.begin();
@@ -184,7 +184,7 @@ InputManager::removeMouseListener
 }
 
 void
-InputManager::removeAllListeners
+Pacman::InputManager::removeAllListeners
 ()
 {
   _keyListeners.clear();
@@ -192,19 +192,19 @@ InputManager::removeAllListeners
 }
 
 void
-InputManager::removeAllKeyListeners ()
+Pacman::InputManager::removeAllKeyListeners ()
 {
   _keyListeners.clear();
 }
 
 void
-InputManager::removeAllMouseListeners ()
+Pacman::InputManager::removeAllMouseListeners ()
 {
   _mouseListeners.clear();
 }
 
 void
-InputManager::setWindowExtents 
+Pacman::InputManager::setWindowExtents 
 (int width, int height)
 {
   // Establecer la región del ratón.
@@ -215,19 +215,19 @@ InputManager::setWindowExtents
 }
 
 OIS::Keyboard*
-InputManager::getKeyboard ()
+Pacman::InputManager::getKeyboard ()
 {
     return _keyboard;
 }
 
 OIS::Mouse*
-InputManager::getMouse ()
+Pacman::InputManager::getMouse ()
 {
     return _mouse;
 }
 
 bool
-InputManager::keyPressed 
+Pacman::InputManager::keyPressed 
 (const OIS::KeyEvent &e)
 {
   itKeyListener = _keyListeners.begin();
@@ -241,7 +241,7 @@ InputManager::keyPressed
 }
 
 bool
-InputManager::keyReleased
+Pacman::InputManager::keyReleased
 (const OIS::KeyEvent &e)
 {
   itKeyListener = _keyListeners.begin();
@@ -255,7 +255,7 @@ InputManager::keyReleased
 }
 
 bool
-InputManager::mouseMoved
+Pacman::InputManager::mouseMoved
 (const OIS::MouseEvent &e)
 {
   itMouseListener = _mouseListeners.begin();
@@ -269,7 +269,7 @@ InputManager::mouseMoved
 }
 
 bool
-InputManager::mousePressed
+Pacman::InputManager::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   itMouseListener = _mouseListeners.begin();
@@ -283,7 +283,7 @@ InputManager::mousePressed
 }
 
 bool
-InputManager::mouseReleased
+Pacman::InputManager::mouseReleased
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   itMouseListener = _mouseListeners.begin();
@@ -296,14 +296,14 @@ InputManager::mouseReleased
   return true;
 }
 
-InputManager*
-InputManager::getSingletonPtr ()
+Pacman::InputManager*
+Pacman::InputManager::getSingletonPtr ()
 {
   return msSingleton;
 }
 
-InputManager&
-InputManager::getSingleton ()
+Pacman::InputManager&
+Pacman::InputManager::getSingleton ()
 {  
   assert(msSingleton);
   return *msSingleton;

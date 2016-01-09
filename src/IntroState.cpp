@@ -3,10 +3,10 @@
 
 using namespace CEGUI;
 
-template<> IntroState* Ogre::Singleton<IntroState>::msSingleton = 0;
+template<> Pacman::IntroState* Ogre::Singleton<Pacman::IntroState>::msSingleton = 0;
 
 void
-IntroState::enter ()
+Pacman::IntroState::enter ()
 {
   _root = Ogre::Root::getSingletonPtr();
 
@@ -27,31 +27,31 @@ IntroState::enter ()
 }
 
 void
-IntroState::exit()
+Pacman::IntroState::exit()
 {
   _sceneMgr->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
 }
 
 void
-IntroState::pause ()
+Pacman::IntroState::pause ()
 {
 }
 
 void
-IntroState::resume ()
+Pacman::IntroState::resume ()
 {
 }
 
 bool
-IntroState::frameStarted
+Pacman::IntroState::frameStarted
 (const Ogre::FrameEvent& evt) 
 {
   return true;
 }
 
 bool
-IntroState::frameEnded
+Pacman::IntroState::frameEnded
 (const Ogre::FrameEvent& evt)
 {
   if (_exitGame)
@@ -61,7 +61,7 @@ IntroState::frameEnded
 }
 
 void
-IntroState::keyPressed
+Pacman::IntroState::keyPressed
 (const OIS::KeyEvent &e)
 {
   // Transición al siguiente estado.
@@ -76,7 +76,7 @@ IntroState::keyPressed
 }
 
 void
-IntroState::keyReleased
+Pacman::IntroState::keyReleased
 (const OIS::KeyEvent &e )
 {
   if (e.key == OIS::KC_ESCAPE) {
@@ -87,7 +87,7 @@ IntroState::keyReleased
 }
 
 void
-IntroState::mouseMoved
+Pacman::IntroState::mouseMoved
 (const OIS::MouseEvent &e)
 {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(e.state.X.rel, e.state.Y.rel);  
@@ -95,33 +95,33 @@ IntroState::mouseMoved
 }
 
 void
-IntroState::mousePressed
+Pacman::IntroState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertMouseButton(id));
 }
 
 void
-IntroState::mouseReleased
+Pacman::IntroState::mouseReleased
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertMouseButton(id));
 }
 
-IntroState*
-IntroState::getSingletonPtr ()
+Pacman::IntroState*
+Pacman::IntroState::getSingletonPtr ()
 {
 return msSingleton;
 }
 
-IntroState&
-IntroState::getSingleton ()
+Pacman::IntroState&
+Pacman::IntroState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
 }
 
-void IntroState::createGUI()
+void Pacman::IntroState::createGUI()
 {
   //CEGUI
   renderer = &CEGUI::OgreRenderer::bootstrapSystem();
@@ -195,7 +195,7 @@ void IntroState::createGUI()
   
 }
 
-CEGUI::MouseButton IntroState::convertMouseButton(OIS::MouseButtonID id)//METODOS DE CEGUI
+CEGUI::MouseButton Pacman::IntroState::convertMouseButton(OIS::MouseButtonID id)//METODOS DE CEGUI
 {
   CEGUI::MouseButton ceguiId;
   switch(id)
@@ -216,7 +216,7 @@ CEGUI::MouseButton IntroState::convertMouseButton(OIS::MouseButtonID id)//METODO
 }
 
 bool
-IntroState::play(const CEGUI::EventArgs &e)
+Pacman::IntroState::play(const CEGUI::EventArgs &e)
 {
   changeState(PlayState::getSingletonPtr());
   return true;

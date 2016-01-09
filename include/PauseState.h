@@ -26,6 +26,8 @@
 
 #include "GameState.h"
 
+namespace Pacman {
+
 class PauseState : public Ogre::Singleton<PauseState>, public GameState
 {
  public:
@@ -58,5 +60,7 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
 
   bool _exitGame;
 };
+
+}
 
 #endif

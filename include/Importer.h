@@ -12,6 +12,8 @@
 #include <xercesc/dom/DOM.hpp>
 #include <Scene.h>
 
+namespace Pacman {
+
 class Importer: public Ogre::Singleton<Importer> {
  public:
   void parseScene (const char* path, Scene *scene);
@@ -32,5 +34,7 @@ class Importer: public Ogre::Singleton<Importer> {
 
   float getValueFromTag (xercesc::DOMNode* node, const XMLCh *tag);
 };
+
+}
 
 #endif

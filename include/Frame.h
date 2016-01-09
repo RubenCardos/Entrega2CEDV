@@ -11,6 +11,8 @@
 #include <OgreVector3.h>
 #include <OgreVector4.h>
 
+namespace Pacman {
+
 class Frame
 {
  public:
@@ -29,5 +31,7 @@ class Frame
   // Rotación de la cámara en el frame _index.
   Ogre::Vector4 _rotation;
 };
+
+}
 
 #endif

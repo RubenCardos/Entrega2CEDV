@@ -30,6 +30,9 @@
 // Clase abstracta de estado básico.
 // Definición base sobre la que extender
 // los estados del juego.
+
+namespace Pacman {
+
 class GameState {
 
  public:
@@ -69,5 +72,7 @@ class GameState {
   }
 
 };
+
+}
 
 #endif

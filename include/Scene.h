@@ -13,6 +13,8 @@
 #include <Node.h>
 #include <Graph.h>
 
+namespace Pacman {
+
 class Scene
 {
  public:
@@ -27,5 +29,7 @@ class Scene
   Graph *_graph;
   std::vector<Camera*> _cameras;
 };
+
+}
 
 #endif

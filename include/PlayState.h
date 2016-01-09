@@ -30,6 +30,11 @@
  #include <RendererModules/Ogre/Renderer.h>
  #include <RendererModules/Ogre/Texture.h>
 
+ #include <Importer.h>
+#include <Scene.h>
+#include <Camera.h>
+
+namespace Pacman {
 
 class PlayState : public Ogre::Singleton<PlayState>, public GameState
 {
@@ -63,10 +68,14 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
   Ogre::Camera* _cameraMiniMap;
+  Importer* _importer;
+  Scene* _scene;
 
   bool quit(const CEGUI::EventArgs &e);
 
   bool _exitGame;
 };
+
+}
 
 #endif

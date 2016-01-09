@@ -7,14 +7,14 @@
 
 #include <Graph.h>
 
-Graph::Graph ()
+Pacman::Graph::Graph ()
 {
   // Reserva de memoria inicial.
   _vertexes.reserve(25);
   _edges.reserve(25);
 }
 
-Graph::~Graph ()
+Pacman::Graph::~Graph ()
 {
   // Liberar vértices.
   typename std::vector<GraphVertex*>::iterator itVert;
@@ -35,33 +35,33 @@ Graph::~Graph ()
 }
 
 void
-Graph::addVertex
+Pacman::Graph::addVertex
 (GraphVertex* pVertex)
 {
   _vertexes.push_back(pVertex);
 }
 
 void
-Graph::addEdge
-(GraphVertex* pOrigin, GraphVertex* pDestination, bool undirected)
+Pacman::Graph::addEdge
+(Pacman::GraphVertex* pOrigin, Pacman::GraphVertex* pDestination, bool undirected)
 {
-  GraphEdge* pEdge = new GraphEdge(pOrigin, pDestination);
+  Pacman::GraphEdge* pEdge = new GraphEdge(pOrigin, pDestination);
   _edges.push_back(pEdge);
   pOrigin->addEdge(pEdge);
     
   if (undirected) {
-    GraphEdge* pEdge2 = new GraphEdge(pDestination, pOrigin);
+    Pacman::GraphEdge* pEdge2 = new GraphEdge(pDestination, pOrigin);
   _edges.push_back(pEdge2);
     pDestination->addEdge(pEdge2);
   }
 }
 
-std::vector<GraphVertex*>
-Graph::adjacents
+std::vector<Pacman::GraphVertex*>
+Pacman::Graph::adjacents
 (int index) const
 {
-  std::vector<GraphVertex*> result;
-  std::vector<GraphVertex*>::const_iterator it;
+  std::vector<Pacman::GraphVertex*> result;
+  std::vector<Pacman::GraphVertex*>::const_iterator it;
 
   for (it = _vertexes.begin();
        it != _vertexes.end();
@@ -72,11 +72,11 @@ Graph::adjacents
   return result;
 }
 
-GraphVertex*
-Graph::getVertex
+Pacman::GraphVertex*
+Pacman::Graph::getVertex
 (int index) const
 {
-  std::vector<GraphVertex*>::const_iterator it;
+  std::vector<Pacman::GraphVertex*>::const_iterator it;
 
   for (it = _vertexes.begin();
        it != _vertexes.end();

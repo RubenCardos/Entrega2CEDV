@@ -13,6 +13,8 @@
 
 using namespace std;
 
+namespace Pacman {
+
 class Node
 {
  public:
@@ -33,5 +35,7 @@ class Node
   // Posición del nodo en el espacio 3D.
   Ogre::Vector3 _position;
 };
+
+}
 
 #endif

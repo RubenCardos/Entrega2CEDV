@@ -14,6 +14,8 @@
 
 using namespace std;
 
+namespace Pacman {
+
 class GraphVertex;
 
 class GraphEdge
@@ -31,5 +33,7 @@ class GraphEdge
   GraphVertex* _pOrigin;
   GraphVertex* _pDestination;
 };
+
+}
 
 #endif

@@ -24,6 +24,8 @@
 #include <Ogre.h>
 #include <OIS/OIS.h>
 
+namespace Pacman {
+
 // Gestor para los eventos de entrada (teclado y ratón).
 class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListener, public OIS::MouseListener {
  public:
@@ -78,4 +80,6 @@ class InputManager : public Ogre::Singleton<InputManager>, public OIS::KeyListen
   std::map<std::string, OIS::KeyListener*>::iterator itKeyListenerEnd;
   std::map<std::string, OIS::MouseListener*>::iterator itMouseListenerEnd;
 };
+
+}
 #endif

@@ -31,6 +31,8 @@
 using namespace std;
 using namespace Ogre; 
 
+
+namespace Pacman {
 class GameState;
 
 class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManager>, public OIS::KeyListener, public OIS::MouseListener
@@ -79,5 +81,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   // Estados del juego.
   std::stack<GameState*> _states;
 };
+
+}
 
 #endif

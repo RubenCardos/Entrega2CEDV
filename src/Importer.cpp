@@ -17,20 +17,20 @@
 using namespace std;
 using namespace xercesc;
 
-template<> Importer* Ogre::Singleton<Importer>::msSingleton = 0;
+template<> Pacman::Importer* Ogre::Singleton<Pacman::Importer>::msSingleton = 0;
 
-Importer* Importer::getSingletonPtr(void)
+Pacman::Importer* Pacman::Importer::getSingletonPtr(void)
 {
     return msSingleton;
 }
-Importer& Importer::getSingleton(void)
+Pacman::Importer& Pacman::Importer::getSingleton(void)
 {  
     assert( msSingleton );  return ( *msSingleton );  
 }
 
 void
-Importer::parseScene
-(const char* path, Scene *scene)
+Pacman::Importer::parseScene
+(const char* path, Pacman::Scene *scene)
 {
   // Inicialización.
   try {
@@ -117,8 +117,8 @@ Importer::parseScene
 }
 
 void
-Importer::parseCamera
-(xercesc::DOMNode* cameraNode, Scene* scene)
+Pacman::Importer::parseCamera
+(xercesc::DOMNode* cameraNode, Pacman::Scene* scene)
 {
   // Atributos de la cámara.
   DOMNamedNodeMap* attributes = cameraNode->getAttributes();
@@ -129,7 +129,7 @@ Importer::parseCamera
   int camera_fps = atoi(XMLString::transcode(fpsNode->getNodeValue()));
 
   // Instanciar la cámara.
-  Camera* camera = new Camera(camera_index, camera_fps);
+  Pacman::Camera* camera = new Pacman::Camera(camera_index, camera_fps);
 
   XMLCh* path_ch = XMLString::transcode("path");  
 
@@ -153,8 +153,8 @@ Importer::parseCamera
 }
 
 void
-Importer::addPathToCamera
-(xercesc::DOMNode* pathNode, Camera *camera)
+Pacman::Importer::addPathToCamera
+(xercesc::DOMNode* pathNode, Pacman::Camera *camera)
 {
   XMLCh* position_ch = XMLString::transcode("position");
   XMLCh* rotation_ch = XMLString::transcode("rotation");
@@ -187,7 +187,7 @@ Importer::addPathToCamera
       }
 
       // Instaciar el frame.
-      Frame* frame = new Frame(frame_index, frame_position, frame_rotation);
+      Pacman::Frame* frame = new Pacman::Frame(frame_index, frame_position, frame_rotation);
       // Añadirlo al path de la cámara.
       camera->addFrameToPath(frame);
 
@@ -200,7 +200,7 @@ Importer::addPathToCamera
 }
 
 void
-Importer::getFramePosition
+Pacman::Importer::getFramePosition
 (xercesc::DOMNode* node, Ogre::Vector3* position)
 {
   XMLCh* x_ch = XMLString::transcode("x");  
@@ -221,7 +221,7 @@ Importer::getFramePosition
 }
 
 void
-Importer::getFrameRotation
+Pacman::Importer::getFrameRotation
 (xercesc::DOMNode* node, Ogre::Vector4* rotation)
 {
   XMLCh* x_ch = XMLString::transcode("x");  
@@ -246,7 +246,7 @@ Importer::getFrameRotation
 }
 
 void
-Importer::parseGraph
+Pacman::Importer::parseGraph
 (xercesc::DOMNode* graphNode, Scene* scene)
 {
   XMLCh* vertex_ch = XMLString::transcode("vertex");
@@ -274,7 +274,7 @@ Importer::parseGraph
 }
 
 void
-Importer::addVertexToScene
+Pacman::Importer::addVertexToScene
 (xercesc::DOMNode* vertexNode, Scene* scene)
 {
   DOMNamedNodeMap* attributes = vertexNode->getAttributes();
@@ -305,7 +305,7 @@ Importer::addVertexToScene
 }
 
 void
-Importer::addEdgeToScene
+Pacman::Importer::addEdgeToScene
 (xercesc::DOMNode* edgeNode, Scene* scene)
 {
   XMLCh* vertex_ch = XMLString::transcode("vertex");
@@ -323,8 +323,8 @@ Importer::addEdgeToScene
 
   // Recuperar los vértices a partir de su index,
   // para generar y añadir el arco.
-  GraphVertex *v1 = scene->getGraph()->getVertex(edge[0]);
-  GraphVertex *v2 = scene->getGraph()->getVertex(edge[1]);
+  Pacman::GraphVertex *v1 = scene->getGraph()->getVertex(edge[0]);
+  Pacman::GraphVertex *v2 = scene->getGraph()->getVertex(edge[1]);
 
   scene->getGraph()->addEdge(v1, v2);
 
@@ -332,7 +332,7 @@ Importer::addEdgeToScene
 }
 
 float
-Importer::getValueFromTag
+Pacman::Importer::getValueFromTag
 (xercesc::DOMNode* node, const XMLCh *tag)
 {
   for (XMLSize_t i = 0; i < node->getChildNodes()->getLength(); ++i ) {

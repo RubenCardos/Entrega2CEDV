@@ -7,15 +7,15 @@
 
 #include <GraphVertex.h>
 
-GraphVertex::GraphVertex
-(const Node& data)
+Pacman::GraphVertex::GraphVertex
+(const Pacman::Node& data)
   :_data(data)
 {
 }
 
-GraphVertex::~GraphVertex ()
+Pacman::GraphVertex::~GraphVertex ()
 {
-  std::vector<GraphEdge*>::iterator itEdge; 
+  std::vector<Pacman::GraphEdge*>::iterator itEdge; 
   for (itEdge = _edges.begin();
        itEdge != _edges.end();
        ++itEdge)
@@ -24,11 +24,11 @@ GraphVertex::~GraphVertex ()
   _edges.clear();
 }
 
-std::vector<GraphVertex*>
-GraphVertex::adjacents () const
+std::vector<Pacman::GraphVertex*>
+Pacman::GraphVertex::adjacents () const
 {
-  std::vector<GraphVertex*> result;
-  std::vector<GraphEdge*>::const_iterator it;
+  std::vector<Pacman::GraphVertex*> result;
+  std::vector<Pacman::GraphEdge*>::const_iterator it;
 
   for (it = _edges.begin();
        it != _edges.end();
