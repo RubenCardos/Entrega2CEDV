@@ -8,7 +8,7 @@ using namespace std;
  {
  	_moving=false;
  	_desp=Ogre::Vector3(0,0,0);
- 	_speed=5;
+ 	_speed=15;
  }
 
  Pacman::Pj::~Pj ()

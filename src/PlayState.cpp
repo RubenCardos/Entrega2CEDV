@@ -45,10 +45,10 @@ Pacman::PlayState::enter ()
   // -----------------------------
 
   //Camara--------------------
-  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y,_snPj->getPosition().z-200);
+  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y-200,_snPj->getPosition().z);
   _camera->setNearClipDistance(5);
   _camera->setFarClipDistance(10000);
-  _camera->yaw(Ogre::Degree(180));
+  _camera->yaw(Ogre::Degree(90));
   //-----------------------------
 
   //Plano ------------------------
@@ -154,7 +154,7 @@ Pacman::PlayState::frameStarted
   //------------------------------
   
   // La camara sigue al personaje ------
-  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y+50,_snPj->getPosition().z-200);
+  _camera->setPosition(_snPj->getPosition().x+200,_snPj->getPosition().y+75,_snPj->getPosition().z);
   //----------------------------------
 
   //CEGUI --------------------------------------
