@@ -205,6 +205,19 @@ Pacman::PlayState::frameStarted
 
   if(isPositionInAVertex(_snPj->getPosition())){
     _pj->setMoving(false);
+
+    //Cuando llego a un vertice nuevo cambio _now ----
+
+
+    //-------------------------------------------------
+
+    // Calculo los nuevos adyacentes -------------------
+
+
+
+    //-----------------------------------------------
+
+
   }else{
     _pj->setMoving(true);
   }
@@ -298,15 +311,42 @@ Pacman::PlayState::keyPressed
       //_pj->setDesp(Vector3(0,0,-_deltaT));
       //_pj->setMoving(true);
       break;}
-    case OIS::KC_W:
+    case OIS::KC_W:{
+      std::vector<Ogre::Vector3>::const_iterator it;
+      bool _check =true;
+      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
+        Ogre::Vector3 _aux=*it;
+        if(_aux.x<0){
+          cout << "Voy!" << endl;
+          _pj->setMoving(true);
+          _pj->setDesp(Vector3(-_deltaT,0,0));
+          _check=false;
+        }else{
+          cout << "No se puede ir hacia alli" << endl;
+        }
+      }
       //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
       //_pj->setDesp(Vector3(-_deltaT,0,0));
-      _pj->setMoving(true);
-      break;
-    case OIS::KC_S:
+      //_pj->setMoving(true);
+      break;}
+    case OIS::KC_S:{
+      std::vector<Ogre::Vector3>::const_iterator it;
+      bool _check =true;
+      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
+        Ogre::Vector3 _aux=*it;
+        if(_aux.x>0){
+          cout << "Voy!" << endl;
+          _pj->setMoving(true);
+          _pj->setDesp(Vector3(_deltaT,0,0));
+          _check=false;
+        }else{
+          cout << "No se puede ir hacia alli" << endl;
+        }
+      }
+      }
       //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
       //_pj->setDesp(Vector3(_deltaT,0,0));
-      _pj->setMoving(true);
+      //_pj->setMoving(true);
       break;
    	case OIS::KC_R:
       _aux->roll(Ogre::Degree(-90));
