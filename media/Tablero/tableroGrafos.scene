@@ -1,0 +1,84 @@
+<scene export_time="1452465260.9549356" exported_by="ruben" formatVersion="1.0.1" previous_export_time="0" >
+  <nodes >
+    <node name="Point.003" >
+      <position y="4.793413" x="0.139215" z="15.320265" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="point" name="Point.003" powerScale="1.4900000095367432" >
+        <position y="4.793413" x="0.139215" z="15.320265" />
+        <lightAttenuation range="5000" quadratic="0.0" linear="0.04" constant="1.0" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Point.002" >
+      <position y="5.989257" x="10.007714" z="-4.449754" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="point" name="Point.002" powerScale="1.5899999141693115" >
+        <position y="5.989257" x="10.007714" z="-4.449754" />
+        <lightAttenuation range="5000" quadratic="0.0" linear="0.04" constant="1.0" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Point.001" >
+      <position y="7.860329" x="1.028604" z="-4.005404" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="point" name="Point.001" powerScale="1.0199999809265137" >
+        <position y="7.860329" x="1.028604" z="-4.005404" />
+        <lightAttenuation range="5000" quadratic="0.0" linear="0.04" constant="1.0" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Point" >
+      <position y="7.398340" x="-7.234817" z="-1.492405" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="point" name="Point" powerScale="1.409999966621399" >
+        <position y="7.398340" x="-7.234817" z="-1.492405" />
+        <lightAttenuation range="5000" quadratic="0.0" linear="0.04" constant="1.0" />
+        <colourDiffuse b="1.0" g="1.0" r="1.0" />
+        <colourSpecular b="1.0" g="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="paredes" >
+      <position y="-0.719068" x="0.000000" z="-0.000000" />
+      <rotation qz="-0.000000" qw="1.000000" qy="0.000000" qx="0.000000" />
+      <scale y="11.000000" x="11.000000" z="11.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity mass_radius="1.0" name="Plane.001" damping_trans="0.03999999910593033" lock_rot_z="False" lock_rot_x="False" damping_rot="0.10000000149011612" ghost="False" lock_trans_x="False" friction_y="1.0" lock_rot_y="False" friction_z="1.0" inertia_tensor="0.4000000059604645" lock_trans_y="False" lock_trans_z="False" mass="1.0" actor="False" anisotropic_friction="False" physics_type="STATIC" friction_x="1.0" meshFile="Plane.001.mesh" velocity_max="0.0" velocity_min="0.0" />
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="/home/ruben/Escritorio/Blender/Export/Material.001.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourDiffuse b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourBackground b="0.05087608844041824" g="0.05087608844041824" r="0.05087608844041824" />
+    <colourAmbient b="0.0" g="0.0" r="0.0" />
+  </environment>
+</scene>

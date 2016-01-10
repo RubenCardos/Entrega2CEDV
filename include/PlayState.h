@@ -76,6 +76,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Pj* _pj;
 
   bool quit(const CEGUI::EventArgs &e);
+  bool isPositionInAVertex(Ogre::Vector3 _pos);
 
   bool _exitGame;
 };

@@ -7,6 +7,13 @@ template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 
 Ogre::AnimationState *_animState;
 //--------------------------
 
+// Donde vengo y donde voy ---
+Pacman::GraphVertex* _now;
+Pacman::GraphVertex* _next;
+std::vector<Pacman::GraphVertex*> _adjVer;
+std::vector<Ogre::Vector3> _possibleMoves;
+// ----------------------------
+
 void
 Pacman::PlayState::enter ()
 {
@@ -36,7 +43,7 @@ Pacman::PlayState::enter ()
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setPosition(0,20,0); //x,y,z
-  _snPj->pitch(Ogre::Degree(-90));
+  //_snPj->pitch(Ogre::Degree(-90));
   _snPj->setScale(5,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
 
@@ -63,6 +70,19 @@ Pacman::PlayState::enter ()
   _nodePlane1->setPosition(0,0,0);
   _sceneMgr->getRootSceneNode()->addChild(_nodePlane1);
   //-----------------------------
+
+  // Mapa -------------------------
+  //Pj------------------------
+  Entity* _entMap = _sceneMgr->createEntity("entMap","Plane.001.mesh");
+  SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
+  _snMap->attachObject(_entMap);
+  _snMap->setPosition(0,-15,0); //x,y,z
+  _snMap->setScale(100,100,100);
+  _sceneMgr->getRootSceneNode()->addChild(_snMap);
+
+  // -----------------------------
+
+  // ------------------
 
   // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -117,7 +137,20 @@ Pacman::PlayState::enter ()
   
   //Prueba de cambio de posicion segun el vertice ---
   _snPj->setPosition(_scene->getGraph()->getVertex(2)->getData().getPosition());
+  _now=_scene->getGraph()->getVertex(2);
   //------------------------------------------------
+
+  // Grafo, adyacentes ----
+
+  _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
+  std::vector<GraphVertex*>::const_iterator it;
+  for (it = _adjVer.begin();it != _adjVer.end();++it){
+    Node _aux=(*it)->getData();
+    Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
+    _possibleMoves.push_back(_vecMove);
+  }
+  //_possibleMoves.clear();
+  //----------------------
 
   _exitGame = false;
 }
@@ -168,11 +201,19 @@ Pacman::PlayState::frameStarted
 
   if(_pj->isMoving()){
     _snPj->setPosition(Vector3(_snPj->getPosition())+=_pj->getDesp());
-  }else{
+  }
 
+  if(isPositionInAVertex(_snPj->getPosition())){
+    _pj->setMoving(false);
+  }else{
+    _pj->setMoving(true);
   }
 
   //--------------------
+
+  
+
+
 
   //Animacion (Prueba)----------------
   if (_animState != NULL) {
@@ -218,31 +259,60 @@ Pacman::PlayState::keyPressed
   //Movimiento PJ----------------
   SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
-    case OIS::KC_A:
-      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,_deltaT));
-      _pj->setDesp(Vector3(0,0,_deltaT));
-      _pj->setMoving(true);
-      break;
-    case OIS::KC_D:
+    case OIS::KC_A:{
+      // Compruebo si esta direccion esta en las direcionesposibles---
+      std::vector<Ogre::Vector3>::const_iterator it;
+      bool _check =true;
+      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
+        Ogre::Vector3 _aux=*it;
+        if(_aux.z>0){
+          cout << "Voy!" << endl;
+          _pj->setMoving(true);
+          _pj->setDesp(Vector3(0,0,_deltaT));
+          _check=false;
+        }else{
+          cout << "No se puede ir hacia alli" << endl;
+        }
+      }
+      //--------------------------------------------------------------
+      
+      
+      break;}
+    case OIS::KC_D:{
+      // Compruebo si esta direccion esta en las direcionesposibles---
+      std::vector<Ogre::Vector3>::const_iterator it;
+      bool _check =true;
+      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
+        Ogre::Vector3 _aux=*it;
+        if(_aux.z<0){
+          cout << "Voy!" << endl;
+          _pj->setMoving(true);
+          _pj->setDesp(Vector3(0,0,-_deltaT));;
+          _check=false;
+        }else{
+          cout << "No se puede ir hacia alli" << endl;
+        }
+      }
+      //--------------------------------------------------------------
       //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-_deltaT));
-      _pj->setDesp(Vector3(0,0,-_deltaT));
-      _pj->setMoving(true);
-      break;
+      //_pj->setDesp(Vector3(0,0,-_deltaT));
+      //_pj->setMoving(true);
+      break;}
     case OIS::KC_W:
       //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
-      _pj->setDesp(Vector3(-_deltaT,0,0));
+      //_pj->setDesp(Vector3(-_deltaT,0,0));
       _pj->setMoving(true);
       break;
     case OIS::KC_S:
       //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
-      _pj->setDesp(Vector3(_deltaT,0,0));
+      //_pj->setDesp(Vector3(_deltaT,0,0));
       _pj->setMoving(true);
       break;
    	case OIS::KC_R:
       _aux->roll(Ogre::Degree(-90));
       break;
     case OIS::KC_SPACE:
-      _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("MoverCabeza");
+      _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("walking");
       _animState->setEnabled(true);
       _animState->setLoop(true);
       _animState->setTimePosition(0.0);
@@ -332,4 +402,26 @@ Pacman::PlayState::quit(const CEGUI::EventArgs &e)
 {
   _exitGame=true;
   return true;
+}
+
+bool
+Pacman::PlayState::isPositionInAVertex(Ogre::Vector3 _pos)
+{
+  
+  bool res=false;
+
+  // Busco si la posicion coincide con alguna de los nodos ---
+
+  std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
+  std::vector<GraphVertex*>::const_iterator it;
+    for (it = _vertices.begin();it != _vertices.end();++it){
+      Node _aux=(*it)->getData();
+      if(_aux.getPosition()==_pos){
+        res=true;
+      }
+    }
+  //----------------------------------------------------------
+
+
+  return res;
 }
