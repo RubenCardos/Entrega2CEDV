@@ -124,7 +124,7 @@ Pacman::PlayState::enter ()
         SceneNode* _snPoint = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
         _snPoint->attachObject(_entPoint);
         _snPoint->setPosition(_aux.getPosition()); //x,y,z
-        _snPoint->setScale(5,5,5);
+        _snPoint->setScale(1,1,1);
         _sceneMgr->getRootSceneNode()->addChild(_snPoint);
         i+=1;
       }
