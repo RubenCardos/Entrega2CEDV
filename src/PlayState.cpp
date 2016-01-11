@@ -9,7 +9,7 @@ Ogre::AnimationState *_animState;
 
 // Donde vengo y donde voy ---
 Pacman::GraphVertex* _now;
-Pacman::GraphVertex* _next;
+//Pacman::GraphVertex* _next;
 std::vector<Pacman::GraphVertex*> _adjVer;
 std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
@@ -149,7 +149,6 @@ Pacman::PlayState::enter ()
     Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
     _possibleMoves.push_back(_vecMove);
   }
-  //_possibleMoves.clear();
   //----------------------
 
   _exitGame = false;
@@ -227,6 +226,14 @@ Pacman::PlayState::frameStarted
 
   }else{
     _pj->setMoving(true);
+
+    // Los movimientos posibles han de ser ------------
+    // en el que me estoy moviendo y el opuesto -------
+    _possibleMoves.clear();
+    _possibleMoves.push_back(_pj->getDesp());
+    _possibleMoves.push_back(Ogre::Vector3(0,0,0)-(_pj->getDesp()));
+    //-------------------------------------------------
+    //-------------------------------------------------
   }
 
   //--------------------
@@ -277,7 +284,7 @@ Pacman::PlayState::keyPressed
   //-------------------------------
 
   //Movimiento PJ----------------
-  SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
+  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
     case OIS::KC_A:{
       // Compruebo si esta direccion esta en las direciones posibles---
@@ -289,7 +296,9 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0,0,_deltaT));
+          _pj->setOrientation(4);
           _check=false;
+
         }else{
           cout << "No se puede ir hacia alli" << endl;
         }
@@ -307,7 +316,8 @@ Pacman::PlayState::keyPressed
         if(_aux.z<0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
-          _pj->setDesp(Vector3(0,0,-_deltaT));;
+          _pj->setDesp(Vector3(0,0,-_deltaT));
+          _pj->setOrientation(2);
           _check=false;
         }else{
           cout << "No se puede ir hacia alli" << endl;
@@ -325,6 +335,7 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(-_deltaT,0,0));
+          _pj->setOrientation(1);
           _check=false;
         }else{
           cout << "No se puede ir hacia alli" << endl;
@@ -342,6 +353,7 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(_deltaT,0,0));
+          _pj->setOrientation(3);
           _check=false;
         }else{
           cout << "No se puede ir hacia alli" << endl;
@@ -351,7 +363,7 @@ Pacman::PlayState::keyPressed
       //-----------------------------------------------
       break;
    	case OIS::KC_R:
-      _aux->roll(Ogre::Degree(-90));
+      _snPj->roll(Ogre::Degree(-90));
       break;
     case OIS::KC_SPACE:
       _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("walking");
@@ -361,6 +373,13 @@ Pacman::PlayState::keyPressed
       break;
   }
   //----------------------------
+
+  // Actualizo la orientacion del Pj ---------
+
+  cout << "Orientacion " << _pj->getOrientation() << endl;
+
+
+  //-------------------------------------------
 }
 
 void
@@ -459,18 +478,20 @@ Pacman::PlayState::isPositionInAVertex(Ogre::Vector3 _pos)
   _pos.z=round(_pos.z);
   //cout << "Pos: " << _pos << endl;
   //--------------------------------------------------------
-
-  std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
-  std::vector<GraphVertex*>::const_iterator it;
-  for (it = _vertices.begin();it != _vertices.end();++it){
-    Node _aux=(*it)->getData();
-    if(_aux.getPosition()==_pos){
-      res=true;
+  //if(_now->getData().getPosition()==_pos){
+  //  res=false;
+  //}else{
+    std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
+    std::vector<GraphVertex*>::const_iterator it;
+    for (it = _vertices.begin();it != _vertices.end();++it){
+      Node _aux=(*it)->getData();
+      if(_aux.getPosition()==_pos){
+        res=true;
+      }
     }
-  }
+  //}
+  
   //----------------------------------------------------------
-
-
   return res;
 }
 
