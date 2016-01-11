@@ -207,13 +207,20 @@ Pacman::PlayState::frameStarted
     _pj->setMoving(false);
 
     //Cuando llego a un vertice nuevo cambio _now ----
-
+    _now=whereIAm(_snPj->getPosition());
 
     //-------------------------------------------------
 
     // Calculo los nuevos adyacentes -------------------
-
-
+    _possibleMoves.clear();
+    _adjVer.clear();
+    _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
+    std::vector<GraphVertex*>::const_iterator it;
+    for (it = _adjVer.begin();it != _adjVer.end();++it){
+      Node _aux=(*it)->getData();
+      Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
+      _possibleMoves.push_back(_vecMove);
+    }
 
     //-----------------------------------------------
 
@@ -273,7 +280,7 @@ Pacman::PlayState::keyPressed
   SceneNode* _aux =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
     case OIS::KC_A:{
-      // Compruebo si esta direccion esta en las direcionesposibles---
+      // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
       for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
@@ -306,12 +313,10 @@ Pacman::PlayState::keyPressed
           cout << "No se puede ir hacia alli" << endl;
         }
       }
-      //--------------------------------------------------------------
-      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(0,0,-_deltaT));
-      //_pj->setDesp(Vector3(0,0,-_deltaT));
-      //_pj->setMoving(true);
+      //------------------------------------------------------
       break;}
     case OIS::KC_W:{
+      // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
       for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
@@ -325,11 +330,10 @@ Pacman::PlayState::keyPressed
           cout << "No se puede ir hacia alli" << endl;
         }
       }
-      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(-_deltaT,0,0));
-      //_pj->setDesp(Vector3(-_deltaT,0,0));
-      //_pj->setMoving(true);
+      //---------------------------------------------
       break;}
     case OIS::KC_S:{
+      // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
       for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
@@ -344,9 +348,7 @@ Pacman::PlayState::keyPressed
         }
       }
       }
-      //_aux->setPosition(Vector3(_aux->getPosition())+=Vector3(_deltaT,0,0));
-      //_pj->setDesp(Vector3(_deltaT,0,0));
-      //_pj->setMoving(true);
+      //-----------------------------------------------
       break;
    	case OIS::KC_R:
       _aux->roll(Ogre::Degree(-90));
@@ -452,16 +454,45 @@ Pacman::PlayState::isPositionInAVertex(Ogre::Vector3 _pos)
 
   // Busco si la posicion coincide con alguna de los nodos ---
 
+  //Ajusto _pos para que sea numeros enteros---------------
+  _pos.x=round(_pos.x);
+  _pos.z=round(_pos.z);
+  //cout << "Pos: " << _pos << endl;
+  //--------------------------------------------------------
+
   std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
   std::vector<GraphVertex*>::const_iterator it;
-    for (it = _vertices.begin();it != _vertices.end();++it){
-      Node _aux=(*it)->getData();
-      if(_aux.getPosition()==_pos){
-        res=true;
-      }
+  for (it = _vertices.begin();it != _vertices.end();++it){
+    Node _aux=(*it)->getData();
+    if(_aux.getPosition()==_pos){
+      res=true;
     }
+  }
   //----------------------------------------------------------
 
 
   return res;
+}
+
+Pacman::GraphVertex*
+Pacman::PlayState::whereIAm(Ogre::Vector3 _pos)
+{
+
+
+  // Busco si la posicion coincide con alguna de los nodos ---
+
+  //Ajusto _pos para que sea numeros enteros---------------
+  _pos.x=round(_pos.x);
+  _pos.z=round(_pos.z);
+  //--------------------------------------------------------
+
+  std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
+  std::vector<GraphVertex*>::const_iterator it;
+  for (it = _vertices.begin();it != _vertices.end();++it){
+    Node _aux=(*it)->getData();
+    if(_aux.getPosition()==_pos){
+      return (*it);
+    }
+  }
+  //----------------------------------------------------------
 }
