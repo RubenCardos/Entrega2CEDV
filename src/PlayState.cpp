@@ -21,7 +21,7 @@ Pacman::PlayState::enter ()
 
   // Se recupera el gestor de escena y la cámara.----------------
   _sceneMgr = _root->getSceneManager("SceneManager");
-  _camera = _sceneMgr->getCamera("IntroCamera");
+  _camera = _sceneMgr->createCamera("PlayCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
   //-------------------------------------
@@ -29,6 +29,14 @@ Pacman::PlayState::enter ()
   //Pruebo a crear algo y ponerlo---------
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
   //-------------------------------------
+
+  //Quitar niebla------------------------------------------------
+  Ogre::ColourValue fadeColour(0.0, 0.0, 0.0);
+  _viewport->setBackgroundColour(fadeColour);
+  _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 0, 0);
+  _sceneMgr->setFog(Ogre::FOG_EXP, fadeColour, 0.000);
+  //-----------------------------------------------------
+
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
@@ -86,8 +94,10 @@ Pacman::PlayState::enter ()
 
   // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  sheet->getChildAtIdx(0)->setVisible(false);
-  sheet->getChildAtIdx(1)->setVisible(true);
+  sheet->getChildAtIdx(0)->setVisible(false); //PLAY
+  sheet->getChildAtIdx(1)->setVisible(false); //CREDITOS
+  sheet->getChildAtIdx(2)->setVisible(false);
+  sheet->getChildAtIdx(3)->setVisible(true);
   //Boton Salir Juego---------------------------------------
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
   quitButton->setText("Exit");

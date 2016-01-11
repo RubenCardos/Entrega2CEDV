@@ -4,6 +4,9 @@
 using namespace CEGUI;
 
 template<> Pacman::IntroState* Ogre::Singleton<Pacman::IntroState>::msSingleton = 0;
+Ogre::AnimationState *_animStateIntro;
+Ogre::Real _deltaTIntro;
+
 
 void
 Pacman::IntroState::enter ()
@@ -13,7 +16,16 @@ Pacman::IntroState::enter ()
   _sceneMgr = _root->createSceneManager(Ogre::ST_GENERIC, "SceneManager");
   _camera = _sceneMgr->createCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
-  _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
+  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5,0.5,0.5));
+  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0,0.0,0.0));
+
+
+  //niebla-------------------------------------------------
+  Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
+  _viewport->setBackgroundColour(fadeColour);
+  _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 20, 50);
+  _sceneMgr->setFog(Ogre::FOG_EXP, fadeColour, 0.003);
+
 
   _exitGame = false;
 
@@ -21,10 +33,60 @@ Pacman::IntroState::enter ()
   _camBack = _sceneMgr->createCamera("MiniMapCamera");
   //---------------------------
   
-  //Creamos interfaces en CEGUI----
+  _camera->setPosition(Ogre::Vector3(20,5,20));
+  _camera->lookAt(Ogre::Vector3(0,1,0));
+  _camera->setNearClipDistance(5);
+  _camera->setFarClipDistance(10000);
+
+  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0,0.0,0.0));
+  double width = _viewport->getActualWidth();
+  double height = _viewport->getActualHeight();
+  _camera->setAspectRatio(width / height);
+
+ 
+  Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, 0);
+  Ogre::MeshManager::getSingleton().createPlane("plane1",
+  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane1,
+  35,50,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
+
+  Ogre::SceneNode* node2 = _sceneMgr->createSceneNode("wallpaper");
+  Ogre::Entity* groundEnt = _sceneMgr->createEntity("planeEnt", "plane1");
+  groundEnt->setMaterialName("wallpaper");
+  node2->attachObject(groundEnt);
+  node2->setPosition(-5,0,-5);
+  node2->yaw(Ogre::Degree(135));
+  node2->roll(Ogre::Degree(90));
+  _sceneMgr->getRootSceneNode()->addChild(node2);
+
+
+  Entity* _entCharacter = _sceneMgr->createEntity("entCharacter","Circle.mesh");
+  SceneNode* _sceneCharacter = _sceneMgr->createSceneNode("Personaje");
+  _sceneCharacter->setPosition(-5,-20,0);
+  _sceneCharacter->setScale(4,4,4);
+  _sceneCharacter->attachObject(_entCharacter);
+  _sceneCharacter->yaw(Ogre::Degree(60));
+  _sceneMgr->getRootSceneNode()->addChild(_sceneCharacter);
+
+
+  Ogre::Light* light = _sceneMgr->createLight("Light1");
+  light->setType(Ogre::Light::LT_DIRECTIONAL);
+  light->setDirection(Ogre::Vector3(-1,1,0));
+  _sceneCharacter->attachObject(light);
+  
+
+ 
+
+
+  _animStateIntro = _sceneMgr->getEntity("entCharacter")->getAnimationState("moveHead");
+  _animStateIntro->setEnabled(true);
+  _animStateIntro->setLoop(true);
+  _animStateIntro->setTimePosition(0.0);
+
+
+  //Creamos la interfaz ------------------------  
   createGUI();
-  //-------------------------------
 }
+
 
 void
 Pacman::IntroState::exit()
@@ -47,6 +109,19 @@ bool
 Pacman::IntroState::frameStarted
 (const Ogre::FrameEvent& evt) 
 {
+  _deltaTIntro = evt.timeSinceLastFrame;
+
+  if (_animStateIntro != NULL) {
+    if (_animStateIntro->hasEnded()) {
+      _animStateIntro->setTimePosition(0.0);
+      _animStateIntro->setEnabled(false);
+    }
+    else {
+      _animStateIntro->addTime(_deltaTIntro);
+    }
+  }
+
+
   return true;
 }
 
@@ -144,15 +219,38 @@ void Pacman::IntroState::createGUI()
     
   //Sheet
   CEGUI::Window* sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow","Sheet");
-   
+  //Cargo la imagen
+  ImageManager::getSingleton().addFromImageFile("BackgroundImage","logo.png");
+
+  //Sheet
+  Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd");
+  sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.60f, 0.0f),CEGUI::UDim(0.05, 0)));
+  sheetBG->setSize( CEGUI::USize(CEGUI::UDim(0.40, 0), CEGUI::UDim(0.40, 0)));
+  sheetBG->setProperty("Image","BackgroundImage");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
+
    //Quit button
-  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
-  quitButton->setText("Play");
-  quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.05,0)));
-  quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.5-0.15/2,0),CEGUI::UDim(0.2,0)));
-  quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+  CEGUI::Window* playButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","play");
+  playButton->setText("[font='Carton_Six'] Play ");
+  playButton->setSize(CEGUI::USize(CEGUI::UDim(0.19,0),CEGUI::UDim(0.1,0)));
+  playButton->setXPosition(UDim(0.70f, 0.0f));
+  playButton->setYPosition(UDim(0.50f, 0.0f));
+  playButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
   //Attaching buttons
-  sheet->addChild(quitButton);
+  sheet->addChild(playButton);
+
+
+  CEGUI::Window* creditoButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","credito");
+  creditoButton->setText("[font='Carton_Six'] Creditos ");
+  creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.19,0),CEGUI::UDim(0.1,0)));
+  creditoButton->setXPosition(UDim(0.70f, 0.0f));
+  creditoButton->setYPosition(UDim(0.70f, 0.0f));
+  creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+  //Attaching buttons
+  sheet->addChild(creditoButton);
+  sheet->addChild(sheetBG);
+
   
   //Render a Textura(Minimapa)-----------------
  TexturePtr rtt_texture = TextureManager::getSingleton().createManual(
@@ -219,5 +317,6 @@ bool
 Pacman::IntroState::play(const CEGUI::EventArgs &e)
 {
   changeState(PlayState::getSingletonPtr());
+  
   return true;
 }
