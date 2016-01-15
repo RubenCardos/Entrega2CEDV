@@ -9,7 +9,7 @@ Ogre::AnimationState *_animState;
 
 // Donde vengo y donde voy ---
 Pacman::GraphVertex* _now;
-//Pacman::GraphVertex* _next;
+bool _exitVertex = false;
 std::vector<Pacman::GraphVertex*> _adjVer;
 std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
@@ -40,7 +40,7 @@ Pacman::PlayState::enter ()
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
-  _cameraMiniMap->setPosition(Ogre::Vector3(200,200,0));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
+  _cameraMiniMap->setPosition(Ogre::Vector3(50,50,0));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
   _cameraMiniMap->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
   _cameraMiniMap->setNearClipDistance(5);
   _cameraMiniMap->setFarClipDistance(10000);
@@ -50,9 +50,9 @@ Pacman::PlayState::enter ()
   Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
-  _snPj->setPosition(0,20,0); //x,y,z
+  //_snPj->setPosition(0,20,0); //x,y,z
   //_snPj->pitch(Ogre::Degree(-90));
-  _snPj->setScale(5,5,5);
+  //_snPj->setScale(5,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
 
   _pj=new Pj;
@@ -84,12 +84,13 @@ Pacman::PlayState::enter ()
   Entity* _entMap = _sceneMgr->createEntity("entMap","Plane.001.mesh");
   SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
   _snMap->attachObject(_entMap);
-  _snMap->setPosition(0,-15,0); //x,y,z
-  _snMap->setScale(100,100,100);
+  _snMap->setPosition(0,0,0); //x,y,z
+  //_snMap->setScale(100,100,100);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
 
   // -----------------------------
 
+ 
   // ------------------
 
   // Interfaz --------------------
@@ -115,7 +116,7 @@ Pacman::PlayState::enter ()
     _scene = new Scene;
 
     // Parse data...
-    _importer->parseScene("./data/sample.xml", _scene);
+    _importer->parseScene("./data/output.xml", _scene);
 
     // Print some data...
       cout << "\nGraph info..." << endl;
@@ -151,7 +152,6 @@ Pacman::PlayState::enter ()
   //------------------------------------------------
 
   // Grafo, adyacentes ----
-
   _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
   std::vector<GraphVertex*>::const_iterator it;
   for (it = _adjVer.begin();it != _adjVer.end();++it){
@@ -196,7 +196,7 @@ Pacman::PlayState::frameStarted
   //------------------------------
   
   // La camara sigue al personaje ------
-  _camera->setPosition(_snPj->getPosition().x+200,_snPj->getPosition().y+75,_snPj->getPosition().z);
+  _camera->setPosition(_snPj->getPosition().x+60,_snPj->getPosition().y+15,_snPj->getPosition().z);
   //----------------------------------
 
   //CEGUI --------------------------------------
@@ -206,13 +206,22 @@ Pacman::PlayState::frameStarted
   RTTWindow->invalidate();
   //-------------------------------------------
 
-  // Movimiento (Prueba)----------
+  // Movimiento -------------------------
+  Vector3 _aux=_snPj->getPosition();
+  _aux.x=round(_aux.x);
+  _aux.z=round(_aux.z);
+  if(_now->getData().getPosition()!=_aux){
+    _exitVertex=true;
+  }else{
+    _exitVertex=false;
+  }
 
   if(_pj->isMoving()){
     _snPj->setPosition(Vector3(_snPj->getPosition())+=_pj->getDesp());
+    //_now=NULL;
   }
-
-  if(isPositionInAVertex(_snPj->getPosition())){
+  if(_exitVertex){
+    if(isPositionInAVertex(_snPj->getPosition())){
     _pj->setMoving(false);
 
     //Cuando llego a un vertice nuevo cambio _now ----
@@ -245,6 +254,9 @@ Pacman::PlayState::frameStarted
     //-------------------------------------------------
     //-------------------------------------------------
   }
+  }
+
+  
 
   //--------------------
 
@@ -486,17 +498,16 @@ Pacman::PlayState::isPositionInAVertex(Ogre::Vector3 _pos)
   //Ajusto _pos para que sea numeros enteros---------------
   _pos.x=round(_pos.x);
   _pos.z=round(_pos.z);
-  //cout << "Pos: " << _pos << endl;
-  //--------------------------------------------------------
-  //if(_now->getData().getPosition()==_pos){
-  //  res=false;
-  //}else{
+  
     std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
     std::vector<GraphVertex*>::const_iterator it;
     for (it = _vertices.begin();it != _vertices.end();++it){
       Node _aux=(*it)->getData();
       if(_aux.getPosition()==_pos){
-        res=true;
+        if(_now!=*it){
+          res=true;
+        }
+        
       }
     }
   //}
