@@ -8,7 +8,7 @@ using namespace std;
  {
  	_moving=false;
  	_desp=Ogre::Vector3(0,0,0);
- 	_speed=8;
+ 	_speed=1;
  	_orientation=1;
  }
 

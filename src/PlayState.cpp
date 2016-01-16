@@ -568,39 +568,42 @@ Pacman::PlayState::updateGhost()
 
   //Movimiento del ghost ------------
   
+
+  //Si el next es nulo estoy en un vertice------
   if(_nextGhost==NULL){
-    
+    //Calculo adyacentes-----------------
     _adjVerGhost = _scene->getGraph()->adjacents(_nowGhost->getData().getIndex());
+    //-----------------------------------
 
+    //Tiro Dados-----------------------------
     int _go=0+rand()%(_adjVerGhost.size()-0);
-    cout << "Go: " << _go << endl;
+    //----------------------------------------
 
+    // Auxiliar para ver haia donde voy ------
     Vector3 _aux = _adjVerGhost[_go]->getData().getPosition()-_nowGhost->getData().getPosition();
     _nextGhost=_adjVerGhost[_go];
-    cout << "_aux: " << _aux << endl;
-    
+    //---------------------------------------
+
+    //El auxiliar me da la direccion---------
     if(_aux.z>0){
-      cout << "Izq" << endl;
-      _ghost->setDesp(Ogre::Vector3(0,0,_deltaT));
+      _ghost->setDesp(Ogre::Vector3(0,0,1));
     }
     if(_aux.z<0){
-      cout << "der" << endl;
-      _ghost->setDesp(Ogre::Vector3(0,0,-_deltaT));
+      _ghost->setDesp(Ogre::Vector3(0,0,-1));
     }
     if(_aux.x>0){
-      cout << "down" << endl;
-      _ghost->setDesp(Ogre::Vector3(_deltaT,0,0));
+      _ghost->setDesp(Ogre::Vector3(1,0,0));
     }
     if(_aux.x<0){
-      cout << "up" << endl;
-      _ghost->setDesp(Ogre::Vector3(-_deltaT,0,0));
+      _ghost->setDesp(Ogre::Vector3(-1,0,0));
     }
+    //------------------------------------
 
     _ghost->setMoving(true);
 
 
   }
-
+  //---------------------------------------------------------
   if(_ghost->isMoving()){
     _snGhost->setPosition(_snGhost->getPosition()+_ghost->getDesp());
     //Ver cuando he de parar---
