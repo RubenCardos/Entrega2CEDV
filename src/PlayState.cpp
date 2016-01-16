@@ -1,5 +1,7 @@
 #include "PlayState.h"
 #include "PauseState.h"
+#define CAM_HEIGHT 2 
+
 
 template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 0;
 
@@ -33,6 +35,27 @@ Pacman::PlayState::enter ()
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
   //-------------------------------------
 
+  /// create a pivot at roughly the character's shoulder
+		mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+		// this is where the camera should be soon, and it spins around the pivot
+		mCameraGoal = mCameraPivot->createChildSceneNode(Vector3(0, 0, 15));
+		// this is where the camera actually is
+		mCameraNode = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+		mCameraNode->setPosition(mCameraPivot->getPosition() + mCameraGoal->getPosition());
+
+		mCameraPivot->setFixedYawAxis(true);
+		mCameraGoal->setFixedYawAxis(true);
+		mCameraNode->setFixedYawAxis(true);
+
+		// our model is quite small, so reduce the clipping planes
+		_camera->setNearClipDistance(5);
+		_camera->setFarClipDistance(10000);
+		mCameraNode->attachObject(_camera);
+		mPivotPitch = 0;
+
+
+
+
   //Pruebo a crear algo y ponerlo---------
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
   //-------------------------------------
@@ -47,7 +70,7 @@ Pacman::PlayState::enter ()
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
-  _cameraMiniMap->setPosition(Ogre::Vector3(50,50,0));//Pongo la camra en el mismo sitio, deberia ver lo mismo dos veces
+  _cameraMiniMap->setPosition(Ogre::Vector3(0,50,50));//Pongo la camara en el mismo sitio, deberia ver lo mismo dos veces
   _cameraMiniMap->lookAt(Ogre::Vector3(0,0,0));//bajar el 60 un poco
   _cameraMiniMap->setNearClipDistance(5);
   _cameraMiniMap->setFarClipDistance(10000);
@@ -69,14 +92,6 @@ Pacman::PlayState::enter ()
   _sceneMgr->getRootSceneNode()->addChild(_snGhost);
   _ghost=new Pj;
 
-  // -----------------------------
-
-  //Camara--------------------
-  _camera->setPosition(_snPj->getPosition().x,_snPj->getPosition().y-200,_snPj->getPosition().z);
-  _camera->setNearClipDistance(5);
-  _camera->setFarClipDistance(10000);
-  _camera->yaw(Ogre::Degree(90));
-  //-----------------------------
 
   //Plano ------------------------
   Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, -5);
@@ -89,7 +104,7 @@ Pacman::PlayState::enter ()
   _nodePlane1->attachObject(_groundEnt1);
   _nodePlane1->setPosition(0,0,0);
   _sceneMgr->getRootSceneNode()->addChild(_nodePlane1);
-  //-----------------------------
+ 
 
   // Mapa -------------------------
   //Pj------------------------
@@ -100,10 +115,6 @@ Pacman::PlayState::enter ()
   _snMap->setScale(23,23,23);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
 
-  // -----------------------------
-
- 
-  // ------------------
 
   // Interfaz --------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -111,6 +122,7 @@ Pacman::PlayState::enter ()
   sheet->getChildAtIdx(1)->setVisible(false); //CREDITOS
   sheet->getChildAtIdx(2)->setVisible(false);
   sheet->getChildAtIdx(3)->setVisible(true);
+
   //Boton Salir Juego---------------------------------------
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
   quitButton->setText("Exit");
@@ -120,7 +132,6 @@ Pacman::PlayState::enter ()
   //-------------------------------------------------------
   
   sheet->addChild(quitButton);
-  //------------------------------
 
   // Prueba Grafo ------------------------------
   try{
@@ -183,6 +194,20 @@ Pacman::PlayState::enter ()
   _exitGame = false;
 }
 
+
+void 
+Pacman::PlayState::updateCamera(Real deltaTime)
+{
+		SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+		// place the camera pivot roughly at the character's shoulder
+		mCameraPivot->setPosition(_snPj->getPosition() + Ogre::Vector3::UNIT_Y * CAM_HEIGHT);
+		// move the camera smoothly to the goal
+		Vector3 goalOffset = mCameraGoal->_getDerivedPosition() - mCameraNode->getPosition();
+		mCameraNode->translate(goalOffset * deltaTime * 9.0f);
+		// always look at the pivot
+		mCameraNode->lookAt(mCameraPivot->_getDerivedPosition(), Ogre::Node::TS_WORLD);
+}
+
 void
 Pacman::PlayState::exit ()
 {
@@ -212,11 +237,11 @@ Pacman::PlayState::frameStarted
   //Actualizacion de Variables----------------
   _deltaT = evt.timeSinceLastFrame;
   SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
-  //------------------------------
+
+  //Actualizamos Camara---------------------------------
+  updateCamera(_deltaT);
   
-  // La camara sigue al personaje ------
-  _camera->setPosition(_snPj->getPosition().x+60,_snPj->getPosition().y+15,_snPj->getPosition().z);
-  //----------------------------------
+
 
   //CEGUI --------------------------------------
   CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -329,7 +354,7 @@ Pacman::PlayState::keyPressed
   //Movimiento PJ----------------
   SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
-    case OIS::KC_A:{
+    case OIS::KC_S:{ //ANTES ERA A
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
@@ -350,7 +375,7 @@ Pacman::PlayState::keyPressed
       
       
       break;}
-    case OIS::KC_D:{
+    case OIS::KC_W:{//ANTES ERA D
       // Compruebo si esta direccion esta en las direcionesposibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
@@ -368,7 +393,7 @@ Pacman::PlayState::keyPressed
       }
       //------------------------------------------------------
       break;}
-    case OIS::KC_W:{
+    case OIS::KC_A:{ //ANTES ERA W
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;
@@ -386,7 +411,7 @@ Pacman::PlayState::keyPressed
       }
       //---------------------------------------------
       break;}
-    case OIS::KC_S:{
+    case OIS::KC_D:{//ANTES ERA S
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<Ogre::Vector3>::const_iterator it;
       bool _check =true;

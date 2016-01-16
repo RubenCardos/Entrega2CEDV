@@ -47,6 +47,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void exit ();
   void pause ();
   void resume ();
+  void updateCamera(Ogre::Real deltaTime);
 
   void keyPressed (const OIS::KeyEvent &e);
   void keyReleased (const OIS::KeyEvent &e);
@@ -65,6 +66,11 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
  protected:
+  SceneNode* mBodyNode;
+  SceneNode* mCameraPivot;
+  SceneNode* mCameraGoal;
+  SceneNode* mCameraNode;
+  Real mPivotPitch;
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
