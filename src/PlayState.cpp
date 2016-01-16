@@ -7,6 +7,7 @@ template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 
 
 // Prueba de animacion -----
 Ogre::AnimationState *_animState;
+Ogre::AnimationState *_animGhost;
 //--------------------------
 
 // Donde vengo y donde voy ---
@@ -86,11 +87,16 @@ Pacman::PlayState::enter ()
   // -----------------------------
 
   //Ghost------------------------
-  Entity* _entGhost = _sceneMgr->createEntity("entGhost","Circle.mesh");
+  Entity* _entGhost = _sceneMgr->createEntity("entGhost","ghost.mesh");
   SceneNode* _snGhost = _sceneMgr->createSceneNode("GhostSceneNode");
   _snGhost->attachObject(_entGhost);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost);
   _ghost=new Pj;
+
+  _animGhost = _sceneMgr->getEntity("entGhost")->getAnimationState("moveIntro");
+  _animGhost->setEnabled(true);
+  _animGhost->setLoop(true);
+  _animGhost->setTimePosition(0.0);
 
 
   //Plano ------------------------
@@ -363,7 +369,7 @@ Pacman::PlayState::keyPressed
         if(_aux.z>0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
-          _pj->setDesp(Vector3(0,0,_deltaT));
+          _pj->setDesp(Vector3(0,0,0.03));
           _pj->setOrientation(4);
           _check=false;
 
@@ -384,7 +390,7 @@ Pacman::PlayState::keyPressed
         if(_aux.z<0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
-          _pj->setDesp(Vector3(0,0,-_deltaT));
+          _pj->setDesp(Vector3(0,0,-0.03));
           _pj->setOrientation(2);
           _check=false;
         }else{
@@ -402,7 +408,7 @@ Pacman::PlayState::keyPressed
         if(_aux.x<0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
-          _pj->setDesp(Vector3(-_deltaT,0,0));
+          _pj->setDesp(Vector3(-0.03,0,0));
           _pj->setOrientation(1);
           _check=false;
         }else{
@@ -420,7 +426,7 @@ Pacman::PlayState::keyPressed
         if(_aux.x>0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
-          _pj->setDesp(Vector3(_deltaT,0,0));
+          _pj->setDesp(Vector3(0.03,0,0));
           _pj->setOrientation(3);
           _check=false;
         }else{
@@ -611,16 +617,16 @@ Pacman::PlayState::updateGhost()
 
     //El auxiliar me da la direccion---------
     if(_aux.z>0){
-      _ghost->setDesp(Ogre::Vector3(0,0,1));
+      _ghost->setDesp(Ogre::Vector3(0,0,0.03));
     }
     if(_aux.z<0){
-      _ghost->setDesp(Ogre::Vector3(0,0,-1));
+      _ghost->setDesp(Ogre::Vector3(0,0,-0.03));
     }
     if(_aux.x>0){
-      _ghost->setDesp(Ogre::Vector3(1,0,0));
+      _ghost->setDesp(Ogre::Vector3(0.03,0,0));
     }
     if(_aux.x<0){
-      _ghost->setDesp(Ogre::Vector3(-1,0,0));
+      _ghost->setDesp(Ogre::Vector3(-0.03,0,0));
     }
     //------------------------------------
 
@@ -640,6 +646,16 @@ Pacman::PlayState::updateGhost()
       _nextGhost=NULL;
       _ghost->setMoving(false);
       _adjVerGhost.clear();
+    }
+  }
+
+  if (_animGhost != NULL) {
+    if (_animGhost->hasEnded()) {
+      _animGhost->setTimePosition(0.0);
+      _animGhost->setEnabled(false);
+    }
+    else {
+      _animGhost->addTime(_deltaT);
     }
   }
   
