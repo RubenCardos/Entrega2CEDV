@@ -4,8 +4,6 @@
 using namespace CEGUI;
 
 template<> Pacman::IntroState* Ogre::Singleton<Pacman::IntroState>::msSingleton = 0;
-Ogre::AnimationState *_animStateIntro;
-Ogre::Real _deltaTIntro;
 
 
 void
@@ -17,10 +15,9 @@ Pacman::IntroState::enter ()
   _camera = _sceneMgr->createCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5,0.5,0.5));
-  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0,0.0,0.0));
 
 
-  //niebla-------------------------------------------------
+  //Niebla-------------------------------------------------
   Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
   _viewport->setBackgroundColour(fadeColour);
   _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 20, 50);
@@ -29,7 +26,7 @@ Pacman::IntroState::enter ()
 
   _exitGame = false;
 
-  //Camra miniMapa-------------
+  //Camara miniMapa-------------
   _camBack = _sceneMgr->createCamera("MiniMapCamera");
   //---------------------------
   
@@ -38,27 +35,27 @@ Pacman::IntroState::enter ()
   _camera->setNearClipDistance(5);
   _camera->setFarClipDistance(10000);
 
-  //_viewport->setBackgroundColour(Ogre::ColourValue(0.0,0.0,0.0));
+
   double width = _viewport->getActualWidth();
   double height = _viewport->getActualHeight();
   _camera->setAspectRatio(width / height);
 
- 
+  //Background-------------------------------------------
   Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, 0);
   Ogre::MeshManager::getSingleton().createPlane("plane1",
   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane1,
   35,50,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
 
-  Ogre::SceneNode* node2 = _sceneMgr->createSceneNode("wallpaper");
+  Ogre::SceneNode* nodeBG = _sceneMgr->createSceneNode("wallpaper");
   Ogre::Entity* groundEnt = _sceneMgr->createEntity("planeEnt", "plane1");
   groundEnt->setMaterialName("wallpaper");
-  node2->attachObject(groundEnt);
-  node2->setPosition(-5,0,-5);
-  node2->yaw(Ogre::Degree(135));
-  node2->roll(Ogre::Degree(90));
-  _sceneMgr->getRootSceneNode()->addChild(node2);
+  nodeBG->attachObject(groundEnt);
+  nodeBG->setPosition(-5,0,-5);
+  nodeBG->yaw(Ogre::Degree(135));
+  nodeBG->roll(Ogre::Degree(90));
+  _sceneMgr->getRootSceneNode()->addChild(nodeBG);
 
-
+  //Carga del personaje---------------------------------------------
   Entity* _entCharacter = _sceneMgr->createEntity("entCharacter","Circle.mesh");
   SceneNode* _sceneCharacter = _sceneMgr->createSceneNode("Personaje");
   _sceneCharacter->setPosition(-5,-20,0);
@@ -67,21 +64,31 @@ Pacman::IntroState::enter ()
   _sceneCharacter->yaw(Ogre::Degree(60));
   _sceneMgr->getRootSceneNode()->addChild(_sceneCharacter);
 
+  //Carga del fantasmaa----------------------------------------------------------
+  Entity* _entGhost = _sceneMgr->createEntity("entGhost","ghost.mesh");
+  SceneNode* _sceneGhost = _sceneMgr->createSceneNode("ghost");
+  _sceneGhost->setPosition(-15,-13,2);  //x->profundidad y->arriba o abajo z-> derecha o izquierda
+  _sceneGhost->setScale(3,3,3);
+  _sceneGhost->attachObject(_entGhost);
+  _sceneGhost->yaw(Ogre::Degree(70));
+  _sceneMgr->getRootSceneNode()->addChild(_sceneGhost);
 
+  //Luz para el background-----------------------------------------------------
   Ogre::Light* light = _sceneMgr->createLight("Light1");
   light->setType(Ogre::Light::LT_DIRECTIONAL);
   light->setDirection(Ogre::Vector3(-1,1,0));
-  _sceneCharacter->attachObject(light);
+  nodeBG->attachObject(light);
   
+  //Animaciones del Personaje y del Fantasma-------------------------------------
+  _animPJ = _sceneMgr->getEntity("entCharacter")->getAnimationState("moveHead");
+  _animPJ->setEnabled(true);
+  _animPJ->setLoop(true);
+  _animPJ->setTimePosition(0.0);
 
- 
-
-
-  _animStateIntro = _sceneMgr->getEntity("entCharacter")->getAnimationState("moveHead");
-  _animStateIntro->setEnabled(true);
-  _animStateIntro->setLoop(true);
-  _animStateIntro->setTimePosition(0.0);
-
+  _animGhost = _sceneMgr->getEntity("entGhost")->getAnimationState("moveIntro");
+  _animGhost->setEnabled(true);
+  _animGhost->setLoop(true);
+  _animGhost->setTimePosition(0.0);
 
   //Creamos la interfaz ------------------------  
   createGUI();
@@ -111,13 +118,23 @@ Pacman::IntroState::frameStarted
 {
   _deltaTIntro = evt.timeSinceLastFrame;
 
-  if (_animStateIntro != NULL) {
-    if (_animStateIntro->hasEnded()) {
-      _animStateIntro->setTimePosition(0.0);
-      _animStateIntro->setEnabled(false);
+  if (_animPJ != NULL) {
+    if (_animPJ->hasEnded()) {
+      _animPJ->setTimePosition(0.0);
+      _animPJ->setEnabled(false);
     }
     else {
-      _animStateIntro->addTime(_deltaTIntro);
+      _animPJ->addTime(_deltaTIntro);
+    }
+  }
+
+  if (_animGhost != NULL) {
+    if (_animGhost->hasEnded()) {
+      _animGhost->setTimePosition(0.0);
+      _animGhost->setEnabled(false);
+    }
+    else {
+      _animGhost->addTime(_deltaTIntro);
     }
   }
 

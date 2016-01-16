@@ -66,7 +66,9 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::Viewport* _viewport;
   Ogre::Camera* _camera;
   Ogre::Camera* _camBack;
-
+  Ogre::AnimationState *_animPJ;
+  Ogre::AnimationState *_animGhost;
+  Ogre::Real _deltaTIntro;
   CEGUI::OgreRenderer* renderer;
 
 
