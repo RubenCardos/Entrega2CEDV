@@ -85,7 +85,7 @@ Pacman::PlayState::enter ()
   SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
   _snMap->attachObject(_entMap);
   _snMap->setPosition(0,0,0); //x,y,z
-  //_snMap->setScale(100,100,100);
+  _snMap->setScale(23,23,23);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
 
   // -----------------------------
