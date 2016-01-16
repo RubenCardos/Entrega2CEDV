@@ -14,6 +14,13 @@ std::vector<Pacman::GraphVertex*> _adjVer;
 std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
 
+// Donde vengo y donde voy Ghost  ---
+Pacman::GraphVertex* _nowGhost;
+Pacman::GraphVertex* _nextGhost;
+std::vector<Pacman::GraphVertex*> _adjVerGhost;
+std::vector<Ogre::Vector3> _possibleMovesGhost;
+// ----------------------------
+
 void
 Pacman::PlayState::enter ()
 {
@@ -50,12 +57,17 @@ Pacman::PlayState::enter ()
   Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
-  //_snPj->setPosition(0,20,0); //x,y,z
-  //_snPj->pitch(Ogre::Degree(-90));
-  //_snPj->setScale(5,5,5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
-
   _pj=new Pj;
+
+  // -----------------------------
+
+  //Ghost------------------------
+  Entity* _entGhost = _sceneMgr->createEntity("entGhost","Circle.mesh");
+  SceneNode* _snGhost = _sceneMgr->createSceneNode("GhostSceneNode");
+  _snGhost->attachObject(_entGhost);
+  _sceneMgr->getRootSceneNode()->addChild(_snGhost);
+  _ghost=new Pj;
 
   // -----------------------------
 
@@ -150,6 +162,13 @@ Pacman::PlayState::enter ()
   _snPj->setPosition(_scene->getGraph()->getVertex(2)->getData().getPosition());
   _now=_scene->getGraph()->getVertex(2);
   //------------------------------------------------
+
+  //Prueba de cambio de posicion segun el vertice ---
+  _snGhost->setPosition(_scene->getGraph()->getVertex(11)->getData().getPosition());
+  _nowGhost=_scene->getGraph()->getVertex(11);
+  _nextGhost=NULL;
+  //------------------------------------------------
+
 
   // Grafo, adyacentes ----
   _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
@@ -261,7 +280,9 @@ Pacman::PlayState::frameStarted
   //--------------------
 
   
-
+  //Update Ghost ----
+  updateGhost();
+  //-----------------
 
 
   //Animacion (Prueba)----------------
@@ -537,4 +558,66 @@ Pacman::PlayState::whereIAm(Ogre::Vector3 _pos)
     }
   }
   //----------------------------------------------------------
+}
+
+void
+Pacman::PlayState::updateGhost()
+{
+  
+  SceneNode* _snGhost =_sceneMgr->getSceneNode("GhostSceneNode");
+
+  //Movimiento del ghost ------------
+  
+  if(_nextGhost==NULL){
+    
+    _adjVerGhost = _scene->getGraph()->adjacents(_nowGhost->getData().getIndex());
+
+    int _go=0+rand()%(_adjVerGhost.size()-0);
+    cout << "Go: " << _go << endl;
+
+    Vector3 _aux = _adjVerGhost[_go]->getData().getPosition()-_nowGhost->getData().getPosition();
+    _nextGhost=_adjVerGhost[_go];
+    cout << "_aux: " << _aux << endl;
+    
+    if(_aux.z>0){
+      cout << "Izq" << endl;
+      _ghost->setDesp(Ogre::Vector3(0,0,_deltaT));
+    }
+    if(_aux.z<0){
+      cout << "der" << endl;
+      _ghost->setDesp(Ogre::Vector3(0,0,-_deltaT));
+    }
+    if(_aux.x>0){
+      cout << "down" << endl;
+      _ghost->setDesp(Ogre::Vector3(_deltaT,0,0));
+    }
+    if(_aux.x<0){
+      cout << "up" << endl;
+      _ghost->setDesp(Ogre::Vector3(-_deltaT,0,0));
+    }
+
+    _ghost->setMoving(true);
+
+
+  }
+
+  if(_ghost->isMoving()){
+    _snGhost->setPosition(_snGhost->getPosition()+_ghost->getDesp());
+    //Ver cuando he de parar---
+
+    Vector3 _res=_nextGhost->getData().getPosition()-_snGhost->getPosition();
+    cout << "Distancia " << _res.length() << endl;
+    if(_res.length()<=0.05){
+      _nowGhost=_nextGhost;
+      _nextGhost=NULL;
+      _ghost->setMoving(false);
+      _adjVerGhost.clear();
+    }
+  }
+  
+
+  
+
+  //------------------------
+  // ----------------- 
 }
