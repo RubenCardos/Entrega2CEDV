@@ -114,7 +114,7 @@ Pacman::PlayState::enter ()
 
   // Mapa -------------------------
   //Pj------------------------
-  Entity* _entMap = _sceneMgr->createEntity("entMap","Plane.001.mesh");
+  Entity* _entMap = _sceneMgr->createEntity("entMap","tablero.mesh");
   SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
   _snMap->attachObject(_entMap);
   _snMap->setPosition(0,0,0); //x,y,z
