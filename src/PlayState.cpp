@@ -1,6 +1,6 @@
 #include "PlayState.h"
 #include "PauseState.h"
-#define CAM_HEIGHT 2 
+#define CAM_HEIGHT 5 //Altura de la camara
 
 
 template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 0;
@@ -35,32 +35,30 @@ Pacman::PlayState::enter ()
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
   //-------------------------------------
+ 
+  //Camara--------------------------------------------------------------
+  //crear un pivote en más o menos por  el hombro del personaje
+	mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+	//camara que girara alrededor del pivote
+	mCameraGoal = mCameraPivot->createChildSceneNode(Vector3(0, 0, 15));
+	mCameraNode = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
+	mCameraNode->setPosition(mCameraPivot->getPosition() + mCameraGoal->getPosition());
 
-  /// create a pivot at roughly the character's shoulder
-		mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
-		// this is where the camera should be soon, and it spins around the pivot
-		mCameraGoal = mCameraPivot->createChildSceneNode(Vector3(0, 0, 15));
-		// this is where the camera actually is
-		mCameraNode = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
-		mCameraNode->setPosition(mCameraPivot->getPosition() + mCameraGoal->getPosition());
+	mCameraPivot->setFixedYawAxis(true);
+	mCameraGoal->setFixedYawAxis(true);
+	mCameraNode->setFixedYawAxis(true);
 
-		mCameraPivot->setFixedYawAxis(true);
-		mCameraGoal->setFixedYawAxis(true);
-		mCameraNode->setFixedYawAxis(true);
-
-		// our model is quite small, so reduce the clipping planes
-		_camera->setNearClipDistance(5);
-		_camera->setFarClipDistance(10000);
-		mCameraNode->attachObject(_camera);
-		mPivotPitch = 0;
-
-
-
+	//nuestro modelo es bastante pequeña, para reducir los planos de recorte
+	_camera->setNearClipDistance(5);
+	_camera->setFarClipDistance(10000);
+	mCameraNode->attachObject(_camera);
+	mPivotPitch = 0;
+	//-------------------------------------------------------------------------
 
   //Pruebo a crear algo y ponerlo---------
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
   //-------------------------------------
-
+  
   //Quitar niebla------------------------------------------------
   Ogre::ColourValue fadeColour(0.0, 0.0, 0.0);
   _viewport->setBackgroundColour(fadeColour);
@@ -77,13 +75,13 @@ Pacman::PlayState::enter ()
   _cameraMiniMap->setFarClipDistance(10000);
   //--------------------------------
   
+
   //Pj------------------------
   Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   _pj=new Pj;
-
   // -----------------------------
 
   //Ghost------------------------
@@ -97,20 +95,7 @@ Pacman::PlayState::enter ()
   _animGhost->setEnabled(true);
   _animGhost->setLoop(true);
   _animGhost->setTimePosition(0.0);
-
-
-  //Plano ------------------------
-  Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, -5);
-  Ogre::MeshManager::getSingleton().createPlane("plane1", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane1,
-  200,200,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
-
-  SceneNode* _nodePlane1 = _sceneMgr->createSceneNode("Tablero");
-  Entity* _groundEnt1 = _sceneMgr->createEntity("planeEnt1", "plane1");
-  _groundEnt1->setMaterialName("Ground"); 
-  _nodePlane1->attachObject(_groundEnt1);
-  _nodePlane1->setPosition(0,0,0);
-  _sceneMgr->getRootSceneNode()->addChild(_nodePlane1);
- 
+  //-------------------------------------------------
 
   // Mapa -------------------------
   //Pj------------------------
@@ -120,6 +105,13 @@ Pacman::PlayState::enter ()
   _snMap->setPosition(0,0,0); //x,y,z
   _snMap->setScale(23,23,23);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
+  //---------------------------------------------------------
+
+  
+ //Skybox -----------------------------------------------
+	_sceneMgr->setSkyBox(true, "MaterialSkybox",10,true);
+	//-------------------------------------------------
+
 
 
   // Interfaz --------------------
@@ -207,10 +199,10 @@ Pacman::PlayState::updateCamera(Real deltaTime)
 		SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
 		// place the camera pivot roughly at the character's shoulder
 		mCameraPivot->setPosition(_snPj->getPosition() + Ogre::Vector3::UNIT_Y * CAM_HEIGHT);
-		// move the camera smoothly to the goal
+		//mover la cámara sin problemas a la meta
 		Vector3 goalOffset = mCameraGoal->_getDerivedPosition() - mCameraNode->getPosition();
 		mCameraNode->translate(goalOffset * deltaTime * 9.0f);
-		// always look at the pivot
+		//siempre ver el pivote
 		mCameraNode->lookAt(mCameraPivot->_getDerivedPosition(), Ogre::Node::TS_WORLD);
 }
 

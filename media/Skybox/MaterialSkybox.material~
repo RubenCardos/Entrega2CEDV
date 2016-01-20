@@ -1,0 +1,17 @@
+material MaterialSkybox
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			depth_write off
+
+			texture_unit
+			{
+				cubic_texture organic_fr.tga organic_bk.tga organic_lf.tga organic_rt.tga organic_up.tga organic_dn.tga separateUV
+				tex_address_mode clamp
+			}
+		}
+	}
+}
