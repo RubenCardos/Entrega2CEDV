@@ -48,6 +48,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void pause ();
   void resume ();
   void updateCamera(Ogre::Real deltaTime);
+  void loadGraph();
+  void createGUI();
 
   void keyPressed (const OIS::KeyEvent &e);
   void keyReleased (const OIS::KeyEvent &e);

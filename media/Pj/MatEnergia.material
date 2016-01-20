@@ -33,6 +33,7 @@ material MatEnergia
             texture_unit 
             {
                 texture spiral1.jpg
+		anim_rotate 0.5
                 tex_address_mode wrap
                 scale 1.0 1.0
                 colour_op modulate

@@ -22,7 +22,7 @@ Pacman::IntroState::enter ()
   _viewport->setBackgroundColour(fadeColour);
   _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 20, 50);
   _sceneMgr->setFog(Ogre::FOG_EXP, fadeColour, 0.003);
-
+  //---------------------------------------------------------
 
   _exitGame = false;
 
@@ -54,6 +54,7 @@ Pacman::IntroState::enter ()
   nodeBG->yaw(Ogre::Degree(135));
   nodeBG->roll(Ogre::Degree(90));
   _sceneMgr->getRootSceneNode()->addChild(nodeBG);
+  //--------------------------------------------------------
 
   //Carga del personaje---------------------------------------------
   Entity* _entCharacter = _sceneMgr->createEntity("entCharacter","Circle.mesh");
@@ -63,6 +64,7 @@ Pacman::IntroState::enter ()
   _sceneCharacter->attachObject(_entCharacter);
   _sceneCharacter->yaw(Ogre::Degree(60));
   _sceneMgr->getRootSceneNode()->addChild(_sceneCharacter);
+  //------------------------------------------------------------------
 
   //Carga del fantasmaa----------------------------------------------------------
   Entity* _entGhost = _sceneMgr->createEntity("entGhost","ghost.mesh");
@@ -72,12 +74,14 @@ Pacman::IntroState::enter ()
   _sceneGhost->attachObject(_entGhost);
   _sceneGhost->yaw(Ogre::Degree(70));
   _sceneMgr->getRootSceneNode()->addChild(_sceneGhost);
+  //----------------------------------------------------------------------
 
   //Luz para el background-----------------------------------------------------
   Ogre::Light* light = _sceneMgr->createLight("Light1");
   light->setType(Ogre::Light::LT_DIRECTIONAL);
   light->setDirection(Ogre::Vector3(-1,1,0));
   nodeBG->attachObject(light);
+  //-----------------------------------------------------
   
   //Animaciones del Personaje y del Fantasma-------------------------------------
   _animPJ = _sceneMgr->getEntity("entCharacter")->getAnimationState("moveHead");
@@ -89,9 +93,11 @@ Pacman::IntroState::enter ()
   _animGhost->setEnabled(true);
   _animGhost->setLoop(true);
   _animGhost->setTimePosition(0.0);
+  //----------------------------------------------------------
 
   //Creamos la interfaz ------------------------  
   createGUI();
+  //----------------------------
 }
 
 

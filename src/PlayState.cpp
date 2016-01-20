@@ -34,6 +34,10 @@ Pacman::PlayState::enter ()
   _camera = _sceneMgr->createCamera("PlayCamera");
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
+  //Vista Ortho----------------------
+  double width = _viewport->getActualWidth();
+  double height = _viewport->getActualHeight();
+  _camera->setAspectRatio(width / height);
   //-------------------------------------
  
   //Camara--------------------------------------------------------------
@@ -55,8 +59,8 @@ Pacman::PlayState::enter ()
 	mPivotPitch = 0;
 	//-------------------------------------------------------------------------
 
-  //Pruebo a crear algo y ponerlo---------
-  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.8, 0.8, 0.8));
+  //Luz ambiente---------
+  _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   //-------------------------------------
   
   //Quitar niebla------------------------------------------------
@@ -80,6 +84,7 @@ Pacman::PlayState::enter ()
   Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
+  _snPj->setScale(0.5,0.5,0.5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   _pj=new Pj;
   // -----------------------------
@@ -102,36 +107,102 @@ Pacman::PlayState::enter ()
   Entity* _entMap = _sceneMgr->createEntity("entMap","tablero.mesh");
   SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
   _snMap->attachObject(_entMap);
-  _snMap->setPosition(0,0,0); //x,y,z
+  _snMap->setPosition(1,0,0); //x,y,z
   _snMap->setScale(23,23,23);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
   //---------------------------------------------------------
 
   
  //Skybox -----------------------------------------------
-	_sceneMgr->setSkyBox(true, "MaterialSkybox",10,true);
+	_sceneMgr->setSkyBox(true, "MaterialSkybox");
 	//-------------------------------------------------
 
+	//Carga-----------------
+	createGUI();
+  loadGraph();
 
 
-  // Interfaz --------------------
+  //Luz Escena-------------------
+  Ogre::Light* spotLight = _sceneMgr->createLight("SpotLight");
+  //Colores difusos a azul
+  spotLight->setDiffuseColour(0, 0, 1.0);
+	spotLight->setSpecularColour(0, 0, 1.0);
+	//Tipo de luz y sus repectivos direcciones y posiciones (Actua modo linterna)
+	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	spotLight->setDirection(-1, -1, 0);
+	spotLight->setPosition(Ogre::Vector3(200, 200, 0));
+	//Para desvanecer la luz, Grados de desvanecimiento...
+	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+  //---------------------------------------------------------------
+
+
+  //Prueba de cambio de posicion segun el vertice ---
+  _snPj->setPosition(_scene->getGraph()->getVertex(2)->getData().getPosition());
+  _now=_scene->getGraph()->getVertex(2);
+  //------------------------------------------------
+
+  //Prueba de cambio de posicion segun el vertice ---
+  _snGhost->setPosition(_scene->getGraph()->getVertex(11)->getData().getPosition());
+  _nowGhost=_scene->getGraph()->getVertex(11);
+  _nextGhost=NULL;
+  //------------------------------------------------
+
+
+  // Grafo, adyacentes ----
+  _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
+  std::vector<GraphVertex*>::const_iterator it;
+  for (it = _adjVer.begin();it != _adjVer.end();++it){
+    Node _aux=(*it)->getData();
+    Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
+    _possibleMoves.push_back(_vecMove);
+  }
+  //----------------------
+
+  _exitGame = false;
+}
+
+void 
+Pacman::PlayState::createGUI()
+{
+	//CEGUI--------------------------------------------------------------
+  // Interfaz Intro (Ocultar botones)--------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   sheet->getChildAtIdx(0)->setVisible(false); //PLAY
   sheet->getChildAtIdx(1)->setVisible(false); //CREDITOS
   sheet->getChildAtIdx(2)->setVisible(false);
-  sheet->getChildAtIdx(3)->setVisible(true);
+  sheet->getChildAtIdx(3)->setVisible(true); //CAMARA
 
-  //Boton Salir Juego---------------------------------------
+
+  //Interfaz Cegui---------------------------------------
+  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","line.png");
+  CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd2");
+  sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0.0f),CEGUI::UDim(0.0, 0)));
+  sheetBG->setSize( CEGUI::USize(CEGUI::UDim(1.0, 0), CEGUI::UDim(0.10, 0)));
+  sheetBG->setProperty("Image","Background");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
+
+  CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/PauseButton");
+  pauseButton->setText("Pausa");
+  pauseButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
+  pauseButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.6,0),CEGUI::UDim(0.3,0)));
+  pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
+
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
-  quitButton->setText("Exit");
-  quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.05,0)));
-  quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.05,0),CEGUI::UDim(0.8,0)));
+  quitButton->setText("Salir");
+  quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
+  quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8,0),CEGUI::UDim(0.3,0)));
   quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
-  //-------------------------------------------------------
-  
-  sheet->addChild(quitButton);
 
-  // Prueba Grafo ------------------------------
+  sheetBG->addChild(pauseButton);
+  sheetBG->addChild(quitButton);
+  sheet->addChild(sheetBG);
+
+}
+void 
+Pacman::PlayState::loadGraph()
+{
+	// Prueba Grafo ------------------------------
   try{
     _importer = new Importer;
     _scene = new Scene;
@@ -165,31 +236,6 @@ Pacman::PlayState::enter ()
       cerr << "Unexpected exception!" << endl;
   }
 
-  // ------------------------------------------
-  
-  //Prueba de cambio de posicion segun el vertice ---
-  _snPj->setPosition(_scene->getGraph()->getVertex(2)->getData().getPosition());
-  _now=_scene->getGraph()->getVertex(2);
-  //------------------------------------------------
-
-  //Prueba de cambio de posicion segun el vertice ---
-  _snGhost->setPosition(_scene->getGraph()->getVertex(11)->getData().getPosition());
-  _nowGhost=_scene->getGraph()->getVertex(11);
-  _nextGhost=NULL;
-  //------------------------------------------------
-
-
-  // Grafo, adyacentes ----
-  _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
-  std::vector<GraphVertex*>::const_iterator it;
-  for (it = _adjVer.begin();it != _adjVer.end();++it){
-    Node _aux=(*it)->getData();
-    Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
-    _possibleMoves.push_back(_vecMove);
-  }
-  //----------------------
-
-  _exitGame = false;
 }
 
 
@@ -218,14 +264,15 @@ Pacman::PlayState::exit ()
 void
 Pacman::PlayState::pause()
 {
+
+
 }
 
 void
 Pacman::PlayState::resume()
 {
-  //Se restaura el background colour.------------------------------
-  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));
-  //---------------------------------------------------------------
+  
+
 }
 
 bool
@@ -238,12 +285,11 @@ Pacman::PlayState::frameStarted
 
   //Actualizamos Camara---------------------------------
   updateCamera(_deltaT);
-  
-
+  //----------------------------------------------
 
   //CEGUI --------------------------------------
   CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  CEGUI::Window* ex1 = rootWin->getChild("CamWin");
+ 	CEGUI::Window* ex1 = rootWin->getChild("CamWin");
   CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
   RTTWindow->invalidate();
   //-------------------------------------------
