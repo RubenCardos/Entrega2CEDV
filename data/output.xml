@@ -193,6 +193,12 @@
   <edge>
     <vertex>1</vertex> <vertex>29</vertex>
   </edge>
+  <edge>
+    <vertex>6</vertex> <vertex>7</vertex>
+  </edge>
+  <edge>
+    <vertex>8</vertex> <vertex>7</vertex>
+  </edge>
 </graph>
 
 </data>

@@ -8,11 +8,12 @@ template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 
 // Prueba de animacion -----
 Ogre::AnimationState *_animState;
 Ogre::AnimationState *_animGhost;
+Ogre::AnimationState *_animGhost2;
 //--------------------------
 
 // Donde vengo y donde voy ---
 Pacman::GraphVertex* _now;
-bool _exitVertex = false;
+Pacman::GraphVertex* _next;
 std::vector<Pacman::GraphVertex*> _adjVer;
 std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
@@ -22,6 +23,12 @@ Pacman::GraphVertex* _nowGhost;
 Pacman::GraphVertex* _nextGhost;
 std::vector<Pacman::GraphVertex*> _adjVerGhost;
 std::vector<Ogre::Vector3> _possibleMovesGhost;
+// ----------------------------
+
+// Donde vengo y donde voy Ghost2  ---
+Pacman::GraphVertex* _nowGhost2;
+Pacman::GraphVertex* _nextGhost2;
+std::vector<Pacman::GraphVertex*> _adjVerGhost2;
 // ----------------------------
 
 void
@@ -102,6 +109,21 @@ Pacman::PlayState::enter ()
   _animGhost->setTimePosition(0.0);
   //-------------------------------------------------
 
+  //Ghost 2------------------------
+  Entity* _entGhost2 = _sceneMgr->createEntity("entGhost2","ghost.mesh");
+  SceneNode* _snGhost2 = _sceneMgr->createSceneNode("GhostSceneNode2");
+  _snGhost->attachObject(_entGhost2);
+  _sceneMgr->getRootSceneNode()->addChild(_snGhost2);
+  _ghost2=new Pj;
+
+  _animGhost2 = _sceneMgr->getEntity("entGhost2")->getAnimationState("moveIntro");
+  _animGhost2->setEnabled(true);
+  _animGhost2->setLoop(true);
+  _animGhost2->setTimePosition(0.0);
+  //-------------------------------------------------
+
+
+
   // Mapa -------------------------
   //Pj------------------------
   Entity* _entMap = _sceneMgr->createEntity("entMap","tablero.mesh");
@@ -147,6 +169,12 @@ Pacman::PlayState::enter ()
   _nextGhost=NULL;
   //------------------------------------------------
 
+  //Prueba de cambio de posicion segun el vertice ---
+  _snGhost2->setPosition(_scene->getGraph()->getVertex(22)->getData().getPosition());
+  _nowGhost2=_scene->getGraph()->getVertex(22);
+  _nextGhost2=NULL;
+  //------------------------------------------------
+
 
   // Grafo, adyacentes ----
   _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
@@ -186,7 +214,7 @@ Pacman::PlayState::createGUI()
   pauseButton->setText("Pausa");
   pauseButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   pauseButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.6,0),CEGUI::UDim(0.3,0)));
-  pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
+  pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::pauseB,this));
 
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
   quitButton->setText("Salir");
@@ -211,18 +239,18 @@ Pacman::PlayState::loadGraph()
     _importer->parseScene("./data/output.xml", _scene);
 
     // Print some data...
-      cout << "\nGraph info..." << endl;
-      cout << "\t#Vertexes: " << _scene->getGraph()->getVertexes().size() << endl;
-      cout << "\t#Edges: " << _scene->getGraph()->getEdges().size() << endl;
+      //cout << "\nGraph info..." << endl;
+      //cout << "\t#Vertexes: " << _scene->getGraph()->getVertexes().size() << endl;
+      //cout << "\t#Edges: " << _scene->getGraph()->getEdges().size() << endl;
 
-      cout << "Vertices" << endl; 
+      //cout << "Vertices" << endl; 
 
       std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
       std::vector<GraphVertex*>::const_iterator it;
       int i =1;
       for (it = _vertices.begin();it != _vertices.end();++it){
         Node _aux=(*it)->getData();
-        cout << "\t" << static_cast<std::string>(_aux)  << endl;
+        //cout << "\t" << static_cast<std::string>(_aux)  << endl;
         Entity* _entPoint = _sceneMgr->createEntity("entPoint"+Ogre::StringConverter::toString(i),"cube.mesh");
         SceneNode* _snPoint = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
         _snPoint->attachObject(_entPoint);
@@ -294,63 +322,14 @@ Pacman::PlayState::frameStarted
   RTTWindow->invalidate();
   //-------------------------------------------
 
-  // Movimiento -------------------------
-  Vector3 _aux=_snPj->getPosition();
-  _aux.x=round(_aux.x);
-  _aux.z=round(_aux.z);
-  if(_now->getData().getPosition()!=_aux){
-    _exitVertex=true;
-  }else{
-    _exitVertex=false;
-  }
-
-  if(_pj->isMoving()){
-    _snPj->setPosition(Vector3(_snPj->getPosition())+=_pj->getDesp());
-    //_now=NULL;
-  }
-  if(_exitVertex){
-    if(isPositionInAVertex(_snPj->getPosition())){
-    _pj->setMoving(false);
-
-    //Cuando llego a un vertice nuevo cambio _now ----
-    _now=whereIAm(_snPj->getPosition());
-
-    //-------------------------------------------------
-
-    // Calculo los nuevos adyacentes -------------------
-    _possibleMoves.clear();
-    _adjVer.clear();
-    _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
-    std::vector<GraphVertex*>::const_iterator it;
-    for (it = _adjVer.begin();it != _adjVer.end();++it){
-      Node _aux=(*it)->getData();
-      Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
-      _possibleMoves.push_back(_vecMove);
-    }
-
-    //-----------------------------------------------
-
-
-  }else{
-    _pj->setMoving(true);
-
-    // Los movimientos posibles han de ser ------------
-    // en el que me estoy moviendo y el opuesto -------
-    _possibleMoves.clear();
-    _possibleMoves.push_back(_pj->getDesp());
-    _possibleMoves.push_back(Ogre::Vector3(0,0,0)-(_pj->getDesp()));
-    //-------------------------------------------------
-    //-------------------------------------------------
-  }
-  }
-
-  
-
+  // Update Pj -------------------------
+  updatePj();
   //--------------------
 
   
   //Update Ghost ----
   updateGhost();
+  //updateGhost2();
   //-----------------
 
 
@@ -400,20 +379,23 @@ Pacman::PlayState::keyPressed
   switch(e.key){
     case OIS::KC_S:{ //ANTES ERA A
       // Compruebo si esta direccion esta en las direciones posibles---
-      std::vector<Ogre::Vector3>::const_iterator it;
+      std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
-      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
-        Ogre::Vector3 _aux=*it;
+      int _go=0;
+      for (it = _adjVer.begin();it != _adjVer.end() && _check;++it){
+        Ogre::Vector3 _aux=(*it)->getData().getPosition()-_now->getData().getPosition();
         if(_aux.z>0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0,0,0.03));
           _pj->setOrientation(4);
+          _next=_adjVer[_go];
           _check=false;
-
         }else{
           cout << "No se puede ir hacia alli" << endl;
+          _go++;
         }
+
       }
       //--------------------------------------------------------------
       
@@ -421,54 +403,66 @@ Pacman::PlayState::keyPressed
       break;}
     case OIS::KC_W:{//ANTES ERA D
       // Compruebo si esta direccion esta en las direcionesposibles---
-      std::vector<Ogre::Vector3>::const_iterator it;
+      std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
-      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
-        Ogre::Vector3 _aux=*it;
+      int _go=0;
+      for (it = _adjVer.begin();it != _adjVer.end() && _check;++it){
+        Ogre::Vector3 _aux=(*it)->getData().getPosition()-_now->getData().getPosition();
         if(_aux.z<0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0,0,-0.03));
           _pj->setOrientation(2);
+          _next=_adjVer[_go];
           _check=false;
+
         }else{
           cout << "No se puede ir hacia alli" << endl;
+          _go++;
         }
       }
       //------------------------------------------------------
       break;}
     case OIS::KC_A:{ //ANTES ERA W
       // Compruebo si esta direccion esta en las direciones posibles---
-      std::vector<Ogre::Vector3>::const_iterator it;
+      std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
-      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
-        Ogre::Vector3 _aux=*it;
+      int _go=0;
+      for (it = _adjVer.begin();it != _adjVer.end() && _check;++it){
+        Ogre::Vector3 _aux=(*it)->getData().getPosition()-_now->getData().getPosition();
         if(_aux.x<0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(-0.03,0,0));
           _pj->setOrientation(1);
+          _next=_adjVer[_go];
           _check=false;
+
         }else{
           cout << "No se puede ir hacia alli" << endl;
+          _go++;
         }
       }
       //---------------------------------------------
       break;}
     case OIS::KC_D:{//ANTES ERA S
       // Compruebo si esta direccion esta en las direciones posibles---
-      std::vector<Ogre::Vector3>::const_iterator it;
+      std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
-      for (it = _possibleMoves.begin();it != _possibleMoves.end() && _check;++it){
-        Ogre::Vector3 _aux=*it;
+      int _go=0;
+      for (it = _adjVer.begin();it != _adjVer.end() && _check;++it){
+        Ogre::Vector3 _aux=(*it)->getData().getPosition()-_now->getData().getPosition();
         if(_aux.x>0){
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0.03,0,0));
           _pj->setOrientation(3);
+          _next=_adjVer[_go];
           _check=false;
+
         }else{
           cout << "No se puede ir hacia alli" << endl;
+          _go++;
         }
       }
       }
@@ -578,55 +572,10 @@ Pacman::PlayState::quit(const CEGUI::EventArgs &e)
 }
 
 bool
-Pacman::PlayState::isPositionInAVertex(Ogre::Vector3 _pos)
+Pacman::PlayState::pauseB(const CEGUI::EventArgs &e)
 {
-  
-  bool res=false;
-
-  // Busco si la posicion coincide con alguna de los nodos ---
-
-  //Ajusto _pos para que sea numeros enteros---------------
-  _pos.x=round(_pos.x);
-  _pos.z=round(_pos.z);
-  
-    std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
-    std::vector<GraphVertex*>::const_iterator it;
-    for (it = _vertices.begin();it != _vertices.end();++it){
-      Node _aux=(*it)->getData();
-      if(_aux.getPosition()==_pos){
-        if(_now!=*it){
-          res=true;
-        }
-        
-      }
-    }
-  //}
-  
-  //----------------------------------------------------------
-  return res;
-}
-
-Pacman::GraphVertex*
-Pacman::PlayState::whereIAm(Ogre::Vector3 _pos)
-{
-
-
-  // Busco si la posicion coincide con alguna de los nodos ---
-
-  //Ajusto _pos para que sea numeros enteros---------------
-  _pos.x=round(_pos.x);
-  _pos.z=round(_pos.z);
-  //--------------------------------------------------------
-
-  std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
-  std::vector<GraphVertex*>::const_iterator it;
-  for (it = _vertices.begin();it != _vertices.end();++it){
-    Node _aux=(*it)->getData();
-    if(_aux.getPosition()==_pos){
-      return (*it);
-    }
-  }
-  //----------------------------------------------------------
+  pushState(PauseState::getSingletonPtr());
+  return true;
 }
 
 void
@@ -678,8 +627,8 @@ Pacman::PlayState::updateGhost()
     //Ver cuando he de parar---
 
     Vector3 _res=_nextGhost->getData().getPosition()-_snGhost->getPosition();
-    cout << "Distancia " << _res.length() << endl;
-    if(_res.length()<=0.05){
+    //cout << "Distancia " << _res.length() << endl;
+    if(_res.length()<=0.035){
       _nowGhost=_nextGhost;
       _nextGhost=NULL;
       _ghost->setMoving(false);
@@ -694,6 +643,124 @@ Pacman::PlayState::updateGhost()
     }
     else {
       _animGhost->addTime(_deltaT);
+    }
+  }
+  
+
+  
+
+  //------------------------
+  // ----------------- 
+}
+
+void
+Pacman::PlayState::updateGhost2()
+{
+  
+  SceneNode* _snGhost =_sceneMgr->getSceneNode("GhostSceneNode2");
+
+  //Movimiento del ghost ------------
+  //Si el next es nulo estoy en un vertice------
+  if(_nextGhost2==NULL){
+    //Calculo adyacentes-----------------
+    _adjVerGhost2 = _scene->getGraph()->adjacents(_nowGhost2->getData().getIndex());
+    //-----------------------------------
+
+    //Tiro Dados-----------------------------
+    int _go=0+rand()%(_adjVerGhost2.size()-0);
+    //----------------------------------------
+
+    // Auxiliar para ver haia donde voy ------
+    Vector3 _aux = _adjVerGhost2[_go]->getData().getPosition()-_nowGhost2->getData().getPosition();
+    _nextGhost2=_adjVerGhost2[_go];
+    //---------------------------------------
+
+    //El auxiliar me da la direccion---------
+    if(_aux.z>0){
+      _ghost2->setDesp(Ogre::Vector3(0,0,0.03));
+    }
+    if(_aux.z<0){
+      _ghost2->setDesp(Ogre::Vector3(0,0,-0.03));
+    }
+    if(_aux.x>0){
+      _ghost2->setDesp(Ogre::Vector3(0.03,0,0));
+    }
+    if(_aux.x<0){
+      _ghost2->setDesp(Ogre::Vector3(-0.03,0,0));
+    }
+    //------------------------------------
+    _ghost2->setMoving(true);
+
+  }
+  //---------------------------------------------------------
+  if(_ghost2->isMoving()){
+    _snGhost->setPosition(_snGhost->getPosition()+_ghost2->getDesp());
+    //Ver cuando he de parar---
+
+    Vector3 _res=_nextGhost2->getData().getPosition()-_snGhost->getPosition();
+    //cout << "Distancia " << _res.length() << endl;
+    if(_res.length()<=0.035){
+      _nowGhost2=_nextGhost2;
+      _nextGhost2=NULL;
+      _ghost2->setMoving(false);
+      _adjVerGhost2.clear();
+    }
+  }
+
+  if (_animGhost2 != NULL) {
+    if (_animGhost2->hasEnded()) {
+      _animGhost2->setTimePosition(0.0);
+      _animGhost2->setEnabled(false);
+    }
+    else {
+      _animGhost2->addTime(_deltaT);
+    }
+  }
+  //------------------------
+  // ----------------- 
+}
+
+void
+Pacman::PlayState::updatePj()
+{
+  
+  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+
+  if(_next==NULL){
+    //Calculo adyacentes-----------------
+    _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
+    //-----------------------------------
+
+  }
+
+
+  if(_pj->isMoving()){
+    //mientras me muevo los adyacentes solo son desp y -desp
+    _adjVer.clear();
+    _adjVer.push_back(_now); 
+    _adjVer.push_back(_next); 
+    //-------------------------------------
+
+    _snPj->setPosition(_snPj->getPosition()+_pj->getDesp());
+    //Ver cuando he de parar---
+
+    Vector3 _res=_next->getData().getPosition()-_snPj->getPosition();
+    //cout << "Distancia " << _res.length() << endl;
+    if(_res.length()<=0.035){
+      _now=_next;
+      _next=NULL;
+      _pj->setMoving(false);
+      _adjVer.clear();
+    }
+  }
+
+  if (_animState != NULL) {
+    if (_animState->hasEnded()) {
+      _animState->setTimePosition(0.0);
+      _animState->setEnabled(false);
+    }
+    else {
+      _animState->addTime(_deltaT);
     }
   }
   

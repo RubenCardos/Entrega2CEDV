@@ -83,14 +83,17 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Real _deltaT;
   Pj* _pj;
   Pj* _ghost;
+  Pj* _ghost2;
 
   bool quit(const CEGUI::EventArgs &e);
-  bool isPositionInAVertex(Ogre::Vector3 _pos);
-  GraphVertex* whereIAm(Ogre::Vector3 _pos);
+  bool pauseB(const CEGUI::EventArgs &e);
+  
 
   bool _exitGame;
 
   void updateGhost();
+  void updateGhost2();
+  void updatePj();
 };
 
 }
