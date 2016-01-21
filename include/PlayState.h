@@ -20,20 +20,17 @@
 
 #ifndef PlayState_H
 #define PlayState_H
-
 #include <Ogre.h>
 #include <OIS/OIS.h>
-
 #include "GameState.h"
-
- #include <CEGUI.h>
- #include <RendererModules/Ogre/Renderer.h>
- #include <RendererModules/Ogre/Texture.h>
-
- #include <Importer.h>
+#include <CEGUI.h>
+#include <RendererModules/Ogre/Renderer.h>
+#include <RendererModules/Ogre/Texture.h>
+#include <Importer.h>
 #include <Scene.h>
 #include <Camera.h>
-
+#include "TrackManager.h"
+#include "SoundFXManager.h"
 #include "Pj.h"
 
 namespace Pacman {
@@ -43,13 +40,15 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
  public:
   PlayState () {}
 
-  void enter ();
-  void exit ();
-  void pause ();
-  void resume ();
+  void enter();
+  void exit();
+  void pause();
+  void resume();
   void updateCamera(Ogre::Real deltaTime);
+  void updateCameraGoal(Ogre::Real deltaYaw, Ogre::Real deltaPitch, Ogre::Real deltaZoom);
   void loadGraph();
   void createGUI();
+  void setupAnimations();
 
   void keyPressed (const OIS::KeyEvent &e);
   void keyReleased (const OIS::KeyEvent &e);
@@ -84,6 +83,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Pj* _pj;
   Pj* _ghost;
   Pj* _ghost2;
+
 
   bool quit(const CEGUI::EventArgs &e);
   bool pauseB(const CEGUI::EventArgs &e);

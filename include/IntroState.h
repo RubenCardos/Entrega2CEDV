@@ -26,8 +26,10 @@
 
 #include "GameState.h"
 #include <CEGUI.h>
- #include <RendererModules/Ogre/Renderer.h>
- #include <RendererModules/Ogre/Texture.h>
+#include <RendererModules/Ogre/Renderer.h>
+#include <RendererModules/Ogre/Texture.h>
+#include "TrackManager.h"
+#include "SoundFXManager.h"
 
 namespace Pacman {
 
@@ -57,7 +59,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
 
   void createGUI();
   bool play(const CEGUI::EventArgs &e);
-  
+  TrackPtr _mainTrack;
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
  protected:
@@ -70,9 +72,14 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   Ogre::AnimationState *_animGhost;
   Ogre::Real _deltaTIntro;
   CEGUI::OgreRenderer* renderer;
-
+  //Sonido
+  TrackManager* _pTrackManager;
+  SoundFXManager* _pSoundFXManager;
+  
+  
 
   bool _exitGame;
+  bool _initSDL();
 };
 
 }

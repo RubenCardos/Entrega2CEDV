@@ -1,5 +1,8 @@
 #include "PlayState.h"
 #include "PauseState.h"
+#include "CEGUI.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #define CAM_HEIGHT 5 //Altura de la camara
 
 
@@ -46,7 +49,7 @@ Pacman::PlayState::enter ()
   double height = _viewport->getActualHeight();
   _camera->setAspectRatio(width / height);
   //-------------------------------------
- 
+ 	
   //Camara--------------------------------------------------------------
   //crear un pivote en más o menos por  el hombro del personaje
 	mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
@@ -88,12 +91,13 @@ Pacman::PlayState::enter ()
   
 
   //Pj------------------------
-  Entity* _entPj = _sceneMgr->createEntity("entPJ","Circle.mesh");
+  Entity* _entPj = _sceneMgr->createEntity("entPJ","personaje.mesh");
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setScale(0.5,0.5,0.5);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   _pj=new Pj;
+
   // -----------------------------
 
   //Ghost------------------------
@@ -121,8 +125,6 @@ Pacman::PlayState::enter ()
   _animGhost2->setLoop(true);
   _animGhost2->setTimePosition(0.0);
   //-------------------------------------------------
-
-
 
   // Mapa -------------------------
   //Pj------------------------
@@ -279,6 +281,29 @@ Pacman::PlayState::updateCamera(Real deltaTime)
 		//siempre ver el pivote
 		mCameraNode->lookAt(mCameraPivot->_getDerivedPosition(), Ogre::Node::TS_WORLD);
 }
+void 
+Pacman::PlayState::updateCameraGoal(Real deltaYaw, Real deltaPitch, Real deltaZoom)
+{
+		mCameraPivot->yaw(Degree(deltaYaw), Ogre::Node::TS_WORLD);
+
+		// bound the pitch
+		if (!(mPivotPitch + deltaPitch > 25 && deltaPitch > 0) &&
+			!(mPivotPitch + deltaPitch < -60 && deltaPitch < 0))
+		{
+			mCameraPivot->pitch(Degree(deltaPitch), Ogre::Node::TS_LOCAL);
+			mPivotPitch += deltaPitch;
+		}
+		
+		Real dist = mCameraGoal->_getDerivedPosition().distance(mCameraPivot->_getDerivedPosition());
+		Real distChange = deltaZoom * dist;
+
+		// bound the zoom
+		if (!(dist + distChange < 8 && distChange < 0) &&
+			!(dist + distChange > 25 && distChange > 0))
+		{
+			mCameraGoal->translate(0, 0, distChange, Ogre::Node::TS_LOCAL);
+		}
+}
 
 void
 Pacman::PlayState::exit ()
@@ -313,6 +338,7 @@ Pacman::PlayState::frameStarted
 
   //Actualizamos Camara---------------------------------
   updateCamera(_deltaT);
+ //updateCameraGoal(-0.05f * Vector3( _snPj->getPosition()).x,-0.05f * Vector3(_snPj->getPosition()).y,-0.0005f * Vector3(_snPj->getPosition()).z);
   //----------------------------------------------
 
   //CEGUI --------------------------------------
@@ -506,6 +532,7 @@ void
 Pacman::PlayState::mouseMoved
 (const OIS::MouseEvent &e)
 {
+	updateCameraGoal(-0.05f * e.state.X.rel,-0.05f * e.state.Y.rel,-0.0005f * e.state.Z.rel);
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(e.state.X.rel, e.state.Y.rel);
   //-------------------------------
@@ -515,6 +542,7 @@ void
 Pacman::PlayState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
+
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertMouseButton(id));
   //-------------------------------
@@ -770,3 +798,4 @@ Pacman::PlayState::updatePj()
   //------------------------
   // ----------------- 
 }
+
