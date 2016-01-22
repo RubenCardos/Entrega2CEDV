@@ -28,7 +28,8 @@
 #include <CEGUI.h>
 #include <RendererModules/Ogre/Renderer.h>
 #include <RendererModules/Ogre/Texture.h>
-
+#include "TrackManager.h"
+#include "SoundFXManager.h"
 namespace Pacman {
 
 class IntroState : public Ogre::Singleton<IntroState>, public GameState

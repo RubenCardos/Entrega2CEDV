@@ -1,8 +1,6 @@
 #include "PlayState.h"
 #include "PauseState.h"
 #include "CEGUI.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
 #define CAM_HEIGHT 5 //Altura de la camara
 
 
@@ -49,7 +47,13 @@ Pacman::PlayState::enter ()
   double height = _viewport->getActualHeight();
   _camera->setAspectRatio(width / height);
   //-------------------------------------
- 	
+
+  //Sonido--------------------------------------------
+ 	GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
+  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("BGMusic.mp3");
+ // GameManager::getSingletonPtr()->_mainTrack->play();
+  //-----------------------------------------------------------
+
   //Camara--------------------------------------------------------------
   //crear un pivote en más o menos por  el hombro del personaje
 	mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
@@ -137,6 +141,8 @@ Pacman::PlayState::enter ()
   //---------------------------------------------------------
 
   
+
+
  //Skybox -----------------------------------------------
 	_sceneMgr->setSkyBox(true, "MaterialSkybox");
 	//-------------------------------------------------
@@ -204,7 +210,7 @@ Pacman::PlayState::createGUI()
 
 
   //Interfaz Cegui---------------------------------------
-  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","line.png");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.jpg");
   CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd2");
   sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0.0f),CEGUI::UDim(0.0, 0)));
   sheetBG->setSize( CEGUI::USize(CEGUI::UDim(1.0, 0), CEGUI::UDim(0.10, 0)));
@@ -253,12 +259,21 @@ Pacman::PlayState::loadGraph()
       for (it = _vertices.begin();it != _vertices.end();++it){
         Node _aux=(*it)->getData();
         //cout << "\t" << static_cast<std::string>(_aux)  << endl;
-        Entity* _entPoint = _sceneMgr->createEntity("entPoint"+Ogre::StringConverter::toString(i),"cube.mesh");
+        /*Entity* _entPoint = _sceneMgr->createEntity("entPoint"+Ogre::StringConverter::toString(i),"cube.mesh");
         SceneNode* _snPoint = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
         _snPoint->attachObject(_entPoint);
         _snPoint->setPosition(_aux.getPosition()); //x,y,z
         _snPoint->setScale(1,1,1);
-        _sceneMgr->getRootSceneNode()->addChild(_snPoint);
+        _sceneMgr->getRootSceneNode()->addChild(_snPoint);*/
+
+        // Ray -------------------------
+		   Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
+		   SceneNode* _snRay = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
+		  _snRay->attachObject(_entRay);
+		  _snRay->setPosition(_aux.getPosition());
+		  _snRay->setScale(0.3,0.3,0.3);
+		  _sceneMgr->getRootSceneNode()->addChild(_snRay);
+		  //--------------------------------------------------------
         i+=1;
       }
   }

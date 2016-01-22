@@ -41,8 +41,7 @@ Pacman::GameManager::start
   // Registro como key y mouse listener...
   _inputMgr->addKeyListener(this, "GameManager");
   _inputMgr->addMouseListener(this, "GameManager");
-  _pTrackManager = new TrackManager;
-  _pSoundFXManager = new SoundFXManager;
+
   // El GameManager es un FrameListener.
   _root->addFrameListener(this);
 

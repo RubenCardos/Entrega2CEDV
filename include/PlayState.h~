@@ -23,6 +23,7 @@
 #include <Ogre.h>
 #include <OIS/OIS.h>
 #include "GameState.h"
+#include "Game.h"
 #include <CEGUI.h>
 #include <RendererModules/Ogre/Renderer.h>
 #include <RendererModules/Ogre/Texture.h>

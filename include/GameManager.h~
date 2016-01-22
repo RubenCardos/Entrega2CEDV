@@ -62,6 +62,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   SoundFXManager* _pSoundFXManager;
   TrackPtr _mainTrack;
   SoundFXPtr _simpleEffect;
+  SoundFXPtr _simpleEffectG;
 
  protected:
   Ogre::Root* _root;

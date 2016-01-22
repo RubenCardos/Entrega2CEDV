@@ -1,8 +1,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "CEGUI.h"
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_mixer.h>
+
 using namespace CEGUI;
 
 template<> Pacman::IntroState* Ogre::Singleton<Pacman::IntroState>::msSingleton = 0;
@@ -18,15 +17,10 @@ Pacman::IntroState::enter ()
   _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5,0.5,0.5));
 
-  _initSDL();
 
-  _pTrackManager = OGRE_NEW TrackManager;
-  _pSoundFXManager = OGRE_NEW SoundFXManager;
-
-  //_mainTrack = _pTrackManager->load("BGMusic.mp3");
- 
-
-
+  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("BGMusic.mp3");
+  //GameManager::getSingletonPtr()->_mainTrack->play();
+  
   //Niebla-------------------------------------------------
   Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
   _viewport->setBackgroundColour(fadeColour);
@@ -356,21 +350,3 @@ Pacman::IntroState::play(const CEGUI::EventArgs &e)
   return true;
 }
 
-bool
-Pacman::IntroState::_initSDL () {
-  if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-    return false;
-  }
-  // Llamar a  SDL_Quit al terminar.
-  atexit(SDL_Quit);
- 
-  // Inicializando SDL mixer...
-  if (Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT,MIX_DEFAULT_CHANNELS, 4096) < 0) {
-    return false;
-  }
- 
-  // Llamar a Mix_CloseAudio al terminar.
-  atexit(Mix_CloseAudio);
- 
-  return true;    
-}
