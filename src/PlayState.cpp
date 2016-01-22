@@ -50,7 +50,8 @@ Pacman::PlayState::enter ()
 
   //Sonido--------------------------------------------
  	GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
-  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("BGMusic.mp3");
+  //GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("prueba.mp3");
+  GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("prueba.wav");
  // GameManager::getSingletonPtr()->_mainTrack->play();
   //-----------------------------------------------------------
 
@@ -156,14 +157,14 @@ Pacman::PlayState::enter ()
   Ogre::Light* spotLight = _sceneMgr->createLight("SpotLight");
   //Colores difusos a azul
   spotLight->setDiffuseColour(0, 0, 1.0);
-	spotLight->setSpecularColour(0, 0, 1.0);
+  spotLight->setSpecularColour(0, 0, 1.0);
 	//Tipo de luz y sus repectivos direcciones y posiciones (Actua modo linterna)
 	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
 	spotLight->setDirection(-1, -1, 0);
 	spotLight->setPosition(Ogre::Vector3(200, 200, 0));
 	//Para desvanecer la luz, Grados de desvanecimiento...
 	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
-  //---------------------------------------------------------------
+		 //---------------------------------------------------------------
 
 
   //Prueba de cambio de posicion segun el vertice ---
@@ -195,6 +196,7 @@ Pacman::PlayState::enter ()
   //----------------------
 
   _exitGame = false;
+ 
 }
 
 void 
@@ -240,42 +242,33 @@ Pacman::PlayState::loadGraph()
 {
 	// Prueba Grafo ------------------------------
   try{
-    _importer = new Importer;
-    _scene = new Scene;
+     _importer = new Importer;
+     _scene = new Scene;
 
     // Parse data...
-    _importer->parseScene("./data/output.xml", _scene);
-
-    // Print some data...
-      //cout << "\nGraph info..." << endl;
-      //cout << "\t#Vertexes: " << _scene->getGraph()->getVertexes().size() << endl;
-      //cout << "\t#Edges: " << _scene->getGraph()->getEdges().size() << endl;
-
-      //cout << "Vertices" << endl; 
+     _importer->parseScene("./data/output.xml", _scene);
+ 
 
       std::vector<GraphVertex*> _vertices=_scene->getGraph()->getVertexes();
       std::vector<GraphVertex*>::const_iterator it;
       int i =1;
+      NUM_VERTEX=0;
       for (it = _vertices.begin();it != _vertices.end();++it){
         Node _aux=(*it)->getData();
-        //cout << "\t" << static_cast<std::string>(_aux)  << endl;
-        /*Entity* _entPoint = _sceneMgr->createEntity("entPoint"+Ogre::StringConverter::toString(i),"cube.mesh");
-        SceneNode* _snPoint = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
-        _snPoint->attachObject(_entPoint);
-        _snPoint->setPosition(_aux.getPosition()); //x,y,z
-        _snPoint->setScale(1,1,1);
-        _sceneMgr->getRootSceneNode()->addChild(_snPoint);*/
 
         // Ray -------------------------
 		   Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
-		   SceneNode* _snRay = _sceneMgr->createSceneNode("PointSceneNode"+Ogre::StringConverter::toString(i));
+		   SceneNode* _snRay = _sceneMgr->createSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
 		  _snRay->attachObject(_entRay);
 		  _snRay->setPosition(_aux.getPosition());
 		  _snRay->setScale(0.3,0.3,0.3);
 		  _sceneMgr->getRootSceneNode()->addChild(_snRay);
 		  //--------------------------------------------------------
         i+=1;
+        NUM_VERTEX+=1;
       }
+
+
   }
   catch (...){
       cerr << "Unexpected exception!" << endl;
@@ -288,7 +281,6 @@ void
 Pacman::PlayState::updateCamera(Real deltaTime)
 {
 		SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
-		// place the camera pivot roughly at the character's shoulder
 		mCameraPivot->setPosition(_snPj->getPosition() + Ogre::Vector3::UNIT_Y * CAM_HEIGHT);
 		//mover la cámara sin problemas a la meta
 		Vector3 goalOffset = mCameraGoal->_getDerivedPosition() - mCameraNode->getPosition();
@@ -373,6 +365,24 @@ Pacman::PlayState::frameStarted
   //updateGhost2();
   //-----------------
 
+  
+  //Colisiones
+	Ogre::AxisAlignedBox bb1 = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
+	for(int i=1;i<NUM_VERTEX;i++){
+		Ogre::AxisAlignedBox bb2 = _sceneMgr->getSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i))->_getWorldAABB();
+		cout << "NOMBRE: "<<"RaySceneNode"+Ogre::StringConverter::toString(i) << endl;
+  	if(bb1.intersects(bb2)){
+  		
+  		_sceneMgr->destroySceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
+  		GameManager::getSingletonPtr()->_simpleEffect->play();
+  		cout << "CHOCAN" << endl;
+
+ 		}else{
+
+ 		}
+	}
+
+
 
   //Animacion (Prueba)----------------
   if (_animState != NULL) {
@@ -443,6 +453,7 @@ Pacman::PlayState::keyPressed
       
       break;}
     case OIS::KC_W:{//ANTES ERA D
+    	
       // Compruebo si esta direccion esta en las direcionesposibles---
       std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;

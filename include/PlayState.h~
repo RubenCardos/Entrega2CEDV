@@ -23,7 +23,6 @@
 #include <Ogre.h>
 #include <OIS/OIS.h>
 #include "GameState.h"
-#include "Game.h"
 #include <CEGUI.h>
 #include <RendererModules/Ogre/Renderer.h>
 #include <RendererModules/Ogre/Texture.h>
@@ -72,6 +71,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   SceneNode* mCameraGoal;
   SceneNode* mCameraNode;
   Real mPivotPitch;
+  double NUM_VERTEX;
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
@@ -83,7 +83,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Pj* _pj;
   Pj* _ghost;
   Pj* _ghost2;
-
+	
 
   bool quit(const CEGUI::EventArgs &e);
   bool pauseB(const CEGUI::EventArgs &e);

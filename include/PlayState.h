@@ -70,6 +70,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   SceneNode* mCameraPivot;
   SceneNode* mCameraGoal;
   SceneNode* mCameraNode;
+  int NUM_VERTEX;
   Real mPivotPitch;
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
@@ -82,7 +83,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Pj* _pj;
   Pj* _ghost;
   Pj* _ghost2;
-
+	
 
   bool quit(const CEGUI::EventArgs &e);
   bool pauseB(const CEGUI::EventArgs &e);
