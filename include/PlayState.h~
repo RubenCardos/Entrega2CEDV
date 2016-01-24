@@ -70,8 +70,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   SceneNode* mCameraPivot;
   SceneNode* mCameraGoal;
   SceneNode* mCameraNode;
+  int NUM_VERTEX;
   Real mPivotPitch;
-  double NUM_VERTEX;
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;

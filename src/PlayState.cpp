@@ -151,7 +151,7 @@ Pacman::PlayState::enter ()
 	//Carga-----------------
 	createGUI();
   loadGraph();
-
+  loadAnimations(_entPj);
 
   //Luz Escena-------------------
   Ogre::Light* spotLight = _sceneMgr->createLight("SpotLight");
@@ -196,6 +196,7 @@ Pacman::PlayState::enter ()
   //----------------------
 
   _exitGame = false;
+  mKeyDirection = Vector3::ZERO;
  
 }
 
@@ -276,7 +277,22 @@ Pacman::PlayState::loadGraph()
 
 }
 
+void 
+Pacman::PlayState::loadAnimations(Entity* character)
+{
+	String animNames[] ={"walking","moveHead"};
+	
+		for (int i = 0; i < 2; i++)
+		{
+			mAnims[i] = character->getAnimationState(animNames[i]);
+			
+		}
 
+		mAnims[1]->setEnabled(true);
+		mAnims[1]->setLoop(true);
+    mAnims[1]->setTimePosition(0);
+
+}
 void 
 Pacman::PlayState::updateCamera(Real deltaTime)
 {
@@ -345,8 +361,11 @@ Pacman::PlayState::frameStarted
 
   //Actualizamos Camara---------------------------------
   updateCamera(_deltaT);
- //updateCameraGoal(-0.05f * Vector3( _snPj->getPosition()).x,-0.05f * Vector3(_snPj->getPosition()).y,-0.0005f * Vector3(_snPj->getPosition()).z);
   //----------------------------------------------
+
+  //Actualizamos la rotacion del personaje-------------------------------
+  updateCharacter(_deltaT);
+  //--------------------------------------------
 
   //CEGUI --------------------------------------
   CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
@@ -364,39 +383,66 @@ Pacman::PlayState::frameStarted
   updateGhost();
   //updateGhost2();
   //-----------------
-
   
-  //Colisiones
+  
+  //Colisiones--------------------------------------
+
 	Ogre::AxisAlignedBox bb1 = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
 	for(int i=1;i<NUM_VERTEX;i++){
 		Ogre::AxisAlignedBox bb2 = _sceneMgr->getSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i))->_getWorldAABB();
-		cout << "NOMBRE: "<<"RaySceneNode"+Ogre::StringConverter::toString(i) << endl;
+		//cout << "NOMBRE: "<< "RaySceneNode"+Ogre::StringConverter::toString(i) << endl;
   	if(bb1.intersects(bb2)){
   		
-  		_sceneMgr->destroySceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
-  		GameManager::getSingletonPtr()->_simpleEffect->play();
-  		cout << "CHOCAN" << endl;
-
- 		}else{
+  		//_sceneMgr->destroySceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
+  		_sceneMgr->getSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i))->setVisible(false);
+  		//GameManager::getSingletonPtr()->_simpleEffect->play();
+  	//	cout << "CHOCAN" << endl;
 
  		}
 	}
-
-
-
-  //Animacion (Prueba)----------------
-  if (_animState != NULL) {
-    if (_animState->hasEnded()) {
-      _animState->setTimePosition(0.0);
-      _animState->setEnabled(false);
+	//----------------------------------------
+for (int i = 0; i < 2; i++)
+		{
+	if (mAnims[i] != NULL) {
+    if (mAnims[i]->hasEnded()) {
+      mAnims[i]->setTimePosition(0.0);
+      mAnims[i]->setEnabled(false);
     }
     else {
-      _animState->addTime(_deltaT);
+      mAnims[i]->addTime(_deltaT);
     }
-  }
+  }	
+}
+
+
+
   //-------------------------------------
   return true;
 }
+
+void 
+Pacman::PlayState::updateCharacter(Real deltaTime)
+{
+		mDirection = Ogre::Vector3::ZERO;   // we will calculate this
+
+		SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+
+		if (mKeyDirection != Ogre::Vector3::ZERO)
+		{
+			//Calcula la direccion basado en las direcciones del personaje
+			mDirection += mKeyDirection.z * mCameraNode->getOrientation().zAxis();
+			mDirection += mKeyDirection.x * mCameraNode->getOrientation().xAxis();
+			mDirection.y = 0;
+			mDirection.normalise(); //Normalizamos el vector
+
+			Quaternion orientationPJ = _snPj->getOrientation().zAxis().getRotationTo(mDirection);
+
+			Real yawPJ = orientationPJ.getYaw().valueDegrees();
+			
+			_snPj->yaw(Degree(yawPJ));
+		}
+	}
+
 
 bool
 Pacman::PlayState::frameEnded
@@ -424,11 +470,14 @@ Pacman::PlayState::keyPressed
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
   CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
   //-------------------------------
-
+  
+ 
   //Movimiento PJ----------------
   SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
   switch(e.key){
-    case OIS::KC_S:{ //ANTES ERA A
+    case OIS::KC_S:{ 
+    	mKeyDirection.z = 1;
+
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
@@ -442,18 +491,25 @@ Pacman::PlayState::keyPressed
           _pj->setOrientation(4);
           _next=_adjVer[_go];
           _check=false;
+
         }else{
           cout << "No se puede ir hacia alli" << endl;
           _go++;
         }
 
       }
+      	mAnims[1]->setEnabled(false);
+      	mAnims[0]->setTimePosition(0);
+      	mAnims[0]->setEnabled(true);
+      	mAnims[0]->setLoop(true);
+      	mAnims[0]->setTimePosition(0);
+      
       //--------------------------------------------------------------
       
       
       break;}
-    case OIS::KC_W:{//ANTES ERA D
-    	
+    case OIS::KC_W:{
+    	mKeyDirection.z = -1;
       // Compruebo si esta direccion esta en las direcionesposibles---
       std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
@@ -473,9 +529,16 @@ Pacman::PlayState::keyPressed
           _go++;
         }
       }
+
+        mAnims[1]->setEnabled(false);
+      	mAnims[0]->setTimePosition(0);
+      	mAnims[0]->setEnabled(true);
+      	mAnims[0]->setLoop(true);
+      	mAnims[0]->setTimePosition(0);
       //------------------------------------------------------
       break;}
-    case OIS::KC_A:{ //ANTES ERA W
+    case OIS::KC_A:{ 
+    	mKeyDirection.x = -1;
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
@@ -495,9 +558,17 @@ Pacman::PlayState::keyPressed
           _go++;
         }
       }
+
+        mAnims[1]->setEnabled(false);
+      	mAnims[0]->setTimePosition(0);
+      	mAnims[0]->setEnabled(true);
+      	mAnims[0]->setLoop(true);
+      	mAnims[0]->setTimePosition(0);
       //---------------------------------------------
+
       break;}
-    case OIS::KC_D:{//ANTES ERA S
+    case OIS::KC_D:{
+    	mKeyDirection.x = 1;
       // Compruebo si esta direccion esta en las direciones posibles---
       std::vector<GraphVertex*>::const_iterator it;
       bool _check =true;
@@ -518,17 +589,15 @@ Pacman::PlayState::keyPressed
         }
       }
       }
+
+        mAnims[1]->setEnabled(false);
+      	mAnims[0]->setTimePosition(0);
+      	mAnims[0]->setEnabled(true);
+      	mAnims[0]->setLoop(true);
+      	mAnims[0]->setTimePosition(0);
       //-----------------------------------------------
       break;
-   	case OIS::KC_R:
-      _snPj->roll(Ogre::Degree(-90));
-      break;
-    case OIS::KC_SPACE:
-      _animState = _sceneMgr->getEntity("entPJ")->getAnimationState("walking");
-      _animState->setEnabled(true);
-      _animState->setLoop(true);
-      _animState->setTimePosition(0.0);
-      break;
+    
   }
   //----------------------------
 
@@ -548,6 +617,10 @@ Pacman::PlayState::keyReleased
   if (e.key == OIS::KC_ESCAPE) {
     _exitGame = true;
   }
+  if (e.key == OIS::KC_W && mKeyDirection.z == -1) mKeyDirection.z = 0;
+	else if (e.key == OIS::KC_A && mKeyDirection.x == -1) mKeyDirection.x = 0;
+	else if (e.key == OIS::KC_S && mKeyDirection.z == 1) mKeyDirection.z = 0;
+	else if (e.key == OIS::KC_D && mKeyDirection.x == 1) mKeyDirection.x = 0;
   //-------------------------------
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(static_cast<CEGUI::Key::Scan>(e.key));
@@ -805,18 +878,15 @@ Pacman::PlayState::updatePj()
       _next=NULL;
       _pj->setMoving(false);
       _adjVer.clear();
+     
+      //Animacion de idle
+      mAnims[1]->setEnabled(true);
+      mAnims[1]->setLoop(true);
+      mAnims[1]->setTimePosition(0.0);
     }
   }
 
-  if (_animState != NULL) {
-    if (_animState->hasEnded()) {
-      _animState->setTimePosition(0.0);
-      _animState->setEnabled(false);
-    }
-    else {
-      _animState->addTime(_deltaT);
-    }
-  }
+  
   
 
   

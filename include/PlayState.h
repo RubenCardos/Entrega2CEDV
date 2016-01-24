@@ -45,7 +45,9 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void resume();
   void updateCamera(Ogre::Real deltaTime);
   void updateCameraGoal(Ogre::Real deltaYaw, Ogre::Real deltaPitch, Ogre::Real deltaZoom);
+  void updateCharacter(Ogre::Real deltaTime);
   void loadGraph();
+  void loadAnimations(Entity* character);
   void createGUI();
   void setupAnimations();
 
@@ -66,12 +68,24 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
  protected:
+  //Camera
   SceneNode* mBodyNode;
   SceneNode* mCameraPivot;
   SceneNode* mCameraGoal;
   SceneNode* mCameraNode;
-  int NUM_VERTEX;
   Real mPivotPitch;
+
+  //Colision
+  int NUM_VERTEX;
+
+  //UpdateCharacter
+  Vector3 mKeyDirection;      // player's local intended direction based on WASD keys
+  Vector3 mDirection;
+
+  //Animaciones
+  AnimationState* mAnims[2]; 
+
+  //Escena
   Ogre::Root* _root;
   Ogre::SceneManager* _sceneMgr;
   Ogre::Viewport* _viewport;
