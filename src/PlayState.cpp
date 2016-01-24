@@ -872,7 +872,7 @@ Pacman::PlayState::updatePj()
     //Ver cuando he de parar---
 
     Vector3 _res=_next->getData().getPosition()-_snPj->getPosition();
-    //cout << "Distancia " << _res.length() << endl;
+    //Se para..
     if(_res.length()<=0.035){
       _now=_next;
       _next=NULL;
@@ -880,6 +880,7 @@ Pacman::PlayState::updatePj()
       _adjVer.clear();
      
       //Animacion de idle
+      mAnims[0]->setEnabled(false);
       mAnims[1]->setEnabled(true);
       mAnims[1]->setLoop(true);
       mAnims[1]->setTimePosition(0.0);
