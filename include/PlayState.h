@@ -97,7 +97,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   Pj* _pj;
   Pj* _ghost;
   Pj* _ghost2;
-	
+	bool _collisionWithGhostDetected;
 
   bool quit(const CEGUI::EventArgs &e);
   bool pauseB(const CEGUI::EventArgs &e);
@@ -108,6 +108,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void updateGhost();
   void updateGhost2();
   void updatePj();
+  void updateCollisions();
 };
 
 }

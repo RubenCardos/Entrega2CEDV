@@ -1,5 +1,6 @@
 #include "PlayState.h"
 #include "PauseState.h"
+#include "GameOverState.h"
 #include "CEGUI.h"
 #define CAM_HEIGHT 5 //Altura de la camara
 
@@ -100,6 +101,7 @@ Pacman::PlayState::enter ()
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setScale(0.5,0.5,0.5);
+  _snPj->showBoundingBox(true);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   _pj=new Pj;
 
@@ -109,6 +111,8 @@ Pacman::PlayState::enter ()
   Entity* _entGhost = _sceneMgr->createEntity("entGhost","ghost.mesh");
   SceneNode* _snGhost = _sceneMgr->createSceneNode("GhostSceneNode");
   _snGhost->attachObject(_entGhost);
+  _snGhost->setScale(0.5,0.5,0.5);
+  _snGhost->showBoundingBox(true);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost);
   _ghost=new Pj;
 
@@ -121,7 +125,9 @@ Pacman::PlayState::enter ()
   //Ghost 2------------------------
   Entity* _entGhost2 = _sceneMgr->createEntity("entGhost2","ghost.mesh");
   SceneNode* _snGhost2 = _sceneMgr->createSceneNode("GhostSceneNode2");
-  _snGhost->attachObject(_entGhost2);
+  _snGhost2->showBoundingBox(true);
+  _snGhost2->setScale(0.5,0.5,0.5);
+  _snGhost2->attachObject(_entGhost2);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost2);
   _ghost2=new Pj;
 
@@ -136,15 +142,12 @@ Pacman::PlayState::enter ()
   Entity* _entMap = _sceneMgr->createEntity("entMap","tablero.mesh");
   SceneNode* _snMap = _sceneMgr->createSceneNode("MapSceneNode");
   _snMap->attachObject(_entMap);
-  _snMap->setPosition(1,0,0); //x,y,z
-  _snMap->setScale(23,23,23);
+  _snMap->setPosition(0,0,0); //x,y,z
+  _snMap->setScale(25,25,25);
   _sceneMgr->getRootSceneNode()->addChild(_snMap);
   //---------------------------------------------------------
 
-  
-
-
- //Skybox -----------------------------------------------
+  //Skybox -----------------------------------------------
 	_sceneMgr->setSkyBox(true, "MaterialSkybox");
 	//-------------------------------------------------
 
@@ -164,7 +167,7 @@ Pacman::PlayState::enter ()
 	spotLight->setPosition(Ogre::Vector3(200, 200, 0));
 	//Para desvanecer la luz, Grados de desvanecimiento...
 	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
-		 //---------------------------------------------------------------
+	//---------------------------------------------------------------
 
 
   //Prueba de cambio de posicion segun el vertice ---
@@ -194,6 +197,11 @@ Pacman::PlayState::enter ()
     _possibleMoves.push_back(_vecMove);
   }
   //----------------------
+
+  // Colision con fantasma ---
+  _collisionWithGhostDetected=false;
+  // ------------------------
+
 
   _exitGame = false;
   mKeyDirection = Vector3::ZERO;
@@ -381,10 +389,15 @@ Pacman::PlayState::frameStarted
   
   //Update Ghost ----
   updateGhost();
-  //updateGhost2();
+  updateGhost2();
   //-----------------
   
   
+  //Update Collisiones ---
+  updateCollisions();
+
+  //----------------------
+
   //Colisiones--------------------------------------
 
 	Ogre::AxisAlignedBox bb1 = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
@@ -466,6 +479,12 @@ Pacman::PlayState::keyPressed
   }
   //-----------------
 
+  // Tecla g --> GameOverState.-------
+  if (e.key == OIS::KC_G) {
+    pushState(GameOverState::getSingletonPtr());
+  }
+  //-----------------
+
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
   CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
@@ -488,7 +507,6 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0,0,0.03));
-          _pj->setOrientation(4);
           _next=_adjVer[_go];
           _check=false;
 
@@ -520,7 +538,6 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0,0,-0.03));
-          _pj->setOrientation(2);
           _next=_adjVer[_go];
           _check=false;
 
@@ -549,7 +566,6 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(-0.03,0,0));
-          _pj->setOrientation(1);
           _next=_adjVer[_go];
           _check=false;
 
@@ -579,7 +595,6 @@ Pacman::PlayState::keyPressed
           cout << "Voy!" << endl;
           _pj->setMoving(true);
           _pj->setDesp(Vector3(0.03,0,0));
-          _pj->setOrientation(3);
           _next=_adjVer[_go];
           _check=false;
 
@@ -601,12 +616,6 @@ Pacman::PlayState::keyPressed
   }
   //----------------------------
 
-  // Actualizo la orientacion del Pj ---------
-
-  cout << "Orientacion " << _pj->getOrientation() << endl;
-
-
-  //-------------------------------------------
 }
 
 void
@@ -896,3 +905,20 @@ Pacman::PlayState::updatePj()
   // ----------------- 
 }
 
+void
+Pacman::PlayState::updateCollisions()
+{
+  
+  
+  Ogre::AxisAlignedBox bbPj = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
+  Ogre::AxisAlignedBox bbGhost1 = _sceneMgr->getSceneNode("GhostSceneNode")->_getWorldAABB();
+  Ogre::AxisAlignedBox bbGhost2 = _sceneMgr->getSceneNode("GhostSceneNode2")->_getWorldAABB();
+
+  if((_collisionWithGhostDetected==false)&&(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)) ){
+      
+    cout << "Colision PJ - Ghost" << endl;
+    _collisionWithGhostDetected=true;
+  }
+
+
+}
