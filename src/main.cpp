@@ -24,6 +24,7 @@
 #include "IntroState.h"
 #include "PlayState.h"
 #include "PauseState.h"
+#include "GameOverState.h"
 
 #include <iostream>
 
@@ -35,10 +36,12 @@ int main () {
   Pacman::IntroState* introState = new Pacman::IntroState();
   Pacman::PlayState* playState = new Pacman::PlayState();
   Pacman::PauseState* pauseState = new Pacman::PauseState();
+  Pacman::GameOverState* gameOverState = new Pacman::GameOverState();
 
   UNUSED_VARIABLE(introState);
   UNUSED_VARIABLE(playState);
   UNUSED_VARIABLE(pauseState);
+  UNUSED_VARIABLE(gameOverState);
     
   try
     {

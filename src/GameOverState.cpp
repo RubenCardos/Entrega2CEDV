@@ -12,7 +12,7 @@ Pacman::GameOverState::enter ()
   _camera = _sceneMgr->getCamera("IntroCamera");
   _viewport = _root->getAutoCreatedWindow()->getViewport(0);
   // Nuevo background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 1.0));
+  _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 0.0));
 
   _exitGame = false;
 }
@@ -59,6 +59,12 @@ void
 Pacman::GameOverState::keyReleased
 (const OIS::KeyEvent &e)
 {
+
+  //Salgo del juego---------------
+  if (e.key == OIS::KC_ESCAPE) {
+    _exitGame = true;
+  }
+
 }
 
 void
