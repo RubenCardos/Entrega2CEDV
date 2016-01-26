@@ -216,8 +216,10 @@ Pacman::PlayState::createGUI()
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   sheet->getChildAtIdx(0)->setVisible(false); //PLAY
   sheet->getChildAtIdx(1)->setVisible(false); //CREDITOS
-  sheet->getChildAtIdx(2)->setVisible(false);
-  sheet->getChildAtIdx(3)->setVisible(true); //CAMARA
+  sheet->getChildAtIdx(2)->setVisible(false); //PUNTUACIONES
+  sheet->getChildAtIdx(3)->setVisible(false); //LOGO
+  sheet->getChildAtIdx(4)->setVisible(true);
+
 
 
   //Interfaz Cegui---------------------------------------
@@ -229,14 +231,14 @@ Pacman::PlayState::createGUI()
   sheetBG->setProperty("FrameEnabled","False");
   sheetBG->setProperty("BackgroundEnabled", "False");
 
-  CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/PauseButton");
-  pauseButton->setText("Pausa");
+  CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","Ex1/PauseButton");
+  pauseButton->setText("[font='Carton_Six'] Pausa ");
   pauseButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   pauseButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.6,0),CEGUI::UDim(0.3,0)));
   pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::pauseB,this));
 
-  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","Ex1/QuitButton");
-  quitButton->setText("Salir");
+  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","Ex1/QuitButton");
+  quitButton->setText("[font='Carton_Six'] Salir ");
   quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8,0),CEGUI::UDim(0.3,0)));
   quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));

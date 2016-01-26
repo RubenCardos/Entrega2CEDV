@@ -235,7 +235,10 @@ void Pacman::IntroState::createGUI()
   CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
   CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
 
+
+  CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
   CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
+
   CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont("DejaVuSans-12");
 
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
@@ -253,30 +256,36 @@ void Pacman::IntroState::createGUI()
 
   //Sheet
   Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd");
-  sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.60f, 0.0f),CEGUI::UDim(0.05, 0)));
+  sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.58f, 0.0f),CEGUI::UDim(0.05, 0)));
   sheetBG->setSize( CEGUI::USize(CEGUI::UDim(0.40, 0), CEGUI::UDim(0.40, 0)));
   sheetBG->setProperty("Image","BackgroundImage");
   sheetBG->setProperty("FrameEnabled","False");
   sheetBG->setProperty("BackgroundEnabled", "False");
 
-   //Quit button
-  CEGUI::Window* playButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","play");
+  CEGUI::Window* playButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","play");
   playButton->setText("[font='Carton_Six'] Play ");
-  playButton->setSize(CEGUI::USize(CEGUI::UDim(0.19,0),CEGUI::UDim(0.1,0)));
-  playButton->setXPosition(UDim(0.70f, 0.0f));
+  playButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  playButton->setXPosition(UDim(0.66f, 0.0f));
   playButton->setYPosition(UDim(0.50f, 0.0f));
   playButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
-  //Attaching buttons
-  sheet->addChild(playButton);
 
+  CEGUI::Window* recordsButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","records");
+  recordsButton->setText("[font='Carton_Six'] Puntuaciones ");
+  recordsButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  recordsButton->setXPosition(UDim(0.66f, 0.0f));
+  recordsButton->setYPosition(UDim(0.60f, 0.0f));
+  recordsButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
 
-  CEGUI::Window* creditoButton = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/Button","credito");
+  CEGUI::Window* creditoButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","credito");
   creditoButton->setText("[font='Carton_Six'] Creditos ");
-  creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.19,0),CEGUI::UDim(0.1,0)));
-  creditoButton->setXPosition(UDim(0.70f, 0.0f));
+  creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  creditoButton->setXPosition(UDim(0.66f, 0.0f));
   creditoButton->setYPosition(UDim(0.70f, 0.0f));
   creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+
   //Attaching buttons
+  sheet->addChild(recordsButton);
+  sheet->addChild(playButton);
   sheet->addChild(creditoButton);
   sheet->addChild(sheetBG);
 

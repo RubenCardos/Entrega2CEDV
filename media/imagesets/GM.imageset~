@@ -1,0 +1,7 @@
+<Imageset autoScaled="vertical" imagefile="GM.png" name="GM" nativeHorzRes="800" nativeVertRes="600" version="2">
+    <Image height="46" name="btnDisabl" width="29" xPos="20" yPos="106" />
+    <Image height="44" name="puntero" width="28" xPos="36" yPos="188" />
+    <Image height="79" name="btnNormal" width="160" xPos="0" yPos="0" />
+    <Image height="44" name="btnHover" width="39" xPos="58" yPos="107" />
+    <Image height="44" name="btnPushed" width="20" xPos="100" yPos="108" />
+</Imageset>

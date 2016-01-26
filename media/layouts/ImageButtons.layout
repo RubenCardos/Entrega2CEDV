@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout version="4">
+	<Window type="DefaultWindow" name="Cfg" >
+		<Property name="Area" value="{{0.0,0},{0.0,0},{1,0},{1,0}}" />
+
+    <Window type="TaharezLook/ImageButton" name="playbutton" >
+        <Property name="NormalImage" value="set:OgreTrayImages image:OgreLogo" />
+       	<Property name="Area" value="{{0.580,0},{0.825,0},{0.768,0},{0.969,0}}" />
+    </Window>
+    
+</GUILayout>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" ?>
+<GUIScheme version="5" name="GM">
+	<Imageset filename="GM.imageset" />
+	<Font filename="DejaVuSans-12.font" />
+	<LookNFeel filename="GM.looknfeel" />
+	<WindowRendererSet filename="CEGUICoreWindowRendererSet" />
+
+	<FalagardMapping windowType="GM/Label"       targetType="DefaultWindow"     renderer="Core/Default"      lookNFeel="GM/Label" />
+	<FalagardMapping windowType="GM/Button"      targetType="CEGUI/PushButton"  renderer="Core/Button"       lookNFeel="GM/Button" />
+	<FalagardMapping windowType="GM/Checkbox"    targetType="CEGUI/ToggleButton"    renderer="Core/ToggleButton" lookNFeel="GM/Checkbox" />
+	<FalagardMapping windowType="GM/ImageButton" targetType="CEGUI/PushButton"  renderer="Core/Button"       lookNFeel="GM/ImageButton" />
+	<FalagardMapping windowType="GM/RadioButton" targetType="CEGUI/RadioButton" renderer="Core/ToggleButton" lookNFeel="GM/RadioButton" />
+	<FalagardMapping windowType="GM/FrameWindow"  targetType="CEGUI/FrameWindow" renderer="Core/FrameWindow"  lookNFeel="GM/FrameWindow" />
+	<FalagardMapping windowType="GM/Titlebar"     targetType="CEGUI/Titlebar"    renderer="Core/Titlebar"     lookNFeel="GM/Titlebar" />
+	<FalagardMapping windowType="GM/Editbox"          targetType="CEGUI/Editbox"          renderer="Core/Editbox"          lookNFeel="GM/Editbox" />
+	<FalagardMapping windowType="GM/MultiLineEditbox" targetType="CEGUI/MultiLineEditbox" renderer="Core/MultiLineEditbox" lookNFeel="GM/MultiLineEditbox" />
+	<FalagardMapping windowType="GM/Menubar"   targetType="CEGUI/Menubar"   renderer="Core/Menubar"   lookNFeel="GM/Menubar" />
+	<FalagardMapping windowType="GM/PopupMenu" targetType="CEGUI/PopupMenu" renderer="Core/PopupMenu" lookNFeel="GM/PopupMenu" />
+	<FalagardMapping windowType="GM/MenuItem"  targetType="CEGUI/MenuItem"  renderer="Core/MenuItem"  lookNFeel="GM/MenuItem" />
+	<FalagardMapping windowType="GM/AlternateProgressBar" targetType="CEGUI/ProgressBar" renderer="Core/ProgressBar" lookNFeel="GM/AltProgressBar" />
+	<FalagardMapping windowType="GM/ProgressBar"          targetType="CEGUI/ProgressBar" renderer="Core/ProgressBar" lookNFeel="GM/ProgressBar" />
+	<FalagardMapping windowType="GM/VUMeter"              targetType="CEGUI/ProgressBar" renderer="Core/ProgressBar" lookNFeel="GM/VUMeter" />
+	<FalagardMapping windowType="GM/VerticalScrollbar"   targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="GM/VerticalScrollbar" />
+	<FalagardMapping windowType="GM/HorizontalScrollbar" targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="GM/HorizontalScrollbar" />
+	<FalagardMapping windowType="GM/VerticalScrollbarThumb"   targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="GM/VerticalScrollbarThumb" />
+	<FalagardMapping windowType="GM/HorizontalScrollbarThumb" targetType="CEGUI/Thumb" renderer="Core/Button" lookNFeel="GM/HorizontalScrollbarThumb" />
+	<FalagardMapping windowType="GM/LargeVerticalScrollbar"      targetType="CEGUI/Scrollbar" renderer="Core/Scrollbar" lookNFeel="GM/LargeVerticalScrollbar" />
+	<FalagardMapping windowType="GM/LargeVerticalScrollbarThumb" targetType="CEGUI/Thumb"     renderer="Core/Button"    lookNFeel="GM/LargeVerticalScrollbarThumb" />
+	<FalagardMapping windowType="GM/TabButton"  targetType="CEGUI/TabButton"  renderer="Core/TabButton"  lookNFeel="GM/TabButton" />
+	<FalagardMapping windowType="GM/TabControl" targetType="CEGUI/TabControl" renderer="Core/TabControl" lookNFeel="GM/TabControl" />
+	<FalagardMapping windowType="GM/TabContentPane"    targetType="DefaultWindow"    renderer="Core/Default"    lookNFeel="GM/TabContentPane" />
+	<FalagardMapping windowType="GM/TabButtonPane"    targetType="DefaultWindow"    renderer="Core/Default"    lookNFeel="GM/TabButtonPane" />
+	<FalagardMapping windowType="GM/ComboDropList" targetType="CEGUI/ComboDropList" renderer="Core/Listbox" lookNFeel="GM/ComboDropList" />
+	<FalagardMapping windowType="GM/ComboEditbox"  targetType="CEGUI/Editbox"	 renderer="Core/Editbox" lookNFeel="GM/ComboEditbox" />
+	<FalagardMapping windowType="GM/Combobox" targetType="CEGUI/Combobox"	 renderer="Core/Default" lookNFeel="GM/Combobox" />
+	<FalagardMapping windowType="GM/Listbox"           targetType="CEGUI/Listbox"           renderer="Core/Listbox"           lookNFeel="GM/Listbox" />
+	<FalagardMapping windowType="GM/ListHeader"        targetType="CEGUI/ListHeader"        renderer="Core/ListHeader"        lookNFeel="GM/ListHeader" />
+	<FalagardMapping windowType="GM/ListHeaderSegment" targetType="CEGUI/ListHeaderSegment" renderer="Core/ListHeaderSegment" lookNFeel="GM/ListHeaderSegment" />
+	<FalagardMapping windowType="GM/MultiColumnList"   targetType="CEGUI/MultiColumnList"   renderer="Core/MultiColumnList"   lookNFeel="GM/MultiColumnList" />
+	<FalagardMapping windowType="GM/Slider"      targetType="CEGUI/Slider"      renderer="Core/Slider"  lookNFeel="GM/Slider" />
+	<FalagardMapping windowType="GM/SliderThumb" targetType="CEGUI/Thumb" renderer="Core/Button"  lookNFeel="GM/SliderThumb" />
+	<FalagardMapping windowType="GM/ScrollablePane" targetType="CEGUI/ScrollablePane" renderer="Core/ScrollablePane" lookNFeel="GM/ScrollablePane" />
+	<FalagardMapping windowType="GM/Spinner" targetType="CEGUI/Spinner" renderer="Core/Default" lookNFeel="GM/Spinner" />
+	<FalagardMapping windowType="GM/Tooltip" targetType="CEGUI/Tooltip" renderer="Core/Tooltip" lookNFeel="GM/Tooltip" />
+	<FalagardMapping windowType="GM/StaticImage" targetType="DefaultWindow" renderer="Core/StaticImage" lookNFeel="GM/StaticImage" />
+	<FalagardMapping windowType="GM/StaticText"  targetType="DefaultWindow" renderer="Core/StaticText"  lookNFeel="GM/StaticText" />
+	<FalagardMapping windowType="GM/ItemListbox" targetType="CEGUI/ItemListbox" renderer="Core/ItemListbox" lookNFeel="GM/ItemListbox" />
+	<FalagardMapping windowType="GM/ListboxItem" targetType="CEGUI/ItemEntry"   renderer="Core/ItemEntry"   lookNFeel="GM/ListboxItem" />
+	<FalagardMapping windowType="GM/GroupBox" targetType="DefaultWindow"   renderer="Core/Default"   lookNFeel="GM/GroupBox" />
+      <FalagardMapping windowType="GM/Tree" targetType="CEGUI/Tree"   renderer="Core/Tree"   lookNFeel="GM/Tree" />
+</GUIScheme>
+
