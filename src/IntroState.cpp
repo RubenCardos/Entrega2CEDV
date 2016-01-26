@@ -18,15 +18,10 @@ Pacman::IntroState::enter ()
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5,0.5,0.5));
 
 
-  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("BGMusic.mp3");
-  //GameManager::getSingletonPtr()->_mainTrack->play();
+  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("Intro.mp3");
+  GameManager::getSingletonPtr()->_mainTrack->play();
   
-  //Niebla-------------------------------------------------
-  Ogre::ColourValue fadeColour(0.9, 0.9, 0.9);
-  _viewport->setBackgroundColour(fadeColour);
-  _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 20, 50);
-  _sceneMgr->setFog(Ogre::FOG_EXP, fadeColour, 0.003);
-  //---------------------------------------------------------
+  
 
   _exitGame = false;
 
@@ -48,7 +43,7 @@ Pacman::IntroState::enter ()
   Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, 0);
   Ogre::MeshManager::getSingleton().createPlane("plane1",
   Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, plane1,
-  35,50,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
+  35,55,1,1,true,1,1,1,Ogre::Vector3::UNIT_Z);
 
   Ogre::SceneNode* nodeBG = _sceneMgr->createSceneNode("wallpaper");
   Ogre::Entity* groundEnt = _sceneMgr->createEntity("planeEnt", "plane1");
@@ -80,15 +75,21 @@ Pacman::IntroState::enter ()
   _sceneMgr->getRootSceneNode()->addChild(_sceneGhost);
   //----------------------------------------------------------------------
 
-  //Luz para el background-----------------------------------------------------
-  Ogre::Light* light = _sceneMgr->createLight("Light1");
-  light->setType(Ogre::Light::LT_DIRECTIONAL);
-  light->setDirection(Ogre::Vector3(-1,1,0));
-  nodeBG->attachObject(light);
-  //-----------------------------------------------------
+  //Luz Escena-------------------
+  Ogre::Light* spotLight = _sceneMgr->createLight("SpotLight");
+  //Colores difusos a azul
+  spotLight->setDiffuseColour(0, 0, 0.5);
+  spotLight->setSpecularColour(0, 0, 1.0);
+	//Tipo de luz y sus repectivos direcciones y posiciones (Actua modo linterna)
+	spotLight->setType(Ogre::Light::LT_SPOTLIGHT);
+	spotLight->setDirection(-1, -1, 0);
+	spotLight->setPosition(Ogre::Vector3(50, 50, 0));
+	//Para desvanecer la luz, Grados de desvanecimiento...
+	spotLight->setSpotlightRange(Ogre::Degree(35), Ogre::Degree(50));
+	//---------------------------------------------------------------
   
   //Animaciones del Personaje y del Fantasma-------------------------------------
-  _animPJ = _sceneMgr->getEntity("entCharacter")->getAnimationState("moveHead");
+  _animPJ = _sceneMgr->getEntity("entCharacter")->getAnimationState("idle");
   _animPJ->setEnabled(true);
   _animPJ->setLoop(true);
   _animPJ->setTimePosition(0.0);
@@ -102,6 +103,12 @@ Pacman::IntroState::enter ()
   //Creamos la interfaz ------------------------  
   createGUI();
   //----------------------------
+
+  //ImageManager de los fondos de las ventanas creditos y puntuaciones----------------------
+  ImageManager::getSingleton().addFromImageFile("BackgroundCredito","CREDITOS.jpg");
+  ImageManager::getSingleton().addFromImageFile("BackgroundRecords","PUNTUACIONES.jpg");
+
+  //--------------------------------------------------------------------------------------------
 }
 
 
@@ -234,23 +241,17 @@ void Pacman::IntroState::createGUI()
   CEGUI::Font::setDefaultResourceGroup("Fonts");
   CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
   CEGUI::WidgetLookManager::setDefaultResourceGroup("LookNFeel");
-
-
   CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
   CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-
   CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont("DejaVuSans-12");
-
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
   CEGUI::Vector2f mousePos = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().getPosition();
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(-mousePos.d_x,-mousePos.d_y);
-
-  // load all the fonts (if they are not loaded yet)
   CEGUI::FontManager::getSingleton().createAll("*.font", "Fonts");
     
   //Sheet
   CEGUI::Window* sheet = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow","Sheet");
+
   //Cargo la imagen
   ImageManager::getSingleton().addFromImageFile("BackgroundImage","logo.png");
 
@@ -264,24 +265,25 @@ void Pacman::IntroState::createGUI()
 
   CEGUI::Window* playButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","play");
   playButton->setText("[font='Carton_Six'] Play ");
-  playButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  playButton->setXPosition(UDim(0.66f, 0.0f));
+  playButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  playButton->setXPosition(UDim(0.65f, 0.0f));
   playButton->setYPosition(UDim(0.50f, 0.0f));
   playButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
 
   CEGUI::Window* recordsButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","records");
   recordsButton->setText("[font='Carton_Six'] Puntuaciones ");
-  recordsButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  recordsButton->setXPosition(UDim(0.66f, 0.0f));
+  recordsButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  recordsButton->setXPosition(UDim(0.65f, 0.0f));
   recordsButton->setYPosition(UDim(0.60f, 0.0f));
-  recordsButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+  recordsButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::records,this));
 
   CEGUI::Window* creditoButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","credito");
   creditoButton->setText("[font='Carton_Six'] Creditos ");
-  creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  creditoButton->setXPosition(UDim(0.66f, 0.0f));
+  creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  creditoButton->setXPosition(UDim(0.65f, 0.0f));
   creditoButton->setYPosition(UDim(0.70f, 0.0f));
-  creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+  creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::credito,this));
+
 
   //Attaching buttons
   sheet->addChild(recordsButton);
@@ -359,3 +361,72 @@ Pacman::IntroState::play(const CEGUI::EventArgs &e)
   return true;
 }
 
+bool
+Pacman::IntroState::back(const CEGUI::EventArgs &e)
+{
+  
+	CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+	
+  if(creditos==true){
+  	sheet->destroyChild("background_credito");
+  }else{
+  	sheet->destroyChild("background_records");
+  }
+
+
+  return true;
+}
+
+bool
+Pacman::IntroState::credito(const CEGUI::EventArgs &e)
+{
+
+	CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  creditos=true;
+
+  //Sheet Creditos
+  Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_credito");
+  sheetBG->setPosition( UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBG->setSize( USize(cegui_reldim(1),cegui_reldim(1)));
+  sheetBG->setProperty("Image","BackgroundCredito");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
+
+  CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
+  backButton->setText("[font='Carton_Six'] Volver ");
+  backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  backButton->setXPosition(UDim(0.66f, 0.0f));
+  backButton->setYPosition(UDim(0.80f, 0.0f));
+  backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::back,this));
+  
+  sheetBG->addChild(backButton);
+  sheet->addChild(sheetBG);
+  return true;
+}
+
+bool
+Pacman::IntroState::records(const CEGUI::EventArgs &e)
+{
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  creditos=false;
+
+  //Sheet Records
+  Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_records");
+  sheetBG->setPosition( UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBG->setSize( USize(cegui_reldim(1),cegui_reldim(1)));
+  sheetBG->setProperty("Image","BackgroundRecords");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
+
+  CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
+  backButton->setText("[font='Carton_Six'] Volver ");
+  backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  backButton->setXPosition(UDim(0.66f, 0.0f));
+  backButton->setYPosition(UDim(0.80f, 0.0f));
+  backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::back,this));
+  
+  sheetBG->addChild(backButton);
+  sheet->addChild(sheetBG);
+  
+  return true;
+}

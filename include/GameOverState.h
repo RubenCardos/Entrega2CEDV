@@ -23,7 +23,7 @@
 
 #include <Ogre.h>
 #include <OIS/OIS.h>
-
+#include <CEGUI.h>
 #include "GameState.h"
 
 namespace Pacman {

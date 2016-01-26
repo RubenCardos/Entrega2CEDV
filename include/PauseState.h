@@ -23,7 +23,7 @@
 
 #include <Ogre.h>
 #include <OIS/OIS.h>
-
+#include <CEGUI.h>
 #include "GameState.h"
 
 namespace Pacman {
@@ -51,6 +51,8 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
   // Heredados de Ogre::Singleton.
   static PauseState& getSingleton ();
   static PauseState* getSingletonPtr ();
+
+  CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
  protected:
   Ogre::Root* _root;

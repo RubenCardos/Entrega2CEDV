@@ -50,10 +50,9 @@ Pacman::PlayState::enter ()
   //-------------------------------------
 
   //Sonido--------------------------------------------
- 	GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
-  //GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("prueba.mp3");
-  GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("prueba.wav");
- // GameManager::getSingletonPtr()->_mainTrack->play();
+ 	//GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
+  GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
+
   //-----------------------------------------------------------
 
   //Camara--------------------------------------------------------------
@@ -79,13 +78,6 @@ Pacman::PlayState::enter ()
   _sceneMgr->setAmbientLight(Ogre::ColourValue(0.5, 0.5, 0.5));
   //-------------------------------------
   
-  //Quitar niebla------------------------------------------------
-  Ogre::ColourValue fadeColour(0.0, 0.0, 0.0);
-  _viewport->setBackgroundColour(fadeColour);
-  _sceneMgr->setFog(Ogre::FOG_LINEAR, fadeColour, 0.0, 0, 0);
-  _sceneMgr->setFog(Ogre::FOG_EXP, fadeColour, 0.000);
-  //-----------------------------------------------------
-
 
   //Camara MiniMapa-------------------
   _cameraMiniMap = _sceneMgr->getCamera("MiniMapCamera");
@@ -290,7 +282,7 @@ Pacman::PlayState::loadGraph()
 void 
 Pacman::PlayState::loadAnimations(Entity* character)
 {
-	String animNames[] ={"walking","moveHead"};
+	String animNames[] ={"walking","idle"};
 	
 		for (int i = 0; i < 2; i++)
 		{
@@ -416,18 +408,20 @@ Pacman::PlayState::frameStarted
  		}
 	}
 	//----------------------------------------
-for (int i = 0; i < 2; i++)
-		{
-	if (mAnims[i] != NULL) {
-    if (mAnims[i]->hasEnded()) {
-      mAnims[i]->setTimePosition(0.0);
-      mAnims[i]->setEnabled(false);
-    }
-    else {
-      mAnims[i]->addTime(_deltaT);
-    }
-  }	
-}
+  for (int i = 0; i < 2; i++)
+  {
+  	if (mAnims[i] != NULL) {
+      if (mAnims[i]->hasEnded()) {
+        mAnims[i]->setTimePosition(0.0);
+        mAnims[i]->setEnabled(false);
+      }
+      else {
+        mAnims[i]->addTime(_deltaT);
+      }
+
+
+    }	
+  }
 
 
 
@@ -438,7 +432,7 @@ for (int i = 0; i < 2; i++)
 void 
 Pacman::PlayState::updateCharacter(Real deltaTime)
 {
-		mDirection = Ogre::Vector3::ZERO;   // we will calculate this
+		mDirection = Ogre::Vector3::ZERO;   
 
 		SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
 
@@ -478,6 +472,7 @@ Pacman::PlayState::keyPressed
   // Tecla p --> PauseState.-------
   if (e.key == OIS::KC_P) {
     pushState(PauseState::getSingletonPtr());
+
   }
   //-----------------
 
@@ -487,14 +482,26 @@ Pacman::PlayState::keyPressed
   }
   //-----------------
 
+  if (e.key == OIS::KC_S || e.key == OIS::KC_W || e.key == OIS::KC_D || e.key == OIS::KC_A) {
+        mAnims[1]->setEnabled(false);
+        mAnims[0]->setTimePosition(0);
+        mAnims[0]->setEnabled(true);
+        mAnims[0]->setLoop(true);
+        mAnims[0]->setTimePosition(0);
+
+
+        GameManager::getSingletonPtr()->_simpleEffect->play();
+  }
+
+
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
   CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
   //-------------------------------
   
- 
+  
   //Movimiento PJ----------------
-  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+ 
   switch(e.key){
     case OIS::KC_S:{ 
     	mKeyDirection.z = 1;
@@ -518,11 +525,7 @@ Pacman::PlayState::keyPressed
         }
 
       }
-      	mAnims[1]->setEnabled(false);
-      	mAnims[0]->setTimePosition(0);
-      	mAnims[0]->setEnabled(true);
-      	mAnims[0]->setLoop(true);
-      	mAnims[0]->setTimePosition(0);
+      	
       
       //--------------------------------------------------------------
       
@@ -549,11 +552,6 @@ Pacman::PlayState::keyPressed
         }
       }
 
-        mAnims[1]->setEnabled(false);
-      	mAnims[0]->setTimePosition(0);
-      	mAnims[0]->setEnabled(true);
-      	mAnims[0]->setLoop(true);
-      	mAnims[0]->setTimePosition(0);
       //------------------------------------------------------
       break;}
     case OIS::KC_A:{ 
@@ -577,11 +575,6 @@ Pacman::PlayState::keyPressed
         }
       }
 
-        mAnims[1]->setEnabled(false);
-      	mAnims[0]->setTimePosition(0);
-      	mAnims[0]->setEnabled(true);
-      	mAnims[0]->setLoop(true);
-      	mAnims[0]->setTimePosition(0);
       //---------------------------------------------
 
       break;}
@@ -607,11 +600,6 @@ Pacman::PlayState::keyPressed
       }
       }
 
-        mAnims[1]->setEnabled(false);
-      	mAnims[0]->setTimePosition(0);
-      	mAnims[0]->setEnabled(true);
-      	mAnims[0]->setLoop(true);
-      	mAnims[0]->setTimePosition(0);
       //-----------------------------------------------
       break;
     
@@ -632,6 +620,8 @@ Pacman::PlayState::keyReleased
 	else if (e.key == OIS::KC_A && mKeyDirection.x == -1) mKeyDirection.x = 0;
 	else if (e.key == OIS::KC_S && mKeyDirection.z == 1) mKeyDirection.z = 0;
 	else if (e.key == OIS::KC_D && mKeyDirection.x == 1) mKeyDirection.x = 0;
+
+  
   //-------------------------------
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(static_cast<CEGUI::Key::Scan>(e.key));
