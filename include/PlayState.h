@@ -67,6 +67,8 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
 
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
+  int _punt;
+
  protected:
   //Camera
   SceneNode* mBodyNode;
@@ -109,6 +111,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   void updateGhost2();
   void updatePj();
   void updateCollisions();
+  void updateRayCollisions();
 };
 
 }

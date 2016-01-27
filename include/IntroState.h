@@ -80,6 +80,9 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   bool _exitGame;
   bool creditos;
   bool _initSDL();
+
+  void createRecordsFile();
+  string readRecords();
 };
 
 }

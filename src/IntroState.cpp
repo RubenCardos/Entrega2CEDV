@@ -425,8 +425,62 @@ Pacman::IntroState::records(const CEGUI::EventArgs &e)
   backButton->setYPosition(UDim(0.80f, 0.0f));
   backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::back,this));
   
+  CEGUI::Window* text = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","text");
+  text->setText("[font='Carton_Six']"+readRecords());
+  text->setSize(CEGUI::USize(CEGUI::UDim(0.90,0),CEGUI::UDim(0.90,0)));
+  text->setXPosition(UDim(0.0f, 0.0f));
+  text->setYPosition(UDim(0.0f, 0.0f));
+  //text->setProperty("FrameEnabled","False");
+  text->setProperty("BackgroundEnabled", "False");
+
+
   sheetBG->addChild(backButton);
+  sheetBG->addChild(text);
   sheet->addChild(sheetBG);
   
   return true;
+}
+
+void 
+Pacman::IntroState::createRecordsFile(){
+  cout << "Fichero inexistente o faltan permisos para abrirlo, creando archivo e records..." << endl;
+  ofstream archivo;  // objeto de la clase ofstream
+  archivo.open("Records.txt");
+  for(int i=0;i<9;i++){
+    archivo  << "AAA 000" << endl;
+  }
+  archivo.close();
+}
+
+std::string 
+Pacman::IntroState::readRecords(){
+    
+    std::string res="";
+
+    fstream fichero;//Fichero
+    std::string frase;//Auxiliar
+
+    fichero.open ( "Records.txt" , ios::in);
+    if (fichero.is_open()) {
+      while (getline (fichero,frase)) {
+        std::string nombre=Ogre::StringUtil::split (frase," ")[0];
+        int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
+        cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
+        res+= nombre+"     "+Ogre::StringUtil::split (frase," ")[1]+"\n";
+      }
+      fichero.close();    
+    }else{
+        createRecordsFile();
+        fichero.open ( "Records.txt" , ios::in);
+        if (fichero.is_open()) {
+          while (getline (fichero,frase)) {
+            std::string nombre=Ogre::StringUtil::split (frase," ")[0];
+            int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
+            cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
+            res+= nombre+"     "+Ogre::StringUtil::split (frase," ")[1]+"\n";
+          }
+          fichero.close();   
+        }
+    }
+  return res;
 }

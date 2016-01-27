@@ -33,6 +33,10 @@ Pacman::GraphVertex* _nextGhost2;
 std::vector<Pacman::GraphVertex*> _adjVerGhost2;
 // ----------------------------
 
+// Vector de Rayos --------------------
+std::vector<Ogre::SceneNode*> _rayVector;
+// --------------------------------------
+
 void
 Pacman::PlayState::enter ()
 {
@@ -197,6 +201,8 @@ Pacman::PlayState::enter ()
 
   _exitGame = false;
   mKeyDirection = Vector3::ZERO;
+
+  _punt=0;
  
 }
 
@@ -266,6 +272,7 @@ Pacman::PlayState::loadGraph()
 		  _snRay->setPosition(_aux.getPosition());
 		  _snRay->setScale(0.3,0.3,0.3);
 		  _sceneMgr->getRootSceneNode()->addChild(_snRay);
+      _rayVector.push_back(_snRay);
 		  //--------------------------------------------------------
         i+=1;
         NUM_VERTEX+=1;
@@ -389,24 +396,25 @@ Pacman::PlayState::frameStarted
   
   //Update Collisiones ---
   updateCollisions();
-
+  updateCollisions();
   //----------------------
 
-  //Colisiones--------------------------------------
+  //Colisiones Rayos--------------------------------------
 
-	Ogre::AxisAlignedBox bb1 = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
-	for(int i=1;i<NUM_VERTEX;i++){
-		Ogre::AxisAlignedBox bb2 = _sceneMgr->getSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i))->_getWorldAABB();
-		//cout << "NOMBRE: "<< "RaySceneNode"+Ogre::StringConverter::toString(i) << endl;
-  	if(bb1.intersects(bb2)){
-  		
-  		//_sceneMgr->destroySceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
-  		_sceneMgr->getSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i))->setVisible(false);
-  		//GameManager::getSingletonPtr()->_simpleEffect->play();
-  	//	cout << "CHOCAN" << endl;
+  std::vector<SceneNode*>::const_iterator it;
 
- 		}
-	}
+  Ogre::AxisAlignedBox bbPjSceneNode = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
+
+  for (int i=0;i<_rayVector.size();++i){
+    Ogre::SceneNode* _aux=_rayVector[i];
+    Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
+    if(bbPjSceneNode.intersects(bbRay)){
+      _rayVector.erase(_rayVector.begin()+i);
+      _punt+=10;
+      cout << "Puntuacion: " << _punt << endl;
+      _sceneMgr->destroySceneNode(_aux);
+    }
+  }
 	//----------------------------------------
   for (int i = 0; i < 2; i++)
   {
@@ -911,6 +919,16 @@ Pacman::PlayState::updateCollisions()
     cout << "Colision PJ - Ghost" << endl;
     _collisionWithGhostDetected=true;
   }
+
+
+}
+
+void
+Pacman::PlayState::updateRayCollisions()
+{
+  
+  
+  
 
 
 }
