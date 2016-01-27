@@ -325,6 +325,9 @@ void Pacman::IntroState::createGUI()
 
   RTTWindow->setProperty("Image","RTTImage");
   
+  ex1->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.25,0)));
+  ex1->setPosition(CEGUI::UVector2(CEGUI::UDim(0.03,0),CEGUI::UDim(0.12,0)));
+
   sheet->addChild(ex1);
 
   //-----------------------------------------

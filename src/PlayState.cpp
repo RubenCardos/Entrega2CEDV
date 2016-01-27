@@ -17,14 +17,14 @@ Ogre::AnimationState *_animGhost2;
 Pacman::GraphVertex* _now;
 Pacman::GraphVertex* _next;
 std::vector<Pacman::GraphVertex*> _adjVer;
-std::vector<Ogre::Vector3> _possibleMoves;
+//std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
 
 // Donde vengo y donde voy Ghost  ---
 Pacman::GraphVertex* _nowGhost;
 Pacman::GraphVertex* _nextGhost;
 std::vector<Pacman::GraphVertex*> _adjVerGhost;
-std::vector<Ogre::Vector3> _possibleMovesGhost;
+//std::vector<Ogre::Vector3> _possibleMovesGhost;
 // ----------------------------
 
 // Donde vengo y donde voy Ghost2  ---
@@ -186,12 +186,6 @@ Pacman::PlayState::enter ()
 
   // Grafo, adyacentes ----
   _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
-  std::vector<GraphVertex*>::const_iterator it;
-  for (it = _adjVer.begin();it != _adjVer.end();++it){
-    Node _aux=(*it)->getData();
-    Ogre::Vector3 _vecMove=_aux.getPosition()-_now->getData().getPosition();
-    _possibleMoves.push_back(_vecMove);
-  }
   //----------------------
 
   // Colision con fantasma ---
@@ -265,7 +259,7 @@ Pacman::PlayState::loadGraph()
       for (it = _vertices.begin();it != _vertices.end();++it){
         Node _aux=(*it)->getData();
 
-        // Ray -------------------------
+      // Ray -------------------------
 		   Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
 		   SceneNode* _snRay = _sceneMgr->createSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
 		  _snRay->attachObject(_entRay);
@@ -367,12 +361,13 @@ Pacman::PlayState::frameStarted
   //Actualizacion de Variables----------------
   _deltaT = evt.timeSinceLastFrame;
   SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+  //----------------------------------------------
 
-  //Actualizamos Camara---------------------------------
+  //Actualizamos Camara---------------------------
   updateCamera(_deltaT);
   //----------------------------------------------
 
-  //Actualizamos la rotacion del personaje-------------------------------
+  //Actualizamos la rotacion del personaje------
   updateCharacter(_deltaT);
   //--------------------------------------------
 
@@ -383,53 +378,21 @@ Pacman::PlayState::frameStarted
   RTTWindow->invalidate();
   //-------------------------------------------
 
-  // Update Pj -------------------------
-  updatePj();
+  // Update Pj ---------
+  updatePj(_deltaT);
   //--------------------
-
   
   //Update Ghost ----
   updateGhost();
   updateGhost2();
   //-----------------
   
-  
   //Update Collisiones ---
   updateCollisions();
-  updateCollisions();
+  updateRayCollisions();
   //----------------------
-
-  //Colisiones Rayos--------------------------------------
-
-  std::vector<SceneNode*>::const_iterator it;
-
-  Ogre::AxisAlignedBox bbPjSceneNode = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
-
-  for (int i=0;i<_rayVector.size();++i){
-    Ogre::SceneNode* _aux=_rayVector[i];
-    Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
-    if(bbPjSceneNode.intersects(bbRay)){
-      _rayVector.erase(_rayVector.begin()+i);
-      _punt+=10;
-      cout << "Puntuacion: " << _punt << endl;
-      _sceneMgr->destroySceneNode(_aux);
-    }
-  }
-	//----------------------------------------
-  for (int i = 0; i < 2; i++)
-  {
-  	if (mAnims[i] != NULL) {
-      if (mAnims[i]->hasEnded()) {
-        mAnims[i]->setTimePosition(0.0);
-        mAnims[i]->setEnabled(false);
-      }
-      else {
-        mAnims[i]->addTime(_deltaT);
-      }
-
-
-    }	
-  }
+  
+  
 
 
 
@@ -857,7 +820,7 @@ Pacman::PlayState::updateGhost2()
 }
 
 void
-Pacman::PlayState::updatePj()
+Pacman::PlayState::updatePj(Real _deltaTime)
 {
   
   SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
@@ -896,8 +859,22 @@ Pacman::PlayState::updatePj()
     }
   }
 
-  
-  
+  //Animaciones ------------------
+  for (int i = 0; i < 2; i++)
+  {
+    if (mAnims[i] != NULL) {
+      if (mAnims[i]->hasEnded()) {
+        mAnims[i]->setTimePosition(0.0);
+        mAnims[i]->setEnabled(false);
+      }
+      else {
+        mAnims[i]->addTime(_deltaT);
+      }
+
+
+    } 
+  }
+  //-------------------------------
 
   
 
@@ -918,6 +895,9 @@ Pacman::PlayState::updateCollisions()
       
     cout << "Colision PJ - Ghost" << endl;
     _collisionWithGhostDetected=true;
+    cout << "Vidas: " << _pj->getLives() << endl;
+    _pj->hit();
+    cout << "Vidas: " << _pj->getLives() << endl;
   }
 
 
@@ -928,7 +908,22 @@ Pacman::PlayState::updateRayCollisions()
 {
   
   
-  
+  //Colisiones Rayos--------------------------------------
+
+  Ogre::AxisAlignedBox bbPjSceneNode = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
+
+  for (unsigned int i=0;i<_rayVector.size();++i){
+    Ogre::SceneNode* _aux=_rayVector[i];
+    Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
+    if(bbPjSceneNode.intersects(bbRay)){
+      _rayVector.erase(_rayVector.begin()+i);
+      _punt+=10;
+      cout << "Puntuacion: " << _punt << endl;
+      cout << "Vidas: " << _pj->getLives() << endl;
+      _sceneMgr->destroySceneNode(_aux);
+    }
+  }
+  //----------------------------------------
 
 
 }

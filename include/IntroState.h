@@ -82,7 +82,7 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
   bool _initSDL();
 
   void createRecordsFile();
-  string readRecords();
+  std::string readRecords();
 };
 
 }

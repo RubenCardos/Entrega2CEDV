@@ -10,6 +10,7 @@ using namespace std;
  	_desp=Ogre::Vector3(0,0,0);
  	_speed=1;
  	_orientation=1;
+ 	_lives=3;
  }
 
  Pacman::Pj::~Pj ()
@@ -48,4 +49,14 @@ using namespace std;
  void Pacman::Pj::setOrientation(int n_orientation)
  {
  	_orientation=n_orientation;
+ }
+
+  int Pacman::Pj::getLives() 
+ {
+ 	return _lives;
+ }
+
+ void Pacman::Pj::hit()
+ {
+ 	_lives-=1;
  }

@@ -109,7 +109,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
 
   void updateGhost();
   void updateGhost2();
-  void updatePj();
+  void updatePj(Ogre::Real _deltaTime);
   void updateCollisions();
   void updateRayCollisions();
 };
