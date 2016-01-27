@@ -845,7 +845,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
 
     Vector3 _res=_next->getData().getPosition()-_snPj->getPosition();
     //Se para..
-    if(_res.length()<=0.035){
+    if(_res.length()<=0.05){
       _now=_next;
       _next=NULL;
       _pj->setMoving(false);
@@ -917,12 +917,21 @@ Pacman::PlayState::updateRayCollisions()
     Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
     if(bbPjSceneNode.intersects(bbRay)){
       _rayVector.erase(_rayVector.begin()+i);
-      _punt+=10;
+      _punt+=100;
       cout << "Puntuacion: " << _punt << endl;
       cout << "Vidas: " << _pj->getLives() << endl;
       _sceneMgr->destroySceneNode(_aux);
+      cout << "\nRayos restantes: " << (_rayVector.size()) << "\n" << endl;
     }
   }
+
+  // Si no quedan rayos por coger seria el final del nivel ----------------
+  if(_rayVector.size()==0){
+    cout << "\n Nivel Acabado \n" << endl;
+  }
+  //-----------------------------------------------------------------------
+
+
   //----------------------------------------
 
 
