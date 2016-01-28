@@ -40,6 +40,7 @@ std::vector<Ogre::SceneNode*> _rayVector;
 // Blink del resapwn -------------------
 int _cont=60;
 bool _blink=true;
+int _contState=0;
 //--------------------------------------
 
 
@@ -387,9 +388,7 @@ Pacman::PlayState::frameStarted
   RTTWindow->invalidate();
   //-------------------------------------------
 
-  // Update Pj ---------
-  updatePj(_deltaT);
-  //--------------------
+  
   
   //Update Ghost ----
   updateGhost();
@@ -401,6 +400,9 @@ Pacman::PlayState::frameStarted
   updateRayCollisions();
   //----------------------
   
+  // Update Pj ---------
+  updatePj(_deltaT);
+  //--------------------
   
 
 
@@ -888,7 +890,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   
   //Actualizacion grafica segun el estado
   if(_pj->getState()=="normal"){
-    cout << "Estado normal " << endl;
+    
   }
 
   if(_pj->getState()=="super"){
@@ -896,8 +898,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   } 
 
   if(_pj->getState()=="respawn"){
-    cout << "Estado reswpam " << endl;
-    //Aqui deberia ir el blink---
+    //Blink--------------------
     if(_blink){
       _snPj->setVisible(false);
       if(--_cont<1){
@@ -913,14 +914,23 @@ Pacman::PlayState::updatePj(Real _deltaTime)
     //---------------------------
 
     //Cuando pasa X tiempo vuelva a estado normal
-
-
+    _contState+=1;
+    if(_contState>=600){
+      _pj->changeState("normal");
+      _contState=0;
+      _snPj->setVisible(true);
+    }
     //------------------------------------------
   }
-  
   //----------------------------------
 
 
+  //Si no tenemos vidas pasamos a GameOver ----
+  if(_pj->getLives()==0){
+    _sceneMgr->clearScene();
+    changeState(GameOverState::getSingletonPtr());
+  }
+  //-------------------------------------------
 
   
 }
