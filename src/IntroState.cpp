@@ -178,7 +178,7 @@ Pacman::IntroState::keyPressed
   // Transición al siguiente estado.
   // Espacio --> PlayState
   if (e.key == OIS::KC_SPACE) {
-    changeState(PlayState::getSingletonPtr());
+   pushState(PlayState::getSingletonPtr());
   }
 
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));

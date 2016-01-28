@@ -5,16 +5,16 @@ template<> Pacman::GameOverState* Ogre::Singleton<Pacman::GameOverState>::msSing
 void
 Pacman::GameOverState::enter ()
 {
+  
+  cout << "\nChange State llego a metodo enter\n" << endl;
   _root = Ogre::Root::getSingletonPtr();
-
   // Se recupera el gestor de escena y la cámara.
   _sceneMgr = _root->getSceneManager("SceneManager");
-  _camera = _sceneMgr->getCamera("IntroCamera");
-  _viewport = _root->getAutoCreatedWindow()->getViewport(0);
-  // Nuevo background colour.
-  _viewport->setBackgroundColour(Ogre::ColourValue(1.0, 1.0, 0.0));
-
+  _camera = _sceneMgr->getCamera("PlayCamera");
+  _viewport = _root->getAutoCreatedWindow()->addViewport(_camera);
+  _viewport->setBackgroundColour(Ogre::ColourValue(0.0, 0.0, 0.0));// Nuevo background colour.
   _exitGame = false;
+  
 }
 
 void

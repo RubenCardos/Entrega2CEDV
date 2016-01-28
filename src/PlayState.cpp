@@ -334,6 +334,9 @@ Pacman::PlayState::updateCameraGoal(Real deltaYaw, Real deltaPitch, Real deltaZo
 void
 Pacman::PlayState::exit ()
 {
+
+  cout << "\nChange State llego a metodo exit\n" << endl;
+
   //Salgo del estado------------------------------
   _sceneMgr->clearScene();
   _root->getAutoCreatedWindow()->removeAllViewports();
@@ -449,7 +452,7 @@ Pacman::PlayState::keyPressed
 
   // Tecla g --> GameOverState.-------
   if (e.key == OIS::KC_G) {
-    pushState(GameOverState::getSingletonPtr());
+    changeState(GameOverState::getSingletonPtr());
   }
   //-----------------
 

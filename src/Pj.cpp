@@ -11,6 +11,7 @@ using namespace std;
  	_speed=1;
  	_orientation=1;
  	_lives=3;
+ 	_state=normal;
  }
 
  Pacman::Pj::~Pj ()
@@ -59,4 +60,14 @@ using namespace std;
  void Pacman::Pj::hit()
  {
  	_lives-=1;
+ }
+
+ void Pacman::Pj::makeSuper()
+ {
+ 	_state=super;
+ }
+
+ void Pacman::Pj::makeNormal()
+ {
+ 	_state=normal;
  }
