@@ -37,6 +37,12 @@ std::vector<Pacman::GraphVertex*> _adjVerGhost2;
 std::vector<Ogre::SceneNode*> _rayVector;
 // --------------------------------------
 
+// Blink del resapwn -------------------
+int _cont=60;
+bool _blink=true;
+//--------------------------------------
+
+
 void
 Pacman::PlayState::enter ()
 {
@@ -832,7 +838,6 @@ Pacman::PlayState::updatePj(Real _deltaTime)
     //Calculo adyacentes-----------------
     _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
     //-----------------------------------
-
   }
 
 
@@ -847,7 +852,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
     //Ver cuando he de parar---
 
     Vector3 _res=_next->getData().getPosition()-_snPj->getPosition();
-    //Se para..
+    //Me paro --------------------
     if(_res.length()<=0.05){
       _now=_next;
       _next=NULL;
@@ -860,6 +865,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
       mAnims[1]->setLoop(true);
       mAnims[1]->setTimePosition(0.0);
     }
+    //-------------------------------
   }
 
   //Animaciones ------------------
@@ -880,27 +886,74 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   //-------------------------------
 
   
+  //Actualizacion grafica segun el estado
+  if(_pj->getState()=="normal"){
+    cout << "Estado normal " << endl;
+  }
 
-  //------------------------
-  // ----------------- 
+  if(_pj->getState()=="super"){
+    cout << "Estado super " << endl;
+  } 
+
+  if(_pj->getState()=="respawn"){
+    cout << "Estado reswpam " << endl;
+    //Aqui deberia ir el blink---
+    if(_blink){
+      _snPj->setVisible(false);
+      if(--_cont<1){
+        _blink=false;
+      }
+    }
+    else{
+      _snPj->setVisible(true);
+      if(++_cont>59){
+        _blink=true;
+      }
+    }
+    //---------------------------
+
+    //Cuando pasa X tiempo vuelva a estado normal
+
+
+    //------------------------------------------
+  }
+  
+  //----------------------------------
+
+
+
+  
 }
 
 void
 Pacman::PlayState::updateCollisions()
 {
   
-  
+  //Variables para la colision--------------------------------------------------------
   Ogre::AxisAlignedBox bbPj = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
   Ogre::AxisAlignedBox bbGhost1 = _sceneMgr->getSceneNode("GhostSceneNode")->_getWorldAABB();
   Ogre::AxisAlignedBox bbGhost2 = _sceneMgr->getSceneNode("GhostSceneNode2")->_getWorldAABB();
+  //----------------------------------------------------------------------------------------
 
-  if((_collisionWithGhostDetected==false)&&(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)) ){
+  //Colision Detectada ! -------------------------------------
+  if(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)){
+  //----------------------------------------------------------   
+
+    //Colision en caso de Pj normal ---  
+    if(_pj->getState()=="normal"){
+      cout << "Colision PJ - Ghost" << endl;
+      _collisionWithGhostDetected=true;
+      _pj->hit();
+      _pj->changeState("respawn");
+    }
+    //---------------------------------
+
+    //Colision en caso de Pj super-----  
+    if(_pj->getState()=="super"){
       
-    cout << "Colision PJ - Ghost" << endl;
-    _collisionWithGhostDetected=true;
-    cout << "Vidas: " << _pj->getLives() << endl;
-    _pj->hit();
-    cout << "Vidas: " << _pj->getLives() << endl;
+    }
+    //---------------------------------
+
   }
 
 

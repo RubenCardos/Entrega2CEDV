@@ -20,8 +20,8 @@ class Pj {
   void setOrientation(int n_orientation);
   int getLives();
   void hit();
-  void makeSuper();
-  void makeNormal();
+  std::string getState();
+  void changeState(std::string state);
 
   
   
@@ -32,14 +32,7 @@ class Pj {
   int _speed;
   int _orientation; //1,2,3,4 En sentido horario
   int _lives;
-  
-  //Estados
-  enum States {
-    normal,
-    super
-  };
-
-  States _state;//Estado en el que nos encontramos
+  std::string _state;//Estado en el que nos encontramos
 
 
 };

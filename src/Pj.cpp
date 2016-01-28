@@ -11,7 +11,7 @@ using namespace std;
  	_speed=1;
  	_orientation=1;
  	_lives=3;
- 	_state=normal;
+ 	_state="normal";
  }
 
  Pacman::Pj::~Pj ()
@@ -62,12 +62,28 @@ using namespace std;
  	_lives-=1;
  }
 
- void Pacman::Pj::makeSuper()
+ std::string Pacman::Pj::getState()
  {
- 	_state=super;
+ 	return _state;
  }
 
- void Pacman::Pj::makeNormal()
+ void Pacman::Pj::changeState(std::string state)
  {
- 	_state=normal;
+ 	
+ 	if(state=="super"){
+ 		_state="super";
+ 	}
+ 	else{
+ 		if(state=="respawn"){
+ 			_state="respawn";
+ 		}
+ 		else
+ 		{
+ 			_state="normal";
+ 		}
+
+ 	}
+ 	
  }
+
+
