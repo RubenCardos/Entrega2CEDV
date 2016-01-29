@@ -1062,7 +1062,26 @@ Pacman::PlayState::updateRayCollisions()
     }
   }
   //---------------------------------------------------------------------
-  
+
+}
+
+void
+Pacman::PlayState::requestScore()
+{
+  // Aqui vamos a comprobar la puntuacion---------------------------------
 
 
+  //Comprovamos puntuacion---------------------
+
+  //-------------------------------------------
+
+  //Si hay nueva puntuacion, obtenemos el nombre del jugador---
+
+  //-----------------------------------------------------------
+
+  //Actualizamos el fichero de puntuaciones--------------------
+
+  //-----------------------------------------------------------
+
+  // ---------------------------------------------------------------------
 }

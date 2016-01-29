@@ -68,6 +68,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 
   int _punt;
+  void requestScore();
 
  protected:
   //Camera
