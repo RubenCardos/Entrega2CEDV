@@ -1,0 +1,18 @@
+material gameover
+{
+	receive_shadows on
+	technique
+	{
+		pass
+		{
+			ambient 0.75 0.75 0.75
+			diffuse 1 1 1 1
+			
+			texture_unit
+			{
+				texture remolino.jpg
+				rotate_anim 0.50
+			}
+		}
+	}
+}

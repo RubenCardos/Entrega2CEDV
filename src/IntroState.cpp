@@ -430,11 +430,12 @@ Pacman::IntroState::records(const CEGUI::EventArgs &e)
   
   CEGUI::Window* text = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","text");
   text->setText("[font='Carton_Six']"+readRecords());
-  text->setSize(CEGUI::USize(CEGUI::UDim(0.90,0),CEGUI::UDim(0.90,0)));
-  text->setXPosition(UDim(0.0f, 0.0f));
-  text->setYPosition(UDim(0.0f, 0.0f));
-  //text->setProperty("FrameEnabled","False");
+  text->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
+  text->setXPosition(UDim(0.45f, 0.0f));
+  text->setYPosition(UDim(0.30f, 0.0f));
+  text->setProperty("FrameEnabled","False");
   text->setProperty("BackgroundEnabled", "False");
+  text->setProperty("VertFormatting", "TopAligned");
 
 
   sheetBG->addChild(backButton);

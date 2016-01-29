@@ -65,7 +65,6 @@ Pacman::PlayState::enter ()
   //Sonido--------------------------------------------
  	//GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
   GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
-
   //-----------------------------------------------------------
 
   //Camara--------------------------------------------------------------
@@ -481,6 +480,9 @@ Pacman::PlayState::keyPressed
   // Tecla g --> GameOverState.-------
   if (e.key == OIS::KC_G) {
     changeState(GameOverState::getSingletonPtr());
+    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    sheet->getChildAtIdx(4)->setVisible(false);
+    sheet->getChildAtIdx(5)->setVisible(false);
   }
   //-----------------
 
