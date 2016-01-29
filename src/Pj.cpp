@@ -86,4 +86,13 @@ using namespace std;
  	
  }
 
+ int Pacman::Pj::getSpeed() 
+ {
+ 	return _speed;
+ }
+
+ void Pacman::Pj::setSpeed(int n_speed)
+ {
+ 	_speed=n_speed;
+ }
 

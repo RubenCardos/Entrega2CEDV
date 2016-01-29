@@ -22,6 +22,8 @@ class Pj {
   void hit();
   std::string getState();
   void changeState(std::string state);
+  int getSpeed();
+  void setSpeed(int n_speed);
 
   
   

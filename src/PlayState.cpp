@@ -17,24 +17,24 @@ Ogre::AnimationState *_animGhost2;
 Pacman::GraphVertex* _now;
 Pacman::GraphVertex* _next;
 std::vector<Pacman::GraphVertex*> _adjVer;
-//std::vector<Ogre::Vector3> _possibleMoves;
 // ----------------------------
 
-// Donde vengo y donde voy Ghost  ---
+// Donde vengo y donde voy Ghost---
 Pacman::GraphVertex* _nowGhost;
 Pacman::GraphVertex* _nextGhost;
 std::vector<Pacman::GraphVertex*> _adjVerGhost;
-//std::vector<Ogre::Vector3> _possibleMovesGhost;
-// ----------------------------
+// --------------------------------
 
-// Donde vengo y donde voy Ghost2  ---
+// Donde vengo y donde voy Ghost2---
 Pacman::GraphVertex* _nowGhost2;
 Pacman::GraphVertex* _nextGhost2;
 std::vector<Pacman::GraphVertex*> _adjVerGhost2;
-// ----------------------------
+// ---------------------------------
 
 // Vector de Rayos --------------------
+std::vector<Ogre::SceneNode*> _rayWareHouse;
 std::vector<Ogre::SceneNode*> _rayVector;
+std::vector<Ogre::SceneNode*> _superRayWareHouse;
 std::vector<Ogre::SceneNode*> _superRayVector;
 // --------------------------------------
 
@@ -281,14 +281,23 @@ Pacman::PlayState::loadGraph()
 		  if(_aux.getIndex() == 8 || _aux.getIndex() == 15 || _aux.getIndex() == 22 || _aux.getIndex() == 28){
         _snRay->setScale(0.6,0.6,0.6);
         _superRayVector.push_back(_snRay);
+        //Almaceno el rayo----------------------------------------
+        _superRayWareHouse.push_back(_snRay);
+        //--------------------------------------------------------
       }else{
         _snRay->setScale(0.3,0.3,0.3);
         _rayVector.push_back(_snRay);
+        //Almaceno el rayo----------------------------------------
+        _rayWareHouse.push_back(_snRay);
+        //--------------------------------------------------------
       }
 		  //--------------------------------------------------------
         i+=1;
         NUM_VERTEX+=1;
+        
       }
+
+
 
 
   }
@@ -905,7 +914,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   }
 
   if(_pj->getState()=="super"){
-    cout << "Estado super " << endl;
+    
   } 
 
   if(_pj->getState()=="respawn"){
@@ -1045,6 +1054,31 @@ Pacman::PlayState::updateRayCollisions()
   // Si no quedan rayos por coger seria el final del nivel ----------------
   if(_rayVector.size()==0){
     cout << "\n Nivel Acabado \n" << endl;
+    //Vacio el vector de Super Rayos------
+    if(_superRayVector.size()>0){
+      _superRayVector.clear();
+    }
+    //------------------------------------
+
+    //Vuelvo a cargar los super rayos-----------
+    for(unsigned int i=0;i<_superRayWareHouse.size();i++){
+      _superRayWareHouse[i]->setVisible(true);
+      _superRayVector.push_back(_superRayWareHouse[i]);
+    }
+    //------------------------------------------
+
+    //Vuelvo a cargar los rayos-----------
+    for(unsigned int i=0;i<_rayWareHouse.size();i++){
+      _rayWareHouse[i]->setVisible(true);
+      _rayVector.push_back(_rayWareHouse[i]);
+    }
+    //------------------------------------
+
+    //Aumento la velocidad de los fantasmas-----
+    _ghost->setSpeed(_ghost->getSpeed()+1);
+    _ghost2->setSpeed(_ghost2->getSpeed()+1);
+    //------------------------------------------
+
   }
   //-----------------------------------------------------------------------
 
