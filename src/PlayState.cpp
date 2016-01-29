@@ -35,12 +35,14 @@ std::vector<Pacman::GraphVertex*> _adjVerGhost2;
 
 // Vector de Rayos --------------------
 std::vector<Ogre::SceneNode*> _rayVector;
+std::vector<Ogre::SceneNode*> _superRayVector;
 // --------------------------------------
 
 // Blink del resapwn -------------------
 int _cont=60;
 bool _blink=true;
 int _contState=0;
+std::vector<Pacman::GraphVertex*> _respawnVertex;
 //--------------------------------------
 
 
@@ -266,14 +268,23 @@ Pacman::PlayState::loadGraph()
       for (it = _vertices.begin();it != _vertices.end();++it){
         Node _aux=(*it)->getData();
 
+        // Nodos Respawn -------------
+        _respawnVertex.push_back(*it);
+        //----------------------------
+
       // Ray -------------------------
 		   Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
 		   SceneNode* _snRay = _sceneMgr->createSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
 		  _snRay->attachObject(_entRay);
 		  _snRay->setPosition(_aux.getPosition());
-		  _snRay->setScale(0.3,0.3,0.3);
-		  _sceneMgr->getRootSceneNode()->addChild(_snRay);
-      _rayVector.push_back(_snRay);
+      _sceneMgr->getRootSceneNode()->addChild(_snRay);
+		  if(_aux.getIndex() == 8 || _aux.getIndex() == 15 || _aux.getIndex() == 22 || _aux.getIndex() == 28){
+        _snRay->setScale(0.6,0.6,0.6);
+        _superRayVector.push_back(_snRay);
+      }else{
+        _snRay->setScale(0.3,0.3,0.3);
+        _rayVector.push_back(_snRay);
+      }
 		  //--------------------------------------------------------
         i+=1;
         NUM_VERTEX+=1;
@@ -961,6 +972,45 @@ Pacman::PlayState::updateCollisions()
     //Colision en caso de Pj super-----  
     if(_pj->getState()=="super"){
       
+      if(bbPj.intersects(bbGhost1)){
+        // El fantasmas deberia cambiar de posicion y recomenzar su movimiento---
+
+        //Nodo aleatorio que sea de tipo respawn---
+        SceneNode* _auxGhost = _sceneMgr->getSceneNode("GhostSceneNode");
+        int _go=0+rand()%(_respawnVertex.size()-0);
+        _auxGhost->setPosition(_respawnVertex[_go]->getData().getPosition());
+        //-----------------------------------------
+
+        //Reseteo variables -----------------------
+        _nowGhost=_respawnVertex[_go];
+        _nextGhost=NULL;
+        _punt+=300;
+        //-----------------------------------------
+      
+
+        //----------------------------------------------------------------------
+      }
+
+      if(bbPj.intersects(bbGhost2)){
+        // El fantasmas deberia cambiar de posicion y recomenzar su movimiento---
+
+        //Nodo aleatorio que sea de tipo respawn---
+        SceneNode* _auxGhost = _sceneMgr->getSceneNode("GhostSceneNode2");
+        int _go=0+rand()%(_respawnVertex.size()-0);
+        _auxGhost->setPosition(_respawnVertex[_go]->getData().getPosition());
+        //-----------------------------------------
+
+        //Reseteo variables -----------------------
+        _nowGhost2=_respawnVertex[_go];
+        _nextGhost2=NULL;
+        _punt+=300;
+        //-----------------------------------------
+      
+
+        //----------------------------------------------------------------------
+      }
+
+      
     }
     //---------------------------------
 
@@ -986,10 +1036,11 @@ Pacman::PlayState::updateRayCollisions()
       _punt+=100;
       cout << "Puntuacion: " << _punt << endl;
       cout << "Vidas: " << _pj->getLives() << endl;
-      _sceneMgr->destroySceneNode(_aux);
+      _aux->setVisible(false);
       cout << "\nRayos restantes: " << (_rayVector.size()) << "\n" << endl;
     }
   }
+  //--------------------------------------------------
 
   // Si no quedan rayos por coger seria el final del nivel ----------------
   if(_rayVector.size()==0){
@@ -997,8 +1048,21 @@ Pacman::PlayState::updateRayCollisions()
   }
   //-----------------------------------------------------------------------
 
-
-  //----------------------------------------
+  // Colisiones SuperRayos ----------------------------------------------
+  for (unsigned int i=0;i<_superRayVector.size();++i){
+    Ogre::SceneNode* _aux=_superRayVector[i];
+    Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
+    if(bbPjSceneNode.intersects(bbRay)){
+      _superRayVector.erase(_superRayVector.begin()+i);
+      _punt+=300;
+      cout << "Puntuacion: " << _punt << endl;
+      cout << "Vidas: " << _pj->getLives() << endl;
+      _aux->setVisible(false);
+      _pj->changeState("super");
+    }
+  }
+  //---------------------------------------------------------------------
+  
 
 
 }
