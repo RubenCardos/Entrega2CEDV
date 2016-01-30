@@ -11,6 +11,7 @@ template<> Pacman::PlayState* Ogre::Singleton<Pacman::PlayState>::msSingleton = 
 Ogre::AnimationState *_animState;
 Ogre::AnimationState *_animGhost;
 Ogre::AnimationState *_animGhost2;
+Ogre::AnimationState *_animGhost3;
 //--------------------------
 
 // Donde vengo y donde voy ---
@@ -29,6 +30,12 @@ std::vector<Pacman::GraphVertex*> _adjVerGhost;
 Pacman::GraphVertex* _nowGhost2;
 Pacman::GraphVertex* _nextGhost2;
 std::vector<Pacman::GraphVertex*> _adjVerGhost2;
+// ---------------------------------
+
+// Donde vengo y donde voy Ghost3---
+Pacman::GraphVertex* _nowGhost3;
+Pacman::GraphVertex* _nextGhost3;
+std::vector<Pacman::GraphVertex*> _adjVerGhost3;
 // ---------------------------------
 
 // Vector de Rayos --------------------
@@ -141,6 +148,21 @@ Pacman::PlayState::enter ()
   _animGhost2->setTimePosition(0.0);
   //-------------------------------------------------
 
+  //Ghost 3------------------------
+  Entity* _entGhost3 = _sceneMgr->createEntity("entGhost3","ghost.mesh");
+  SceneNode* _snGhost3 = _sceneMgr->createSceneNode("GhostSceneNode3");
+  _snGhost3->showBoundingBox(true);
+  _snGhost3->setScale(0.5,0.5,0.5);
+  _snGhost3->attachObject(_entGhost3);
+  _sceneMgr->getRootSceneNode()->addChild(_snGhost3);
+  _ghost3=new Pj;
+
+  _animGhost3 = _sceneMgr->getEntity("entGhost3")->getAnimationState("moveIntro");
+  _animGhost3->setEnabled(true);
+  _animGhost3->setLoop(true);
+  _animGhost3->setTimePosition(0.0);
+  //-------------------------------------------------
+
   // Mapa -------------------------
   //Pj------------------------
   Entity* _entMap = _sceneMgr->createEntity("entMap","tablero.mesh");
@@ -191,6 +213,11 @@ Pacman::PlayState::enter ()
   _nextGhost2=NULL;
   //------------------------------------------------
 
+  //Prueba de cambio de posicion segun el vertice ---
+  _snGhost3->setPosition(_scene->getGraph()->getVertex(28)->getData().getPosition());
+  _nowGhost3=_scene->getGraph()->getVertex(28);
+  _nextGhost3=NULL;
+  //------------------------------------------------
 
   // Grafo, adyacentes ----
   _adjVer = _scene->getGraph()->adjacents(_now->getData().getIndex());
@@ -414,6 +441,7 @@ Pacman::PlayState::frameStarted
   //Update Ghost ----
   updateGhost();
   updateGhost2();
+  updateGhost3();
   //-----------------
   
   //Update Collisiones ---
@@ -855,6 +883,73 @@ Pacman::PlayState::updateGhost2()
 }
 
 void
+Pacman::PlayState::updateGhost3()
+{
+  
+  SceneNode* _snGhost =_sceneMgr->getSceneNode("GhostSceneNode3");
+
+  //Movimiento del ghost ------------
+  //Si el next es nulo estoy en un vertice------
+  if(_nextGhost3==NULL){
+    //Calculo adyacentes-----------------
+    _adjVerGhost3 = _scene->getGraph()->adjacents(_nowGhost3->getData().getIndex());
+    //-----------------------------------
+
+    //Tiro Dados-----------------------------
+    int _go=0+rand()%(_adjVerGhost3.size()-0);
+    //----------------------------------------
+
+    // Auxiliar para ver haia donde voy ------
+    Vector3 _aux = _adjVerGhost3[_go]->getData().getPosition()-_nowGhost3->getData().getPosition();
+    _nextGhost3=_adjVerGhost3[_go];
+    //---------------------------------------
+
+    //El auxiliar me da la direccion---------
+    if(_aux.z>0){
+      _ghost3->setDesp(Ogre::Vector3(0,0,0.03));
+    }
+    if(_aux.z<0){
+      _ghost3->setDesp(Ogre::Vector3(0,0,-0.03));
+    }
+    if(_aux.x>0){
+      _ghost3->setDesp(Ogre::Vector3(0.03,0,0));
+    }
+    if(_aux.x<0){
+      _ghost3->setDesp(Ogre::Vector3(-0.03,0,0));
+    }
+    //------------------------------------
+    _ghost3->setMoving(true);
+
+  }
+  //---------------------------------------------------------
+  if(_ghost3->isMoving()){
+    _snGhost->setPosition(_snGhost->getPosition()+_ghost3->getDesp());
+    //Ver cuando he de parar---
+
+    Vector3 _res=_nextGhost3->getData().getPosition()-_snGhost->getPosition();
+    //cout << "Distancia " << _res.length() << endl;
+    if(_res.length()<=0.035){
+      _nowGhost3=_nextGhost3;
+      _nextGhost3=NULL;
+      _ghost3->setMoving(false);
+      _adjVerGhost3.clear();
+    }
+  }
+
+  if (_animGhost3 != NULL) {
+    if (_animGhost3->hasEnded()) {
+      _animGhost3->setTimePosition(0.0);
+      _animGhost3->setEnabled(false);
+    }
+    else {
+      _animGhost3->addTime(_deltaT);
+    }
+  }
+  //------------------------
+  // ----------------- 
+}
+
+void
 Pacman::PlayState::updatePj(Real _deltaTime)
 {
   
@@ -929,7 +1024,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   
   //Actualizacion grafica segun el estado
   if(_pj->getState()=="normal"){
-    
+    _snPj->setVisible(true);
   }
 
   if(_pj->getState()=="super"){
@@ -982,10 +1077,11 @@ Pacman::PlayState::updateCollisions()
   Ogre::AxisAlignedBox bbPj = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
   Ogre::AxisAlignedBox bbGhost1 = _sceneMgr->getSceneNode("GhostSceneNode")->_getWorldAABB();
   Ogre::AxisAlignedBox bbGhost2 = _sceneMgr->getSceneNode("GhostSceneNode2")->_getWorldAABB();
+  Ogre::AxisAlignedBox bbGhost3 = _sceneMgr->getSceneNode("GhostSceneNode3")->_getWorldAABB();
   //----------------------------------------------------------------------------------------
 
   //Colision Detectada ! -------------------------------------
-  if(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)){
+  if(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)|| bbPj.intersects(bbGhost3)){
   //----------------------------------------------------------   
 
     //Colision en caso de Pj normal ---  
@@ -1031,6 +1127,25 @@ Pacman::PlayState::updateCollisions()
         //Reseteo variables -----------------------
         _nowGhost2=_respawnVertex[_go];
         _nextGhost2=NULL;
+        _punt+=300;
+        //-----------------------------------------
+      
+
+        //----------------------------------------------------------------------
+      }
+
+      if(bbPj.intersects(bbGhost3)){
+        // El fantasmas deberia cambiar de posicion y recomenzar su movimiento---
+
+        //Nodo aleatorio que sea de tipo respawn---
+        SceneNode* _auxGhost = _sceneMgr->getSceneNode("GhostSceneNode3");
+        int _go=0+rand()%(_respawnVertex.size()-0);
+        _auxGhost->setPosition(_respawnVertex[_go]->getData().getPosition());
+        //-----------------------------------------
+
+        //Reseteo variables -----------------------
+        _nowGhost3=_respawnVertex[_go];
+        _nextGhost3=NULL;
         _punt+=300;
         //-----------------------------------------
       
