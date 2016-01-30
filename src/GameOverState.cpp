@@ -224,7 +224,9 @@ Pacman::GameOverState::frameStarted
     _snPj->setPosition(_snPj->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
     _snGhost->setPosition(_snGhost->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
     _snGhost2->setPosition(_snGhost2->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
+  
   }else{
+  
       _snPj->setVisible(false);
       _snGhost->setVisible(false);
       _snGhost2->setVisible(false);

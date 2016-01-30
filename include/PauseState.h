@@ -61,6 +61,8 @@ class PauseState : public Ogre::Singleton<PauseState>, public GameState
   Ogre::Camera* _camera;
 
   bool _exitGame;
+
+  bool resumeB(const CEGUI::EventArgs &e);
 };
 
 }

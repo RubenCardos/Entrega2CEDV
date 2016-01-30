@@ -40,7 +40,7 @@ Pacman::PauseState::enter ()
   backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   backButton->setXPosition(UDim(0.20f, 0.0f));
   backButton->setYPosition(UDim(0.70f, 0.0f));
-  //backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::credito,this));
+  backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
   
 
   sheet->addChild(menuButton);
@@ -157,4 +157,9 @@ Pacman::PauseState::getSingleton ()
 { 
   assert(msSingleton);
   return *msSingleton;
+}
+bool 
+Pacman::PauseState::resumeB(const CEGUI::EventArgs &e){
+  popState();
+  return true;
 }
