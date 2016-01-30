@@ -209,6 +209,30 @@ Pacman::GameOverState::frameStarted
       _animGhost2->addTime(_deltaTGameOver);
     }
   }
+
+  //Escalo los nodos para parezca que se alejan----
+  SceneNode* _snPj =_sceneMgr->getSceneNode("Personaje");
+  SceneNode* _snGhost =_sceneMgr->getSceneNode("ghost");
+  SceneNode* _snGhost2 =_sceneMgr->getSceneNode("ghost1");
+
+  if(_snPj->getScale() > Ogre::Vector3(0.01,0.01,0.01) ){
+  
+    _snPj->setScale((_snPj->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
+    _snGhost->setScale((_snGhost->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
+    _snGhost2->setScale((_snGhost2->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
+  
+    _snPj->setPosition(_snPj->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
+    _snGhost->setPosition(_snGhost->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
+    _snGhost2->setPosition(_snGhost2->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
+  }else{
+      _snPj->setVisible(false);
+      _snGhost->setVisible(false);
+      _snGhost2->setVisible(false);
+
+  }
+  //-----------------------------------------------
+
+
   return true;
 }
 
