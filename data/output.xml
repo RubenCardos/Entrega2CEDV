@@ -90,7 +90,18 @@
   <vertex index="29" type="">
     <x>14.000000</x> <y>0.000000</y> <z>0.000000</z>
   </vertex>
-  
+  <vertex index="30" type="">
+    <x>21.000000</x> <y>0.000000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="31" type="">
+    <x>-21.000000</x> <y>0.000000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="32" type="gate">
+    <x>28.000000</x> <y>0.000000</y> <z>0.000000</z>
+  </vertex>
+  <vertex index="33" type="gate">
+    <x>-28.000000</x> <y>0.000000</y> <z>0.000000</z>
+  </vertex>
   <edge>
     <vertex>1</vertex> <vertex>2</vertex>
   </edge>
@@ -198,6 +209,18 @@
   </edge>
   <edge>
     <vertex>8</vertex> <vertex>7</vertex>
+  </edge>
+  <edge>
+    <vertex>29</vertex> <vertex>30</vertex>
+  </edge>
+  <edge>
+    <vertex>16</vertex> <vertex>31</vertex>
+  </edge>
+  <edge>
+    <vertex>32</vertex> <vertex>30</vertex>
+  </edge>
+  <edge>
+    <vertex>33</vertex> <vertex>31</vertex>
   </edge>
 </graph>
 

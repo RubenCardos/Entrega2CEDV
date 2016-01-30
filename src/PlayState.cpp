@@ -270,27 +270,29 @@ Pacman::PlayState::loadGraph()
         // Nodos Respawn -------------
         _respawnVertex.push_back(*it);
         //----------------------------
-
-      // Ray -------------------------
-		   Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
-		   SceneNode* _snRay = _sceneMgr->createSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
-		  _snRay->attachObject(_entRay);
-		  _snRay->setPosition(_aux.getPosition());
-      _sceneMgr->getRootSceneNode()->addChild(_snRay);
-		  if(_aux.getIndex() == 8 || _aux.getIndex() == 15 || _aux.getIndex() == 22 || _aux.getIndex() == 28){
-        _snRay->setScale(0.6,0.6,0.6);
-        _superRayVector.push_back(_snRay);
-        //Almaceno el rayo----------------------------------------
-        _superRayWareHouse.push_back(_snRay);
+        if(_aux.getIndex()!=32 && _aux.getIndex()!=33){
+          // Ray -------------------------
+          Entity* _entRay = _sceneMgr->createEntity("_entRay"+Ogre::StringConverter::toString(i),"ray.mesh");
+          SceneNode* _snRay = _sceneMgr->createSceneNode("RaySceneNode"+Ogre::StringConverter::toString(i));
+          _snRay->attachObject(_entRay);
+          _snRay->setPosition(_aux.getPosition());
+          _sceneMgr->getRootSceneNode()->addChild(_snRay);
+          if(_aux.getIndex() == 8 || _aux.getIndex() == 15 || _aux.getIndex() == 22 || _aux.getIndex() == 28){
+            _snRay->setScale(0.6,0.6,0.6);
+            _superRayVector.push_back(_snRay);
+            //Almaceno el rayo----------------------------------------
+            _superRayWareHouse.push_back(_snRay);
+            //--------------------------------------------------------
+          }else{
+            _snRay->setScale(0.3,0.3,0.3);
+            _rayVector.push_back(_snRay);
+            //Almaceno el rayo----------------------------------------
+            _rayWareHouse.push_back(_snRay);
+            //--------------------------------------------------------
+          }
         //--------------------------------------------------------
-      }else{
-        _snRay->setScale(0.3,0.3,0.3);
-        _rayVector.push_back(_snRay);
-        //Almaceno el rayo----------------------------------------
-        _rayWareHouse.push_back(_snRay);
-        //--------------------------------------------------------
-      }
-		  //--------------------------------------------------------
+        }
+      
         i+=1;
         NUM_VERTEX+=1;
         
@@ -882,7 +884,22 @@ Pacman::PlayState::updatePj(Real _deltaTime)
       _next=NULL;
       _pj->setMoving(false);
       _adjVer.clear();
-     
+      cout << "Estoy en: " << _now->getData().getIndex() << endl;
+      
+      if(_now->getData().getIndex()==32){
+        cout << "Teletransporte "  << endl;
+        _snPj->setPosition(_scene->getGraph()->getVertex(31)->getData().getPosition());
+        _now=_scene->getGraph()->getVertex(31);
+        _next=NULL;
+      }
+
+      if(_now->getData().getIndex()==33){
+        cout << "Teletransporte "  << endl;
+        _snPj->setPosition(_scene->getGraph()->getVertex(30)->getData().getPosition());
+        _now=_scene->getGraph()->getVertex(30);
+        _next=NULL;
+      }
+
       //Animacion de idle
       mAnims[0]->setEnabled(false);
       mAnims[1]->setEnabled(true);
@@ -1077,8 +1094,8 @@ Pacman::PlayState::updateRayCollisions()
     //------------------------------------
 
     //Aumento la velocidad de los fantasmas-----
-    _ghost->setSpeed(_ghost->getSpeed()+1);
-    _ghost2->setSpeed(_ghost2->getSpeed()+1);
+    //_ghost->setSpeed(_ghost->getSpeed()+1);
+    //_ghost2->setSpeed(_ghost2->getSpeed()+1);
     //------------------------------------------
 
   }
