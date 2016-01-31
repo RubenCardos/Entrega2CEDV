@@ -52,6 +52,9 @@ int _contState=0;
 std::vector<Pacman::GraphVertex*> _respawnVertex;
 //--------------------------------------
 
+// Blink del super -------------------
+int _contSuper=800;
+//--------------------------------------
 
 void
 Pacman::PlayState::enter ()
@@ -279,7 +282,17 @@ Pacman::PlayState::createGUI()
   textPoints->setProperty("BackgroundEnabled", "False");
   textPoints->setProperty("VertFormatting", "TopAligned");
 
+  CEGUI::Window* textLives = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textLives");
+  textLives->setText("[font='Carton_Six'] 3");
+  textLives->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
+  textLives->setXPosition(CEGUI::UDim(0.55f, 0.0f));
+  textLives->setYPosition(CEGUI::UDim(0.30f, 0.0f));
+  textLives->setProperty("FrameEnabled","False");
+  textLives->setProperty("BackgroundEnabled", "False");
+  textLives->setProperty("VertFormatting", "TopAligned");
+
   sheetBG->addChild(textPoints);
+  sheetBG->addChild(textLives);
   sheetBG->addChild(pauseButton);
   sheetBG->addChild(quitButton);
   sheet->addChild(sheetBG);
@@ -465,7 +478,8 @@ Pacman::PlayState::frameStarted
   
   //Actualizacion de la puntuacion en la interfaz----
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt)); //PLAY
+  sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt));
+  sheet->getChild("background_wnd2")->getChild("textLives")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pj->getLives()));
   //-------------------------------------------------
 
 
@@ -1050,7 +1064,11 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   }
 
   if(_pj->getState()=="super"){
-    
+    if(--_contSuper<=0){
+      _contSuper=800;
+      _pj->changeState("normal");
+      cout << "Vuelvo al estado normal" << endl;
+    }
   } 
 
   if(_pj->getState()=="respawn"){
