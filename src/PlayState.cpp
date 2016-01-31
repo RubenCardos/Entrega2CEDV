@@ -253,7 +253,7 @@ Pacman::PlayState::createGUI()
 
 
   //Interfaz Cegui---------------------------------------
-  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.jpg");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.png");
   CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd2");
   sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0.0f),CEGUI::UDim(0.0, 0)));
   sheetBG->setSize( CEGUI::USize(CEGUI::UDim(1.0, 0), CEGUI::UDim(0.10, 0)));
@@ -276,8 +276,8 @@ Pacman::PlayState::createGUI()
   CEGUI::Window* textPoints = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textPoints");
   textPoints->setText("[font='Carton_Six'] 000");
   textPoints->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
-  textPoints->setXPosition(CEGUI::UDim(0.45f, 0.0f));
-  textPoints->setYPosition(CEGUI::UDim(0.30f, 0.0f));
+  textPoints->setXPosition(CEGUI::UDim(0.43f, 0.0f));
+  textPoints->setYPosition(CEGUI::UDim(0.35f, 0.0f));
   textPoints->setProperty("FrameEnabled","False");
   textPoints->setProperty("BackgroundEnabled", "False");
   textPoints->setProperty("VertFormatting", "TopAligned");
@@ -285,8 +285,8 @@ Pacman::PlayState::createGUI()
   CEGUI::Window* textLives = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textLives");
   textLives->setText("[font='Carton_Six'] 3");
   textLives->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
-  textLives->setXPosition(CEGUI::UDim(0.55f, 0.0f));
-  textLives->setYPosition(CEGUI::UDim(0.30f, 0.0f));
+  textLives->setXPosition(CEGUI::UDim(0.1f, 0.0f));
+  textLives->setYPosition(CEGUI::UDim(0.35f, 0.0f));
   textLives->setProperty("FrameEnabled","False");
   textLives->setProperty("BackgroundEnabled", "False");
   textLives->setProperty("VertFormatting", "TopAligned");
