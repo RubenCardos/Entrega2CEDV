@@ -270,6 +270,16 @@ Pacman::PlayState::createGUI()
   quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8,0),CEGUI::UDim(0.3,0)));
   quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
 
+  CEGUI::Window* textPoints = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textPoints");
+  textPoints->setText("[font='Carton_Six'] 000");
+  textPoints->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
+  textPoints->setXPosition(CEGUI::UDim(0.45f, 0.0f));
+  textPoints->setYPosition(CEGUI::UDim(0.30f, 0.0f));
+  textPoints->setProperty("FrameEnabled","False");
+  textPoints->setProperty("BackgroundEnabled", "False");
+  textPoints->setProperty("VertFormatting", "TopAligned");
+
+  sheetBG->addChild(textPoints);
   sheetBG->addChild(pauseButton);
   sheetBG->addChild(quitButton);
   sheet->addChild(sheetBG);
@@ -453,7 +463,10 @@ Pacman::PlayState::frameStarted
   updatePj(_deltaT);
   //--------------------
   
-
+  //Actualizacion de la puntuacion en la interfaz----
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt)); //PLAY
+  //-------------------------------------------------
 
 
   //-------------------------------------
@@ -912,17 +925,6 @@ Pacman::PlayState::updateGhost3()
     _nextGhost3=_adjVerGhost3[res];
 
     //----------------------------------------
-
-
-
-    //Tiro Dados-----------------------------
-    //int _go=0+rand()%(_adjVerGhost3.size()-0);
-    //----------------------------------------
-
-    // Auxiliar para ver haia donde voy ------
-    //Vector3 _aux = _adjVerGhost3[_go]->getData().getPosition()-_nowGhost3->getData().getPosition();
-    //_nextGhost3=_adjVerGhost3[_go];
-    //---------------------------------------
 
     //El auxiliar me da la direccion---------
     if(_aux.z>0){
