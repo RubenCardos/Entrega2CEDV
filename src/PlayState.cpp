@@ -414,6 +414,7 @@ Pacman::PlayState::exit ()
 
   //Salgo del estado------------------------------
   _sceneMgr->clearScene();
+  _sceneMgr->destroyCamera("PlayCamera");
   _root->getAutoCreatedWindow()->removeAllViewports();
   //--------------------------------------------
 }

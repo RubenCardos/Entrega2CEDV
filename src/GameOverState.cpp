@@ -136,11 +136,20 @@ Pacman::GameOverState::resetGM(const CEGUI::EventArgs &e)
 void
 Pacman::GameOverState::exit ()
 {
+  cout <<"\nPaso por el exit de game over\n"<< endl;
+  _sceneMgr->clearScene();
+  _sceneMgr->destroyCamera("GameOverCamera");
+
+  //Limpio la interfaz de CEGUI
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+
+  //--------------------------------------------------------------------
+  _root->getAutoCreatedWindow()->removeAllViewports();
 }
 void
 Pacman::GameOverState::createGUI ()
 {
-    //INTERFAZ CEGUI-----------------------------------------------------
+  //INTERFAZ CEGUI-----------------------------------------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
   CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
