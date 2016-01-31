@@ -887,6 +887,7 @@ Pacman::PlayState::updateGhost3()
 {
   
   SceneNode* _snGhost =_sceneMgr->getSceneNode("GhostSceneNode3");
+  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
 
   //Movimiento del ghost ------------
   //Si el next es nulo estoy en un vertice------
@@ -895,13 +896,32 @@ Pacman::PlayState::updateGhost3()
     _adjVerGhost3 = _scene->getGraph()->adjacents(_nowGhost3->getData().getIndex());
     //-----------------------------------
 
+    //Algoritmo Voraz (IA)--------------------
+    int res=0;
+    double minimo=100.0;//Un valor muy alto o el valor maximo
+    for (unsigned int i=0;i<_adjVerGhost3.size();i++){
+      Vector3 _vectorDistance=_snPj->getPosition()-_adjVerGhost3[i]->getData().getPosition();
+      double _distance=_vectorDistance.length();
+      if(_distance<minimo){
+        res=i;
+        minimo=_distance;
+      }
+    }
+
+    Vector3 _aux = _adjVerGhost3[res]->getData().getPosition()-_nowGhost3->getData().getPosition();
+    _nextGhost3=_adjVerGhost3[res];
+
+    //----------------------------------------
+
+
+
     //Tiro Dados-----------------------------
-    int _go=0+rand()%(_adjVerGhost3.size()-0);
+    //int _go=0+rand()%(_adjVerGhost3.size()-0);
     //----------------------------------------
 
     // Auxiliar para ver haia donde voy ------
-    Vector3 _aux = _adjVerGhost3[_go]->getData().getPosition()-_nowGhost3->getData().getPosition();
-    _nextGhost3=_adjVerGhost3[_go];
+    //Vector3 _aux = _adjVerGhost3[_go]->getData().getPosition()-_nowGhost3->getData().getPosition();
+    //_nextGhost3=_adjVerGhost3[_go];
     //---------------------------------------
 
     //El auxiliar me da la direccion---------
