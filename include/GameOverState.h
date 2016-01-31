@@ -47,14 +47,15 @@ class GameOverState : public Ogre::Singleton<GameOverState>, public GameState
 
   bool frameStarted (const Ogre::FrameEvent& evt);
   bool frameEnded (const Ogre::FrameEvent& evt);
-
-  bool quit(const CEGUI::EventArgs &e);
-  bool reset(const CEGUI::EventArgs &e);
+  void createGUI();
+  
   // Heredados de Ogre::Singleton.
   static GameOverState& getSingleton ();
   static GameOverState* getSingletonPtr ();
 
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
+
+  
 
  protected:
   Ogre::Root* _root;
@@ -67,6 +68,11 @@ class GameOverState : public Ogre::Singleton<GameOverState>, public GameState
   Ogre::Real _deltaTGameOver;
 
   bool _exitGame;
+
+  bool quitGM(const CEGUI::EventArgs &e);
+  bool resetGM(const CEGUI::EventArgs &e);
+ 
+ 
 };
 
 }

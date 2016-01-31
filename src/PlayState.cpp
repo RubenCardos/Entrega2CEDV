@@ -72,10 +72,7 @@ Pacman::PlayState::enter ()
   _camera->setAspectRatio(width / height);
   //-------------------------------------
 
-  //Sonido--------------------------------------------
- 	//GameManager::getSingletonPtr()->_mainTrack->unload(); //Quitamos el sonido que habia antes y abajo cargamos otro
-  GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
-  //-----------------------------------------------------------
+  
 
   //Camara--------------------------------------------------------------
   //crear un pivote en más o menos por  el hombro del personaje
@@ -261,13 +258,13 @@ Pacman::PlayState::createGUI()
   sheetBG->setProperty("FrameEnabled","False");
   sheetBG->setProperty("BackgroundEnabled", "False");
 
-  CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","Ex1/PauseButton");
+  CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","PauseButton");
   pauseButton->setText("[font='Carton_Six'] Pausa ");
   pauseButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   pauseButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.6,0),CEGUI::UDim(0.3,0)));
   pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::pauseB,this));
 
-  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","Ex1/QuitButton");
+  CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","QuitButton");
   quitButton->setText("[font='Carton_Six'] Salir ");
   quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8,0),CEGUI::UDim(0.3,0)));
@@ -550,7 +547,9 @@ Pacman::PlayState::keyPressed
         mAnims[0]->setLoop(true);
         mAnims[0]->setTimePosition(0);
 
-
+        //Sonido--------------------------------------------
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
+        //-----------------------------------------------------------
         GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
@@ -1208,18 +1207,25 @@ Pacman::PlayState::updateRayCollisions()
   
   
   //Colisiones Rayos--------------------------------------
-
   Ogre::AxisAlignedBox bbPjSceneNode = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
 
   for (unsigned int i=0;i<_rayVector.size();++i){
     Ogre::SceneNode* _aux=_rayVector[i];
     Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
     if(bbPjSceneNode.intersects(bbRay)){
+      bool bIsVisible =  _camera->isVisible(_sceneMgr->getSceneNode(_rayVector[i]->getName())->_getWorldAABB());
+      if(bIsVisible==true){
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("descorchar.wav");
+        GameManager::getSingletonPtr()->_simpleEffect->play();
+        cout << "ES VISIBLE" << endl;
+      }
+
+
+      _aux->setVisible(false);
       _rayVector.erase(_rayVector.begin()+i);
       _punt+=100;
       cout << "Puntuacion: " << _punt << endl;
       cout << "Vidas: " << _pj->getLives() << endl;
-      _aux->setVisible(false);
       cout << "\nRayos restantes: " << (_rayVector.size()) << "\n" << endl;
     }
   }

@@ -26,14 +26,14 @@ Pacman::PauseState::enter ()
   menuButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   menuButton->setXPosition(UDim(0.20f, 0.0f));
   menuButton->setYPosition(UDim(0.50f, 0.0f));
-  //menuButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
+  menuButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
 
   CEGUI::Window* resetButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","reset");
   resetButton->setText("[font='Carton_Six'] Reset ");
   resetButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   resetButton->setXPosition(UDim(0.20f, 0.0f));
   resetButton->setYPosition(UDim(0.60f, 0.0f));
-  //resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::records,this));
+  resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
 
   CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
   backButton->setText("[font='Carton_Six'] Resume ");

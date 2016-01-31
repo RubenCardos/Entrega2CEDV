@@ -1,8 +1,10 @@
 #include "GameOverState.h"
+#include "CEGUI.h"
 #include "PlayState.h"
-using namespace CEGUI;
 
 template<> Pacman::GameOverState* Ogre::Singleton<Pacman::GameOverState>::msSingleton = 0;
+
+using namespace CEGUI;
 
 void
 Pacman::GameOverState::enter ()
@@ -90,36 +92,6 @@ Pacman::GameOverState::enter ()
   _animGhost2->setTimePosition(0.0);
   //----------------------------------------------------------
 
-  //INTERFAZ CEGUI-----------------------------------------------------
-  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-
-  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
-  CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_gameover");
-  sheetBG->setPosition(UVector2(cegui_reldim(0),cegui_reldim(0)));
-  sheetBG->setSize(CEGUI::USize(CEGUI::UDim(20,0),CEGUI::UDim(20,0)));
-  sheetBG->setProperty("Image","BackgroundGameOver");
-  sheetBG->setProperty("FrameEnabled","False");
-  sheetBG->setProperty("BackgroundEnabled", "False");
-
-
-  CEGUI::Window* resetButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","resetGame");
-  resetButton->setText("[font='Carton_Six'] Reiniciar ");
-  resetButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  resetButton->setXPosition(UDim(0.75f, 0.0f));
-  resetButton->setYPosition(UDim(0.50f, 0.0f));
-  resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GameOverState::reset,this));
-
-  CEGUI::Window* exitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","exitGame");
-  exitButton->setText("[font='Carton_Six'] Salir ");
-  exitButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  exitButton->setXPosition(UDim(0.03f, 0.0f));
-  exitButton->setYPosition(UDim(0.50f, 0.0f));
-  exitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GameOverState::quit,this));
-
-  sheetBG->addChild(resetButton);
-  sheetBG->addChild(exitButton);
-  sheet->addChild(sheetBG);
-   //------------------------------------------------------------------------------------
 
    //Background-------------------------------------------
   Ogre::Plane plane1(Ogre::Vector3::UNIT_Y, 0);
@@ -137,20 +109,24 @@ Pacman::GameOverState::enter ()
   nodeBG->roll(Ogre::Degree(90));
   _sceneMgr->getRootSceneNode()->addChild(nodeBG);
   //--------------------------------------------------------
+  createGUI();
+
 
   _exitGame = false;
+
+  
+
 }
 
 bool
-Pacman::GameOverState::quit(const CEGUI::EventArgs &e)
+Pacman::GameOverState::quitGM(const CEGUI::EventArgs &e)
 {
   _exitGame=true;
-  
   return true;
 }
 
 bool
-Pacman::GameOverState::reset(const CEGUI::EventArgs &e)
+Pacman::GameOverState::resetGM(const CEGUI::EventArgs &e)
 {
   changeState(PlayState::getSingletonPtr());
   
@@ -161,7 +137,40 @@ void
 Pacman::GameOverState::exit ()
 {
 }
+void
+Pacman::GameOverState::createGUI ()
+{
+    //INTERFAZ CEGUI-----------------------------------------------------
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
+  CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_gameover");
+  sheetBG->setPosition(UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBG->setSize(CEGUI::USize(CEGUI::UDim(20,0),CEGUI::UDim(20,0)));
+  sheetBG->setProperty("Image","BackgroundGameOver");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
+
+
+  CEGUI::Window* resetButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","resetGameOver");
+  resetButton->setText("[font='Carton_Six'] Reiniciar ");
+  resetButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  resetButton->setXPosition(UDim(0.75f, 0.0f));
+  resetButton->setYPosition(UDim(0.50f, 0.0f));
+  resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GameOverState::resetGM,this));
+
+  CEGUI::Window* exitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","exitGameOver");
+  exitButton->setText("[font='Carton_Six'] Salir ");
+  exitButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
+  exitButton->setXPosition(UDim(0.03f, 0.0f));
+  exitButton->setYPosition(UDim(0.50f, 0.0f));
+  exitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GameOverState::quitGM,this));
+
+  sheetBG->addChild(resetButton);
+  sheetBG->addChild(exitButton);
+  sheet->addChild(sheetBG);
+   //------------------------------------------------------------------------------------
+}
 void
 Pacman::GameOverState::pause ()
 {
@@ -217,9 +226,9 @@ Pacman::GameOverState::frameStarted
 
   if(_snPj->getScale() > Ogre::Vector3(0.01,0.01,0.01) ){
   
-    _snPj->setScale((_snPj->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
-    _snGhost->setScale((_snGhost->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
-    _snGhost2->setScale((_snGhost2->getScale())-(_deltaTGameOver/8,_deltaTGameOver/8,_deltaTGameOver/8));
+    _snPj->setScale((_snPj->getScale())-(_deltaTGameOver/8));
+    _snGhost->setScale((_snGhost->getScale())-(_deltaTGameOver/8));
+    _snGhost2->setScale((_snGhost2->getScale())-(_deltaTGameOver/8));
   
     _snPj->setPosition(_snPj->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
     _snGhost->setPosition(_snGhost->getPosition()+Ogre::Vector3(0,_deltaTGameOver/4,0));
@@ -259,11 +268,6 @@ Pacman::GameOverState::keyReleased
 (const OIS::KeyEvent &e)
 {
 
-  //Salgo del juego---------------
-  if (e.key == OIS::KC_ESCAPE) {
-    _exitGame = true;
-  }
-
 }
 
 void
@@ -277,7 +281,7 @@ void
 Pacman::GameOverState::mousePressed
 (const OIS::MouseEvent &e, OIS::MouseButtonID id)
 {
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertMouseButton(id));
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertMouseButton(id));
 }
 
 void
@@ -286,6 +290,7 @@ Pacman::GameOverState::mouseReleased
 {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertMouseButton(id));
 }
+
 
 CEGUI::MouseButton Pacman::GameOverState::convertMouseButton(OIS::MouseButtonID id)//METODOS DE CEGUI
 {
