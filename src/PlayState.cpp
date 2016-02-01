@@ -424,7 +424,7 @@ Pacman::PlayState::exit ()
   //sheet->getChild("background_wnd2")->destroyChild("textLives");
   //sheet->getChild("background_wnd2")->destroyChild("PauseButton");
   //sheet->getChild("background_wnd2")->destroyChild("QuitButton");
-  sheet->destroyChild("background_wnd2");
+  //sheet->destroyChild("background_wnd2");
   //--------------------------------------------------------------------
 
   _root->getAutoCreatedWindow()->removeAllViewports();
@@ -561,9 +561,9 @@ Pacman::PlayState::keyPressed
         mAnims[0]->setTimePosition(0);
 
         //Sonido--------------------------------------------
-        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
+       // GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
         //-----------------------------------------------------------
-        GameManager::getSingletonPtr()->_simpleEffect->play();
+       // GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
 
@@ -1228,8 +1228,8 @@ Pacman::PlayState::updateRayCollisions()
     if(bbPjSceneNode.intersects(bbRay)){
       bool bIsVisible =  _camera->isVisible(_sceneMgr->getSceneNode(_rayVector[i]->getName())->_getWorldAABB());
       if(bIsVisible==true){
-        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("descorchar.wav");
-        GameManager::getSingletonPtr()->_simpleEffect->play();
+       // GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("descorchar.wav");
+       // GameManager::getSingletonPtr()->_simpleEffect->play();
         cout << "ES VISIBLE" << endl;
       }
 

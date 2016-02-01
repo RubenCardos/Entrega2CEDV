@@ -20,32 +20,23 @@ Pacman::PauseState::enter ()
 
   CEGUI::Window* sheet = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
-
-  CEGUI::Window* menuButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","menu");
-  menuButton->setText("[font='Carton_Six'] Menu ");
-  menuButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  menuButton->setXPosition(UDim(0.20f, 0.0f));
-  menuButton->setYPosition(UDim(0.50f, 0.0f));
-  menuButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
-
-  CEGUI::Window* resetButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","reset");
-  resetButton->setText("[font='Carton_Six'] Reset ");
-  resetButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  resetButton->setXPosition(UDim(0.20f, 0.0f));
-  resetButton->setYPosition(UDim(0.60f, 0.0f));
-  resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
+  CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_pause");
+  sheetBG->setPosition(UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBG->setSize(CEGUI::USize(CEGUI::UDim(20,0),CEGUI::UDim(20,0)));
+  sheetBG->setProperty("Image","BackgroundPause");
+  sheetBG->setProperty("FrameEnabled","False");
+  sheetBG->setProperty("BackgroundEnabled", "False");
 
   CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
   backButton->setText("[font='Carton_Six'] Resume ");
   backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  backButton->setXPosition(UDim(0.20f, 0.0f));
-  backButton->setYPosition(UDim(0.70f, 0.0f));
+  backButton->setXPosition(UDim(0.60f, 0.0f));
+  backButton->setYPosition(UDim(0.50f, 0.0f));
   backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
   
-
-  sheet->addChild(menuButton);
-  sheet->addChild(resetButton);
-  sheet->addChild(backButton);
+  
+  sheetBG->addChild(backButton);
+  sheet->addChild(sheetBG);
 
   _exitGame = false;
 }
@@ -54,12 +45,15 @@ void
 Pacman::PauseState::exit ()
 {
    CEGUI::Window* sheet = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-   sheet->destroyChild("menu");
-   sheet->destroyChild("reset");
-   sheet->destroyChild("back");
+   sheet->getChild("background_pause")->destroyChild("back");
+   sheet->destroyChild("background_pause");
 
 }
-
+bool 
+Pacman::PauseState::resumeB(const CEGUI::EventArgs &e){
+  popState();
+  return true;
+}
 void
 Pacman::PauseState::pause ()
 {
@@ -158,8 +152,4 @@ Pacman::PauseState::getSingleton ()
   assert(msSingleton);
   return *msSingleton;
 }
-bool 
-Pacman::PauseState::resumeB(const CEGUI::EventArgs &e){
-  popState();
-  return true;
-}
+
