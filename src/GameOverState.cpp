@@ -142,7 +142,7 @@ Pacman::GameOverState::exit ()
 
   //Limpio la interfaz de CEGUI
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-
+  //sheet->destroyChild(sheet->getChild("background_gameover"));
   //--------------------------------------------------------------------
   _root->getAutoCreatedWindow()->removeAllViewports();
 }
@@ -152,7 +152,7 @@ Pacman::GameOverState::createGUI ()
   //INTERFAZ CEGUI-----------------------------------------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 
-  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
+  
   CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_gameover");
   sheetBG->setPosition(UVector2(cegui_reldim(0),cegui_reldim(0)));
   sheetBG->setSize(CEGUI::USize(CEGUI::UDim(20,0),CEGUI::UDim(20,0)));

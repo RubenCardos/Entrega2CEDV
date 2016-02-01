@@ -250,7 +250,7 @@ Pacman::PlayState::createGUI()
 
 
   //Interfaz Cegui---------------------------------------
-  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.png");
+  
   CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd2");
   sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0.0f),CEGUI::UDim(0.0, 0)));
   sheetBG->setSize( CEGUI::USize(CEGUI::UDim(1.0, 0), CEGUI::UDim(0.10, 0)));
@@ -410,11 +410,19 @@ void
 Pacman::PlayState::exit ()
 {
 
-  cout << "\nChange State llego a metodo exit\n" << endl;
+  //Compruebo los records ------------
+  requestScore();
+  //----------------------------------
 
   //Salgo del estado------------------------------
   _sceneMgr->clearScene();
   _sceneMgr->destroyCamera("PlayCamera");
+
+  //Limpio la interfaz de CEGUI
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  //sheet->destroyChild(sheet->getChild("background_wnd2"));
+  //--------------------------------------------------------------------
+
   _root->getAutoCreatedWindow()->removeAllViewports();
   //--------------------------------------------
 }
@@ -1283,20 +1291,73 @@ Pacman::PlayState::updateRayCollisions()
 void
 Pacman::PlayState::requestScore()
 {
-  // Aqui vamos a comprobar la puntuacion---------------------------------
+  fstream fichero;//Fichero
+    string frase;//Auxiliar
+    bool reWrite=false;//Si debemos re-escribir el fichero o no
+    String nombre;
+    std::vector <String> puntuaciones;//vector para guardar puntuaciones
+
+    fichero.open ( "Records.txt" , ios::in); //Suponemos que ya existe
+    if (fichero.is_open()) {//se debe lanzar primero el metodo de lectura para comprobar que existe el fichero
+      while (getline (fichero,frase)) {
+        String nombre=Ogre::StringUtil::split (frase," ")[0];
+        int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
+        cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
+        if(_punt>punt && reWrite == false){
+          cout << "Nuevo Record!!!"<< endl;
+          reWrite=true;
+
+          cout << "\nNombre?\n" << endl;
+          //cin >> nombre;
+          nombre="Ruben";
+          String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
+          cout << aux << endl;
+          puntuaciones.push_back(aux);
+        }
+        puntuaciones.push_back(frase);
+      }
+      fichero.close();    
+    }else{
+
+      cout << "Fichero inexistente o faltan permisos para abrirlo, creando archivo e records..." << endl;
+      ofstream archivo;  // objeto de la clase ofstream
+      archivo.open("Records.txt");
+      for(int i=0;i<9;i++){
+        archivo  << "AAA 000" << endl;
+      }
+      archivo.close();
+
+      fichero.open ( "Records.txt" , ios::in);
+      while (getline (fichero,frase)) {
+        String nombre=Ogre::StringUtil::split (frase," ")[0];
+        int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
+        cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
+        if(_punt>punt && reWrite == false){
+          cout << "Nuevo Record!!!"<< endl;
+          reWrite=true;
+
+          cout << "\nNombre?\n" << endl;
+          cin >> nombre;
+          
+          String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
+          cout << aux << endl;
+          puntuaciones.push_back(aux);
+        }
+        puntuaciones.push_back(frase);
+      }
+      fichero.close();
+    }
 
 
-  //Comprovamos puntuacion---------------------
+    //Se debe re-escribir el fichero
+    if(reWrite==true){
+      puntuaciones.pop_back();//saco la ultima
 
-  //-------------------------------------------
-
-  //Si hay nueva puntuacion, obtenemos el nombre del jugador---
-
-  //-----------------------------------------------------------
-
-  //Actualizamos el fichero de puntuaciones--------------------
-
-  //-----------------------------------------------------------
-
-  // ---------------------------------------------------------------------
+      ofstream archivo;  // objeto de la clase ofstream
+      archivo.open("Records.txt");
+      for(unsigned int i=0;i<puntuaciones.size();i++){
+          archivo  << puntuaciones[i] << endl;
+      }
+      archivo.close();
+    }
 }

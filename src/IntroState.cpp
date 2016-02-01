@@ -333,6 +333,10 @@ void Pacman::IntroState::createGUI()
   //-----------------------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
+  //Texturas de los otros estados ------------
+  CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.png");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
+  //------------------------------------------
   
 }
 

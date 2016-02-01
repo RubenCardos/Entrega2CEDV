@@ -70,6 +70,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
   int _punt;
   void requestScore();
 
+
  protected:
   //Camera
   SceneNode* mBodyNode;
