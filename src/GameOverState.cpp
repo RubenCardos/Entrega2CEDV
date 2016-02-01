@@ -178,7 +178,10 @@ Pacman::GameOverState::createGUI ()
   sheetBG->addChild(resetButton);
   sheetBG->addChild(exitButton);
   sheet->addChild(sheetBG);
-   //------------------------------------------------------------------------------------
+  
+  //CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
+
+  //------------------------------------------------------------------------------------
 }
 void
 Pacman::GameOverState::pause ()

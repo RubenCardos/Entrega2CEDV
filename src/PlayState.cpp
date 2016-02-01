@@ -420,7 +420,11 @@ Pacman::PlayState::exit ()
 
   //Limpio la interfaz de CEGUI
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  //sheet->destroyChild(sheet->getChild("background_wnd2"));
+  //sheet->getChild("background_wnd2")->destroyChild("textPoints");
+  //sheet->getChild("background_wnd2")->destroyChild("textLives");
+  //sheet->getChild("background_wnd2")->destroyChild("PauseButton");
+  //sheet->getChild("background_wnd2")->destroyChild("QuitButton");
+  sheet->destroyChild("background_wnd2");
   //--------------------------------------------------------------------
 
   _root->getAutoCreatedWindow()->removeAllViewports();
