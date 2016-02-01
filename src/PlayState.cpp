@@ -1337,7 +1337,7 @@ Pacman::PlayState::requestScore()
           reWrite=true;
 
           cout << "\nNombre?\n" << endl;
-          cin >> nombre;
+          nombre="Ruben";
           
           String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
           cout << aux << endl;

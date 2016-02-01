@@ -1,9 +1,9 @@
-Ruben 700
-AAA 000
-AAA 000
-AAA 000
-AAA 000
-AAA 000
+Ruben 2600
+Ruben 1100
+Ruben 500
+Ruben 400
+Ruben 200
+Ruben 100
 AAA 000
 AAA 000
 AAA 000
