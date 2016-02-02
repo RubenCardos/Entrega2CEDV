@@ -131,7 +131,7 @@ Pacman::GameOverState::resetGM(const CEGUI::EventArgs &e)
 {
   
 
-  changeState(IntroState::getSingletonPtr());
+  changeState(PlayState::getSingletonPtr());
 
   return true;
 }
@@ -141,25 +141,18 @@ Pacman::GameOverState::exit ()
 {
   cout <<"\nPaso por el exit de game over\n"<< endl;
   _sceneMgr->clearScene();
-
   _sceneMgr->destroyCamera("GameOverCamera");
-  _root->getAutoCreatedWindow()->removeAllViewports();
 
-  _root->destroySceneManager(_sceneMgr);
-  CEGUI::WindowManager::getSingleton().destroyAllWindows();
-  ImageManager::getSingleton().destroyAll();
-  CEGUI::System::getSingleton().getRenderer()->destroyAllTextures();
-  //Limpio la interfaz de CEGUI
-  //CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  //CEGUI::WindowManager::getSingleton().destroyWindow( sheet );
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
  
-  //sheet->destroyChild("background_gameover");
-  //sheet->destroyChild("background_wnd2");
+  sheet->destroyChild("background_gameover");
+  sheet->destroyChild("background_wnd2");
 
 
   GameManager::getSingletonPtr()->_mainTrack->unload();
 
-  
+  _root->getAutoCreatedWindow()->removeAllViewports();
+  cout <<"\nSalgo por el exit de game over\n"<< endl;
   //--------------------------------------------------------------------
   
 }

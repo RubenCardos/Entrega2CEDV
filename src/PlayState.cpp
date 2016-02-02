@@ -59,8 +59,10 @@ int _contSuper=800;
 void
 Pacman::PlayState::enter ()
 {
-  _root = Ogre::Root::getSingletonPtr();
 
+  cout <<"\nEntro en el PlayState, metodo enter\n"<< endl;
+
+  _root = Ogre::Root::getSingletonPtr();
   // Se recupera el gestor de escena y la cámara.----------------
   _sceneMgr = _root->getSceneManager("SceneManager");
   _camera = _sceneMgr->createCamera("PlayCamera");
@@ -71,9 +73,7 @@ Pacman::PlayState::enter ()
   double height = _viewport->getActualHeight();
   _camera->setAspectRatio(width / height);
   //-------------------------------------
-
   
-
   //Camara--------------------------------------------------------------
   //crear un pivote en más o menos por  el hombro del personaje
 	mCameraPivot = _camera->getSceneManager()->getRootSceneNode()->createChildSceneNode();
@@ -181,6 +181,7 @@ Pacman::PlayState::enter ()
 	createGUI();
   loadGraph();
   loadAnimations(_entPj);
+  //------------------------
 
   //Luz Escena-------------------
   Ogre::Light* spotLight = _sceneMgr->createLight("SpotLight");
@@ -232,6 +233,8 @@ Pacman::PlayState::enter ()
   mKeyDirection = Vector3::ZERO;
 
   _punt=0;
+
+  cout <<"\nEntro en el PlayState, final metodo enter\n"<< endl;
  
 }
 
@@ -345,9 +348,6 @@ Pacman::PlayState::loadGraph()
         
       }
 
-
-
-
   }
   catch (...){
       cerr << "Unexpected exception!" << endl;
@@ -412,6 +412,14 @@ Pacman::PlayState::exit ()
 
   //Compruebo los records ------------
   requestScore();
+  delete _importer;
+  //----------------------------------
+
+  //Limpio vectores--------------------
+  _rayWareHouse.clear();
+  _rayVector.clear();
+  _superRayWareHouse.clear();
+  _superRayVector.clear();
   //----------------------------------
 
   //Salgo del estado------------------------------
@@ -420,11 +428,6 @@ Pacman::PlayState::exit ()
 
   //Limpio la interfaz de CEGUI
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  //sheet->getChild("background_wnd2")->destroyChild("textPoints");
-  //sheet->getChild("background_wnd2")->destroyChild("textLives");
-  //sheet->getChild("background_wnd2")->destroyChild("PauseButton");
-  //sheet->getChild("background_wnd2")->destroyChild("QuitButton");
-  //sheet->destroyChild("background_wnd2");
   //--------------------------------------------------------------------
 
   _root->getAutoCreatedWindow()->removeAllViewports();
@@ -468,8 +471,6 @@ Pacman::PlayState::frameStarted
   CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
   RTTWindow->invalidate();
   //-------------------------------------------
-
-  
   
   //Update Ghost ----
   updateGhost();
@@ -477,11 +478,15 @@ Pacman::PlayState::frameStarted
   updateGhost3();
   //-----------------
   
+  
+
   //Update Collisiones ---
   updateCollisions();
   updateRayCollisions();
   //----------------------
   
+  
+
   // Update Pj ---------
   updatePj(_deltaT);
   //--------------------
@@ -492,9 +497,9 @@ Pacman::PlayState::frameStarted
   sheet->getChild("background_wnd2")->getChild("textLives")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pj->getLives()));
   //-------------------------------------------------
 
-
   //-------------------------------------
   return true;
+
 }
 
 void 
@@ -561,9 +566,9 @@ Pacman::PlayState::keyPressed
         mAnims[0]->setTimePosition(0);
 
         //Sonido--------------------------------------------
-       // GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
         //-----------------------------------------------------------
-       // GameManager::getSingletonPtr()->_simpleEffect->play();
+        GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
 
@@ -1217,8 +1222,7 @@ Pacman::PlayState::updateCollisions()
 void
 Pacman::PlayState::updateRayCollisions()
 {
-  
-  
+
   //Colisiones Rayos--------------------------------------
   Ogre::AxisAlignedBox bbPjSceneNode = _sceneMgr->getSceneNode("PjSceneNode")->_getWorldAABB();
 
@@ -1228,9 +1232,8 @@ Pacman::PlayState::updateRayCollisions()
     if(bbPjSceneNode.intersects(bbRay)){
       bool bIsVisible =  _camera->isVisible(_sceneMgr->getSceneNode(_rayVector[i]->getName())->_getWorldAABB());
       if(bIsVisible==true){
-       // GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("descorchar.wav");
-       // GameManager::getSingletonPtr()->_simpleEffect->play();
-        cout << "ES VISIBLE" << endl;
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("descorchar.wav");
+        GameManager::getSingletonPtr()->_simpleEffect->play();
       }
 
 
@@ -1243,6 +1246,7 @@ Pacman::PlayState::updateRayCollisions()
     }
   }
   //--------------------------------------------------
+  
 
   // Si no quedan rayos por coger seria el final del nivel ----------------
   if(_rayVector.size()==0){
@@ -1266,11 +1270,6 @@ Pacman::PlayState::updateRayCollisions()
       _rayVector.push_back(_rayWareHouse[i]);
     }
     //------------------------------------
-
-    //Aumento la velocidad de los fantasmas-----
-    //_ghost->setSpeed(_ghost->getSpeed()+1);
-    //_ghost2->setSpeed(_ghost2->getSpeed()+1);
-    //------------------------------------------
 
   }
   //-----------------------------------------------------------------------
