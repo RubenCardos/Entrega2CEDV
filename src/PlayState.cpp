@@ -53,7 +53,7 @@ std::vector<Pacman::GraphVertex*> _respawnVertex;
 //--------------------------------------
 
 // Blink del super -------------------
-int _contSuper=800;
+int _contSuper=1500;
 //--------------------------------------
 
 void
@@ -242,6 +242,9 @@ void
 Pacman::PlayState::createGUI()
 {
 	//CEGUI--------------------------------------------------------------
+  
+  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+
   // Interfaz Intro (Ocultar botones)--------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   sheet->getChildAtIdx(0)->setVisible(false); //PLAY
@@ -291,8 +294,19 @@ Pacman::PlayState::createGUI()
   textLives->setProperty("BackgroundEnabled", "False");
   textLives->setProperty("VertFormatting", "TopAligned");
 
+  CEGUI::Window* textSuperCont = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textSuperCont");
+  textSuperCont->setText("[font='Carton_Six']");
+  textSuperCont->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
+  textSuperCont->setXPosition(CEGUI::UDim(0.48f, 0.0f));
+  textSuperCont->setYPosition(CEGUI::UDim(0.55f, 0.0f));
+  textSuperCont->setProperty("FrameEnabled","False");
+  textSuperCont->setProperty("BackgroundEnabled", "False");
+  textSuperCont->setProperty("VertFormatting", "TopAligned");
+  textSuperCont->setVisible(false);
+
   sheetBG->addChild(textPoints);
   sheetBG->addChild(textLives);
+  sheet->addChild(textSuperCont);
   sheetBG->addChild(pauseButton);
   sheetBG->addChild(quitButton);
   sheet->addChild(sheetBG);
@@ -426,9 +440,7 @@ Pacman::PlayState::exit ()
   _sceneMgr->clearScene();
   _sceneMgr->destroyCamera("PlayCamera");
 
-  //Limpio la interfaz de CEGUI
-  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  //--------------------------------------------------------------------
+  
 
   _root->getAutoCreatedWindow()->removeAllViewports();
   //--------------------------------------------
@@ -1081,10 +1093,16 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   }
 
   if(_pj->getState()=="super"){
+    //Muestro el super contador---
+    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    sheet->getChild("textSuperCont")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_contSuper/100));
+    sheet->getChild("textSuperCont")->setVisible(true);
+    //----------------------------
     if(--_contSuper<=0){
-      _contSuper=800;
+      _contSuper=1500;
       _pj->changeState("normal");
       cout << "Vuelvo al estado normal" << endl;
+      sheet->getChild("textSuperCont")->setVisible(false);
     }
   } 
 

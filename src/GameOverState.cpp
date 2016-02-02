@@ -150,6 +150,8 @@ Pacman::GameOverState::exit ()
 
 
   GameManager::getSingletonPtr()->_mainTrack->unload();
+  GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("Intro.mp3");
+  GameManager::getSingletonPtr()->_mainTrack->play();
 
   _root->getAutoCreatedWindow()->removeAllViewports();
   cout <<"\nSalgo por el exit de game over\n"<< endl;

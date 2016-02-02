@@ -1,6 +1,9 @@
 #include "Pj.h"
 #include <iostream>
 
+#define LIVES 5;
+
+
 using namespace std;
 
  Pacman::Pj::Pj
@@ -10,7 +13,7 @@ using namespace std;
  	_desp=Ogre::Vector3(0,0,0);
  	_speed=1;
  	_orientation=1;
- 	_lives=3;
+ 	_lives=LIVES;
  	_state="normal";
  }
 
