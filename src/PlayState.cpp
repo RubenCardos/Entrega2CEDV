@@ -147,6 +147,10 @@ Pacman::PlayState::enter ()
   _animGhost2->setLoop(true);
   _animGhost2->setTimePosition(0.0);
   //-------------------------------------------------
+  Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
+  Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(0.7444444298744202, 0.7444444298744202, 0.7444444298744202,1.0 ));
+  Mat->getTechnique(0)->getPass(0)->setDiffuse(0.640000066757203 ,0.6169856640247353 ,0.0, 1.0);
+  Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(0.8000000715255737, 0.7712320685386658, 0.0, 1.0));
 
   //Ghost 3------------------------
   Entity* _entGhost3 = _sceneMgr->createEntity("entGhost3","ghost.mesh");
@@ -563,8 +567,21 @@ Pacman::PlayState::keyPressed
 
   // Tecla g --> GameOverState.-------
   if (e.key == OIS::KC_G) {
-    changeState(GameOverState::getSingletonPtr());
     CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    CEGUI::Editbox* eb = static_cast<CEGUI::Editbox*>(sheet->createChild("OgreTray/Editbox","editbox"));
+    eb->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.40f, 0)));
+    eb->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+    eb->setFont("Carton_Six");
+    eb->activate();
+
+    CEGUI::Window* butttonAcept = static_cast<CEGUI::Window*>(sheet->createChild("OgreTray/Button"));
+    butttonAcept->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.55f, 0)));
+    butttonAcept->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+    butttonAcept->setText("[font='Carton_Six'] Accept");
+    butttonAcept->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::accept,this));
+    //changeState(GameOverState::getSingletonPtr());
+    
+
     sheet->getChildAtIdx(4)->setVisible(false);
     sheet->getChildAtIdx(5)->setVisible(false);
   }
@@ -577,9 +594,8 @@ Pacman::PlayState::keyPressed
         mAnims[0]->setLoop(true);
         mAnims[0]->setTimePosition(0);
 
-        //Sonido--------------------------------------------
+      
         GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("vaccum.wav");
-        //-----------------------------------------------------------
         GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
@@ -793,6 +809,15 @@ bool
 Pacman::PlayState::pauseB(const CEGUI::EventArgs &e)
 {
   pushState(PauseState::getSingletonPtr());
+  return true;
+}
+
+bool
+Pacman::PlayState::accept(const CEGUI::EventArgs &e)
+{
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  cout << sheet->getChild("editbox")->getText() << endl;
+
   return true;
 }
 

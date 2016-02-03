@@ -107,7 +107,7 @@ class PlayState : public Ogre::Singleton<PlayState>, public GameState
 
   bool quit(const CEGUI::EventArgs &e);
   bool pauseB(const CEGUI::EventArgs &e);
-  
+  bool accept(const CEGUI::EventArgs &e);
 
   bool _exitGame;
 

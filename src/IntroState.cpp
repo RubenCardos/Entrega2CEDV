@@ -336,7 +336,7 @@ void Pacman::IntroState::createGUI()
   //Texturas de los otros estados ------------
   CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.png");
   CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
-  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundPause","pause.jpg");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundPause","pause.png");
   //------------------------------------------
   
 }
