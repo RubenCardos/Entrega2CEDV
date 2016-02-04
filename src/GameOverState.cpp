@@ -147,7 +147,8 @@ Pacman::GameOverState::exit ()
  
   sheet->destroyChild("background_gameover");
   sheet->destroyChild("background_wnd2");
-
+  sheet->destroyChild("textSuperCont");
+  sheet->destroyChild("background_editbox");
 
   GameManager::getSingletonPtr()->_mainTrack->unload();
   GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("Intro.mp3");
@@ -174,14 +175,14 @@ Pacman::GameOverState::createGUI ()
 
 
   CEGUI::Window* resetButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","resetGameOver");
-  resetButton->setText("[font='Carton_Six'] Reiniciar ");
+  resetButton->setText("[font='Carton_Six'] Play Again ");
   resetButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   resetButton->setXPosition(UDim(0.75f, 0.0f));
   resetButton->setYPosition(UDim(0.50f, 0.0f));
   resetButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GameOverState::resetGM,this));
 
   CEGUI::Window* exitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","exitGameOver");
-  exitButton->setText("[font='Carton_Six'] Salir ");
+  exitButton->setText("[font='Carton_Six'] Exit ");
   exitButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   exitButton->setXPosition(UDim(0.03f, 0.0f));
   exitButton->setYPosition(UDim(0.50f, 0.0f));

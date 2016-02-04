@@ -112,7 +112,6 @@ Pacman::PlayState::enter ()
   SceneNode* _snPj = _sceneMgr->createSceneNode("PjSceneNode");
   _snPj->attachObject(_entPj);
   _snPj->setScale(0.5,0.5,0.5);
-  _snPj->showBoundingBox(true);
   _sceneMgr->getRootSceneNode()->addChild(_snPj);
   _pj=new Pj;
 
@@ -123,7 +122,6 @@ Pacman::PlayState::enter ()
   SceneNode* _snGhost = _sceneMgr->createSceneNode("GhostSceneNode");
   _snGhost->attachObject(_entGhost);
   _snGhost->setScale(0.5,0.5,0.5);
-  _snGhost->showBoundingBox(true);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost);
   _ghost=new Pj;
 
@@ -136,7 +134,6 @@ Pacman::PlayState::enter ()
   //Ghost 2------------------------
   Entity* _entGhost2 = _sceneMgr->createEntity("entGhost2","ghost.mesh");
   SceneNode* _snGhost2 = _sceneMgr->createSceneNode("GhostSceneNode2");
-  _snGhost2->showBoundingBox(true);
   _snGhost2->setScale(0.5,0.5,0.5);
   _snGhost2->attachObject(_entGhost2);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost2);
@@ -147,15 +144,11 @@ Pacman::PlayState::enter ()
   _animGhost2->setLoop(true);
   _animGhost2->setTimePosition(0.0);
   //-------------------------------------------------
-  Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
-  Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(0.7444444298744202, 0.7444444298744202, 0.7444444298744202,1.0 ));
-  Mat->getTechnique(0)->getPass(0)->setDiffuse(0.640000066757203 ,0.6169856640247353 ,0.0, 1.0);
-  Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(0.8000000715255737, 0.7712320685386658, 0.0, 1.0));
+  
 
   //Ghost 3------------------------
   Entity* _entGhost3 = _sceneMgr->createEntity("entGhost3","ghost.mesh");
   SceneNode* _snGhost3 = _sceneMgr->createSceneNode("GhostSceneNode3");
-  _snGhost3->showBoundingBox(true);
   _snGhost3->setScale(0.5,0.5,0.5);
   _snGhost3->attachObject(_entGhost3);
   _sceneMgr->getRootSceneNode()->addChild(_snGhost3);
@@ -269,13 +262,13 @@ Pacman::PlayState::createGUI()
   sheetBG->setProperty("BackgroundEnabled", "False");
 
   CEGUI::Window* pauseButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","PauseButton");
-  pauseButton->setText("[font='Carton_Six'] Pausa ");
+  pauseButton->setText("[font='Carton_Six'] Pause ");
   pauseButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   pauseButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.6,0),CEGUI::UDim(0.3,0)));
   pauseButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::pauseB,this));
 
   CEGUI::Window* quitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","QuitButton");
-  quitButton->setText("[font='Carton_Six'] Salir ");
+  quitButton->setText("[font='Carton_Six'] Exit ");
   quitButton->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.5,0)));
   quitButton->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8,0),CEGUI::UDim(0.3,0)));
   quitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::quit,this));
@@ -290,7 +283,7 @@ Pacman::PlayState::createGUI()
   textPoints->setProperty("VertFormatting", "TopAligned");
 
   CEGUI::Window* textLives = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textLives");
-  textLives->setText("[font='Carton_Six'] 3");
+  textLives->setText("[font='Carton_Six']");
   textLives->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
   textLives->setXPosition(CEGUI::UDim(0.1f, 0.0f));
   textLives->setYPosition(CEGUI::UDim(0.35f, 0.0f));
@@ -308,11 +301,32 @@ Pacman::PlayState::createGUI()
   textSuperCont->setProperty("VertFormatting", "TopAligned");
   textSuperCont->setVisible(false);
 
+  CEGUI::Window* sheetBGed = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_editbox");
+  sheetBGed->setPosition(CEGUI::UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBGed->setSize(CEGUI::USize(cegui_reldim(1),cegui_reldim(1)));
+  sheetBGed->setProperty("Image","BackgroundPause");
+  sheetBGed->setProperty("FrameEnabled","False");
+  sheetBGed->setProperty("BackgroundEnabled", "False");
+    
+  CEGUI::Editbox* eb = static_cast<CEGUI::Editbox*>(sheetBGed->createChild("OgreTray/Editbox","editbox"));
+  eb->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.40f, 0)));
+  eb->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  eb->setFont("Carton_Six");
+  eb->activate();
+
+  CEGUI::Window* butttonAcept = static_cast<CEGUI::Window*>(sheetBGed->createChild("OgreTray/Button"));
+  butttonAcept->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.55f, 0)));
+  butttonAcept->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  butttonAcept->setText("[font='Carton_Six'] Accept");
+  butttonAcept->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::accept,this));
+
+  sheetBGed->setVisible(false);
   sheetBG->addChild(textPoints);
   sheetBG->addChild(textLives);
   sheet->addChild(textSuperCont);
   sheetBG->addChild(pauseButton);
   sheetBG->addChild(quitButton);
+  sheet->addChild(sheetBGed);
   sheet->addChild(sheetBG);
 
 }
@@ -567,23 +581,7 @@ Pacman::PlayState::keyPressed
 
   // Tecla g --> GameOverState.-------
   if (e.key == OIS::KC_G) {
-    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-    CEGUI::Editbox* eb = static_cast<CEGUI::Editbox*>(sheet->createChild("OgreTray/Editbox","editbox"));
-    eb->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.40f, 0)));
-    eb->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
-    eb->setFont("Carton_Six");
-    eb->activate();
-
-    CEGUI::Window* butttonAcept = static_cast<CEGUI::Window*>(sheet->createChild("OgreTray/Button"));
-    butttonAcept->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.55f, 0)));
-    butttonAcept->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
-    butttonAcept->setText("[font='Carton_Six'] Accept");
-    butttonAcept->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::accept,this));
-    //changeState(GameOverState::getSingletonPtr());
-    
-
-    sheet->getChildAtIdx(4)->setVisible(false);
-    sheet->getChildAtIdx(5)->setVisible(false);
+    changeState(GameOverState::getSingletonPtr());
   }
   //-----------------
 
@@ -1115,6 +1113,8 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   //Actualizacion grafica segun el estado
   if(_pj->getState()=="normal"){
     _snPj->setVisible(true);
+
+
   }
 
   if(_pj->getState()=="super"){
@@ -1123,12 +1123,29 @@ Pacman::PlayState::updatePj(Real _deltaTime)
     sheet->getChild("textSuperCont")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_contSuper/100));
     sheet->getChild("textSuperCont")->setVisible(true);
     //----------------------------
+    //Cambiar material Ghost------------------------------
+    Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
+    Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(0.0 ,0.0 ,0.0, 0.0));
+    Mat->getTechnique(0)->getPass(0)->setDiffuse(0.0 ,0.0 ,0.0, 0.0);
+    Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(0.0 ,0.0 ,0.0, 0.0));
+    //--------------------------------------------------------------
+
     if(--_contSuper<=0){
+      //Cambiar material Ghost------------------------------
+      Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
+      Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(1.0 ,1.0 ,1.0, 1.0));
+      Mat->getTechnique(0)->getPass(0)->setDiffuse(1.0 ,1.0 ,1.0, 1.0);
+      Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(1.0 ,1.0 ,1.0, 1.0));
+      //--------------------------------------------------------------
+
       _contSuper=1500;
       _pj->changeState("normal");
       cout << "Vuelvo al estado normal" << endl;
       sheet->getChild("textSuperCont")->setVisible(false);
+     
     }
+
+    
   } 
 
   if(_pj->getState()=="respawn"){
@@ -1162,6 +1179,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   //Si no tenemos vidas pasamos a GameOver ----
   if(_pj->getLives()==0){
     _sceneMgr->clearScene();
+    GameManager::getSingletonPtr()->_simpleEffect->unload();
     changeState(GameOverState::getSingletonPtr());
   }
   //-------------------------------------------

@@ -271,14 +271,14 @@ void Pacman::IntroState::createGUI()
   playButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::play,this));
 
   CEGUI::Window* recordsButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","records");
-  recordsButton->setText("[font='Carton_Six'] Puntuaciones ");
+  recordsButton->setText("[font='Carton_Six'] Records ");
   recordsButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
   recordsButton->setXPosition(UDim(0.65f, 0.0f));
   recordsButton->setYPosition(UDim(0.60f, 0.0f));
   recordsButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::records,this));
 
   CEGUI::Window* creditoButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","credito");
-  creditoButton->setText("[font='Carton_Six'] Creditos ");
+  creditoButton->setText("[font='Carton_Six'] Credits ");
   creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
   creditoButton->setXPosition(UDim(0.65f, 0.0f));
   creditoButton->setYPosition(UDim(0.70f, 0.0f));
@@ -401,7 +401,7 @@ Pacman::IntroState::credito(const CEGUI::EventArgs &e)
   sheetBG->setProperty("BackgroundEnabled", "False");
 
   CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
-  backButton->setText("[font='Carton_Six'] Volver ");
+  backButton->setText("[font='Carton_Six'] Back ");
   backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   backButton->setXPosition(UDim(0.66f, 0.0f));
   backButton->setYPosition(UDim(0.80f, 0.0f));
@@ -427,7 +427,7 @@ Pacman::IntroState::records(const CEGUI::EventArgs &e)
   sheetBG->setProperty("BackgroundEnabled", "False");
 
   CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
-  backButton->setText("[font='Carton_Six'] Volver ");
+  backButton->setText("[font='Carton_Six'] Back ");
   backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
   backButton->setXPosition(UDim(0.66f, 0.0f));
   backButton->setYPosition(UDim(0.80f, 0.0f));

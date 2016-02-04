@@ -4,6 +4,6 @@ Ruben 3500
 Ruben 3400
 Ruben 2600
 Ruben 1800
-Ruben 1100
-Ruben 1100
+Ruben 1600
+Ruben 1200
 Ruben 1100
