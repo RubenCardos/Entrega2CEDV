@@ -824,6 +824,7 @@ Pacman::PlayState::accept(const CEGUI::EventArgs &e)
   //-----------------------------------------------------------------------------------------
 
   //Paso al gameOver-------------------------------------------------------------------------
+  sheet->getChild("background_editbox")->setVisible("false") ;
   changeState(GameOverState::getSingletonPtr());
   //-----------------------------------------------------------------------------------------
   return true;
