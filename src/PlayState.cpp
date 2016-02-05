@@ -56,6 +56,11 @@ std::vector<Pacman::GraphVertex*> _respawnVertex;
 int _contSuper=1500;
 //--------------------------------------
 
+//Records------------------------------
+bool _inRecords=false;
+std::string _name="";
+//-------------------------------------
+
 void
 Pacman::PlayState::enter ()
 {
@@ -482,51 +487,51 @@ bool
 Pacman::PlayState::frameStarted
 (const Ogre::FrameEvent& evt)
 {
-  //Actualizacion de Variables----------------
-  _deltaT = evt.timeSinceLastFrame;
-  SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
-  //----------------------------------------------
-
-  //Actualizamos Camara---------------------------
-  updateCamera(_deltaT);
-  //----------------------------------------------
-
-  //Actualizamos la rotacion del personaje------
-  updateCharacter(_deltaT);
-  //--------------------------------------------
-
-  //CEGUI --------------------------------------
-  CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
- 	CEGUI::Window* ex1 = rootWin->getChild("CamWin");
-  CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
-  RTTWindow->invalidate();
-  //-------------------------------------------
   
-  //Update Ghost ----
-  updateGhost();
-  updateGhost2();
-  updateGhost3();
-  //-----------------
-  
-  
+  //Actualizamos si no estamos en los records----
+  if(_inRecords==false){
 
-  //Update Collisiones ---
-  updateCollisions();
-  updateRayCollisions();
-  //----------------------
-  
-  
+    //Actualizacion de Variables----------------
+    _deltaT = evt.timeSinceLastFrame;
+    SceneNode* _snPj =_sceneMgr->getSceneNode("PjSceneNode");
+    //----------------------------------------------
 
-  // Update Pj ---------
-  updatePj(_deltaT);
-  //--------------------
-  
-  //Actualizacion de la puntuacion en la interfaz----
-  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt));
-  sheet->getChild("background_wnd2")->getChild("textLives")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pj->getLives()));
-  //-------------------------------------------------
+    //Actualizamos Camara---------------------------
+    updateCamera(_deltaT);
+    //----------------------------------------------
 
+    //Actualizamos la rotacion del personaje------
+    updateCharacter(_deltaT);
+    //--------------------------------------------
+
+    //CEGUI --------------------------------------
+    CEGUI::Window* rootWin = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+   	CEGUI::Window* ex1 = rootWin->getChild("CamWin");
+    CEGUI::Window* RTTWindow = ex1->getChild("RTTWindow");
+    RTTWindow->invalidate();
+    //-------------------------------------------
+    
+    //Update Ghost ----
+    updateGhost();
+    updateGhost2();
+    updateGhost3();
+    //-----------------
+
+    //Update Collisiones ---
+    updateCollisions();
+    updateRayCollisions();
+    //----------------------
+    
+    // Update Pj ---------
+    updatePj(_deltaT);
+    //--------------------
+    
+    //Actualizacion de la puntuacion en la interfaz----
+    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt));
+    sheet->getChild("background_wnd2")->getChild("textLives")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pj->getLives()));
+    //-------------------------------------------------
+  }
   //-------------------------------------
   return true;
 
@@ -813,9 +818,14 @@ Pacman::PlayState::pauseB(const CEGUI::EventArgs &e)
 bool
 Pacman::PlayState::accept(const CEGUI::EventArgs &e)
 {
+  //Obtengo el nombre ----------------------------------------------------------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  cout << sheet->getChild("editbox")->getText() << endl;
+  _name=sheet->getChild("background_editbox")->getChild("editbox")->getText().c_str() ;
+  //-----------------------------------------------------------------------------------------
 
+  //Paso al gameOver-------------------------------------------------------------------------
+  changeState(GameOverState::getSingletonPtr());
+  //-----------------------------------------------------------------------------------------
   return true;
 }
 
@@ -1178,9 +1188,18 @@ Pacman::PlayState::updatePj(Real _deltaTime)
 
   //Si no tenemos vidas pasamos a GameOver ----
   if(_pj->getLives()==0){
-    _sceneMgr->clearScene();
-    GameManager::getSingletonPtr()->_simpleEffect->unload();
-    changeState(GameOverState::getSingletonPtr());
+    //_sceneMgr->clearScene();
+    //GameManager::getSingletonPtr()->_simpleEffect->unload();
+    //Paso a los records-----------------------
+    _inRecords=true;
+
+    //-----------------------------------------
+
+    //Muestrola interfaz----------------------
+    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    sheet->getChild("background_editbox")->setVisible("true") ;
+    //----------------------------------------
+    //changeState(GameOverState::getSingletonPtr());
   }
   //-------------------------------------------
 
@@ -1400,8 +1419,7 @@ Pacman::PlayState::requestScore()
           cout << "Nuevo Record!!!"<< endl;
           reWrite=true;
 
-          cout << "\nNombre?\n" << endl;
-          nombre="Ruben";
+          nombre=_name;
           
           String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
           cout << aux << endl;
