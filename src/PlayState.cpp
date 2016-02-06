@@ -235,6 +235,7 @@ Pacman::PlayState::enter ()
   mKeyDirection = Vector3::ZERO;
 
   _punt=0;
+  _inRecords=false;
 
   cout <<"\nEntro en el PlayState, final metodo enter\n"<< endl;
  
@@ -454,7 +455,7 @@ Pacman::PlayState::exit ()
 
   //Escondo la interfaz----------------------
   CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-  sheet->getChild("background_editbox")->setVisible("false") ;
+  sheet->getChild("background_editbox")->setVisible(false) ;
   //----------------------------------------
 
   //Limpio vectores--------------------
