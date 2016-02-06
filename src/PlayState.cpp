@@ -452,6 +452,11 @@ Pacman::PlayState::exit ()
   delete _importer;
   //----------------------------------
 
+  //Escondo la interfaz----------------------
+  CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  sheet->getChild("background_editbox")->setVisible("false") ;
+  //----------------------------------------
+
   //Limpio vectores--------------------
   _rayWareHouse.clear();
   _rayVector.clear();
@@ -577,20 +582,23 @@ Pacman::PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
 
-  // Tecla p --> PauseState.-------
-  if (e.key == OIS::KC_P) {
-    pushState(PauseState::getSingletonPtr());
+  
 
-  }
-  //-----------------
+  
 
-  // Tecla g --> GameOverState.-------
-  if (e.key == OIS::KC_G) {
-    changeState(GameOverState::getSingletonPtr());
-  }
-  //-----------------
 
-  if (e.key == OIS::KC_S || e.key == OIS::KC_W || e.key == OIS::KC_D || e.key == OIS::KC_A) {
+  //CEGUI--------------------------
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
+  //-------------------------------
+  
+  
+  //Movimiento PJ----------------
+ 
+  //Actualizamos si no estamos en los records----
+  if(_inRecords==false){
+
+    if (e.key == OIS::KC_S || e.key == OIS::KC_W || e.key == OIS::KC_D || e.key == OIS::KC_A) {
         mAnims[1]->setEnabled(false);
         mAnims[0]->setTimePosition(0);
         mAnims[0]->setEnabled(true);
@@ -602,15 +610,6 @@ Pacman::PlayState::keyPressed
         GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
-
-  //CEGUI--------------------------
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
-  //-------------------------------
-  
-  
-  //Movimiento PJ----------------
- 
   switch(e.key){
     case OIS::KC_S:{ 
     	mKeyDirection.z = 1;
@@ -711,7 +710,7 @@ Pacman::PlayState::keyPressed
 
       //-----------------------------------------------
       break;
-    
+    } 
   }
   //----------------------------
 
@@ -1189,18 +1188,15 @@ Pacman::PlayState::updatePj(Real _deltaTime)
 
   //Si no tenemos vidas pasamos a GameOver ----
   if(_pj->getLives()==0){
-    //_sceneMgr->clearScene();
-    //GameManager::getSingletonPtr()->_simpleEffect->unload();
     //Paso a los records-----------------------
     _inRecords=true;
-
     //-----------------------------------------
 
     //Muestrola interfaz----------------------
     CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
     sheet->getChild("background_editbox")->setVisible("true") ;
     //----------------------------------------
-    //changeState(GameOverState::getSingletonPtr());
+    
   }
   //-------------------------------------------
 
@@ -1393,7 +1389,7 @@ Pacman::PlayState::requestScore()
 
           cout << "\nNombre?\n" << endl;
           //cin >> nombre;
-          nombre="Ruben";
+          nombre=_name;
           String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
           cout << aux << endl;
           puntuaciones.push_back(aux);

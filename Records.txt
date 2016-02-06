@@ -1,8 +1,8 @@
 LordEscombro 6300
-AAA 000
-AAA 000
-AAA 000
-AAA 000
+Tipo De Incognito 2200
+Ruben 800
+Ruben 400
+Ruben 100
 AAA 000
 AAA 000
 AAA 000
