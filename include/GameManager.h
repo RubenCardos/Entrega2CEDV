@@ -63,6 +63,7 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   TrackPtr _mainTrack;
   SoundFXPtr _simpleEffect;
   SoundFXPtr _simpleEffect2;
+ 
 
  protected:
   Ogre::Root* _root;
@@ -89,6 +90,8 @@ class GameManager : public Ogre::FrameListener, public Ogre::Singleton<GameManag
   
   // Gestor de eventos de entrada.
   InputManager *_inputMgr;
+ 
+
   // Estados del juego.
   std::stack<GameState*> _states;
 };

@@ -130,7 +130,7 @@ Pacman::GameManager::configure ()
     }
   }
   
-  _renderWindow = _root->initialise(true, "Ghost House");
+  _renderWindow = _root->initialise(true, "Ghost Mansion");
   
   Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
   

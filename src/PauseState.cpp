@@ -30,7 +30,7 @@ Pacman::PauseState::enter ()
   CEGUI::Window* backButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","back");
   backButton->setText("[font='Carton_Six'] Resume ");
   backButton->setSize(CEGUI::USize(CEGUI::UDim(0.23,0),CEGUI::UDim(0.07,0)));
-  backButton->setXPosition(UDim(0.60f, 0.0f));
+  backButton->setXPosition(UDim(0.40f, 0.0f));
   backButton->setYPosition(UDim(0.50f, 0.0f));
   backButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PauseState::resumeB,this));
   

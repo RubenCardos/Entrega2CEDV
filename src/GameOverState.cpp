@@ -139,7 +139,7 @@ Pacman::GameOverState::resetGM(const CEGUI::EventArgs &e)
 void
 Pacman::GameOverState::exit ()
 {
-  cout <<"\nPaso por el exit de game over\n"<< endl;
+  
   _sceneMgr->clearScene();
   _sceneMgr->destroyCamera("GameOverCamera");
 
@@ -149,14 +149,14 @@ Pacman::GameOverState::exit ()
   sheet->destroyChild("background_wnd2");
   sheet->destroyChild("textSuperCont");
   sheet->destroyChild("background_editbox");
+  sheet->destroyChild("background_next");
 
   GameManager::getSingletonPtr()->_mainTrack->unload();
   GameManager::getSingletonPtr()->_mainTrack = GameManager::getSingletonPtr()->_pTrackManager->load("Intro.mp3");
   GameManager::getSingletonPtr()->_mainTrack->play();
 
   _root->getAutoCreatedWindow()->removeAllViewports();
-  cout <<"\nSalgo por el exit de game over\n"<< endl;
-  //--------------------------------------------------------------------
+
   
 }
 void
@@ -191,8 +191,6 @@ Pacman::GameOverState::createGUI ()
   sheetBG->addChild(resetButton);
   sheetBG->addChild(exitButton);
   sheet->addChild(sheetBG);
-  
-  //CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
   //------------------------------------------------------------------------------------
 }

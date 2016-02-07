@@ -57,9 +57,10 @@ class IntroState : public Ogre::Singleton<IntroState>, public GameState
 
   void createGUI();
   bool play(const CEGUI::EventArgs &e);
-  bool credito(const CEGUI::EventArgs &e);
+  bool credits(const CEGUI::EventArgs &e);
   bool records(const CEGUI::EventArgs &e);
   bool back(const CEGUI::EventArgs &e);
+  bool quit(const CEGUI::EventArgs &e);
  
   CEGUI::MouseButton convertMouseButton(OIS::MouseButtonID id);
 

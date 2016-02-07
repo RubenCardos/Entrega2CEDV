@@ -23,7 +23,7 @@ Pacman::IntroState::enter ()
   
   
 
-  _exitGame = false;
+  
 
   //Camara miniMapa-------------
   _camBack = _sceneMgr->createCamera("MiniMapCamera");
@@ -104,11 +104,8 @@ Pacman::IntroState::enter ()
   createGUI();
   //----------------------------
 
-  //ImageManager de los fondos de las ventanas creditos y puntuaciones----------------------
-  ImageManager::getSingleton().addFromImageFile("BackgroundCredito","CREDITOS.jpg");
-  ImageManager::getSingleton().addFromImageFile("BackgroundRecords","PUNTUACIONES.jpg");
-
-  //--------------------------------------------------------------------------------------------
+  _exitGame = false;
+  
 }
 
 
@@ -244,7 +241,7 @@ void Pacman::IntroState::createGUI()
   CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
   CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
   CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont("DejaVuSans-12");
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
   CEGUI::Vector2f mousePos = CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().getPosition();
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(-mousePos.d_x,-mousePos.d_y);
   CEGUI::FontManager::getSingleton().createAll("*.font", "Fonts");
@@ -282,10 +279,18 @@ void Pacman::IntroState::createGUI()
   creditoButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
   creditoButton->setXPosition(UDim(0.65f, 0.0f));
   creditoButton->setYPosition(UDim(0.70f, 0.0f));
-  creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::credito,this));
+  creditoButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::credits,this));
+
+  CEGUI::Window* exitButton = CEGUI::WindowManager::getSingleton().createWindow("OgreTray/Button","exitIntro");
+  exitButton->setText("[font='Carton_Six'] Exit ");
+  exitButton->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  exitButton->setXPosition(UDim(0.65f, 0.0f));
+  exitButton->setYPosition(UDim(0.80f, 0.0f));
+  exitButton->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&IntroState::quit,this));
 
 
   //Attaching buttons
+  sheet->addChild(exitButton);
   sheet->addChild(recordsButton);
   sheet->addChild(playButton);
   sheet->addChild(creditoButton);
@@ -333,11 +338,16 @@ void Pacman::IntroState::createGUI()
   //-----------------------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(sheet);
 
-  //Texturas de los otros estados ------------
+  //ImageManager de los fondos de las ventanas creditos y puntuaciones----------------------
   CEGUI::ImageManager::getSingleton().addFromImageFile("Background","cabecera.png");
-  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","GAMEOVER.png");
-  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundPause","pause.png");
-  //------------------------------------------
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundGameOver","gameover.png");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundPause","pause.jpg");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundCredits","credits.jpg");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundRecords","records.jpg");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundScore","score.png");
+  CEGUI::ImageManager::getSingleton().addFromImageFile("BackgroundNextLevel","nextlevel.png");
+  //--------------------------------------------------------------------------------------------
+
   
 }
 
@@ -376,7 +386,7 @@ Pacman::IntroState::back(const CEGUI::EventArgs &e)
 	CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
 	
   if(creditos==true){
-  	sheet->destroyChild("background_credito");
+  	sheet->destroyChild("background_credits");
   }else{
   	sheet->destroyChild("background_records");
   }
@@ -386,17 +396,27 @@ Pacman::IntroState::back(const CEGUI::EventArgs &e)
 }
 
 bool
-Pacman::IntroState::credito(const CEGUI::EventArgs &e)
+Pacman::IntroState::quit(const CEGUI::EventArgs &e)
+{
+  
+  _exitGame=true;
+
+
+  return true;
+}
+
+bool
+Pacman::IntroState::credits(const CEGUI::EventArgs &e)
 {
 
 	CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   creditos=true;
 
   //Sheet Creditos
-  Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_credito");
+  Window* sheetBG =  WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_credits");
   sheetBG->setPosition( UVector2(cegui_reldim(0),cegui_reldim(0)));
   sheetBG->setSize( USize(cegui_reldim(1),cegui_reldim(1)));
-  sheetBG->setProperty("Image","BackgroundCredito");
+  sheetBG->setProperty("Image","BackgroundCredits");
   sheetBG->setProperty("FrameEnabled","False");
   sheetBG->setProperty("BackgroundEnabled", "False");
 
@@ -435,12 +455,12 @@ Pacman::IntroState::records(const CEGUI::EventArgs &e)
   
   CEGUI::Window* text = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","text");
   text->setText("[font='Carton_Six']"+readRecords());
-  text->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
-  text->setXPosition(UDim(0.45f, 0.0f));
-  text->setYPosition(UDim(0.30f, 0.0f));
+  text->setSize(CEGUI::USize(CEGUI::UDim(0.50,0),CEGUI::UDim(0.70,0)));
+  text->setXPosition(UDim(0.1f, 0.0f));
+  text->setYPosition(UDim(0.15f, 0.0f));
   text->setProperty("FrameEnabled","False");
   text->setProperty("BackgroundEnabled", "False");
-  text->setProperty("VertFormatting", "TopAligned");
+  text->setProperty("HorzFormatting", "RightAligned");
 
 
   sheetBG->addChild(backButton);

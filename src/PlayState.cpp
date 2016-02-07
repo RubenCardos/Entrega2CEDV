@@ -53,13 +53,19 @@ std::vector<Pacman::GraphVertex*> _respawnVertex;
 //--------------------------------------
 
 // Blink del super -------------------
-int _contSuper=1500;
+//int _contSuper=1500;
+int _contSuper=3000;
 //--------------------------------------
 
 //Records------------------------------
 bool _inRecords=false;
 std::string _name="";
 //-------------------------------------
+
+//Next Level-------------------------
+int _contNextLevel=120;
+bool _nextLevel=false;
+//-----------------------------------
 
 void
 Pacman::PlayState::enter ()
@@ -234,10 +240,11 @@ Pacman::PlayState::enter ()
   _exitGame = false;
   mKeyDirection = Vector3::ZERO;
 
-  _punt=0;
+  _pointsRay=0;
+  _pointsGhost=0;
   _inRecords=false;
 
-  cout <<"\nEntro en el PlayState, final metodo enter\n"<< endl;
+  
  
 }
 
@@ -254,11 +261,12 @@ Pacman::PlayState::createGUI()
   sheet->getChildAtIdx(1)->setVisible(false); //CREDITOS
   sheet->getChildAtIdx(2)->setVisible(false); //PUNTUACIONES
   sheet->getChildAtIdx(3)->setVisible(false); //LOGO
-  sheet->getChildAtIdx(4)->setVisible(true);
+  sheet->getChildAtIdx(4)->setVisible(false); //LOGO
+  sheet->getChildAtIdx(5)->setVisible(true);  //CAMARA
 
 
 
-  //Interfaz Cegui---------------------------------------
+  //Interfaz Cegui Cabecera--------------------------------------
   
   CEGUI::Window* sheetBG =  CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_wnd2");
   sheetBG->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 0.0f),CEGUI::UDim(0.0, 0)));
@@ -298,42 +306,65 @@ Pacman::PlayState::createGUI()
   textLives->setProperty("VertFormatting", "TopAligned");
 
   CEGUI::Window* textSuperCont = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticText","textSuperCont");
-  textSuperCont->setText("[font='Carton_Six']");
   textSuperCont->setSize(CEGUI::USize(CEGUI::UDim(0.20,0),CEGUI::UDim(0.70,0)));
-  textSuperCont->setXPosition(CEGUI::UDim(0.48f, 0.0f));
+  textSuperCont->setXPosition(CEGUI::UDim(0.47f, 0.0f));
   textSuperCont->setYPosition(CEGUI::UDim(0.55f, 0.0f));
   textSuperCont->setProperty("FrameEnabled","False");
   textSuperCont->setProperty("BackgroundEnabled", "False");
   textSuperCont->setProperty("VertFormatting", "TopAligned");
   textSuperCont->setVisible(false);
+  //-----------------------------------------------------------------------------------------------------
 
+
+  //EditBox Name Records----------------------------------------------------------
   CEGUI::Window* sheetBGed = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_editbox");
   sheetBGed->setPosition(CEGUI::UVector2(cegui_reldim(0),cegui_reldim(0)));
   sheetBGed->setSize(CEGUI::USize(cegui_reldim(1),cegui_reldim(1)));
-  sheetBGed->setProperty("Image","BackgroundPause");
+  sheetBGed->setProperty("Image","BackgroundScore");
   sheetBGed->setProperty("FrameEnabled","False");
   sheetBGed->setProperty("BackgroundEnabled", "False");
     
   CEGUI::Editbox* eb = static_cast<CEGUI::Editbox*>(sheetBGed->createChild("OgreTray/Editbox","editbox"));
-  eb->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.40f, 0)));
-  eb->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  eb->setPosition(CEGUI::UVector2(CEGUI::UDim(0.48f, 0.0f),CEGUI::UDim(0.25f, 0)));
+  eb->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.05,0)));
   eb->setFont("Carton_Six");
-  eb->activate();
+  
+  CEGUI::Window* recordsPoints = static_cast<CEGUI::Window*>(sheetBGed->createChild("TaharezLook/StaticText","pointsrecords"));
+  recordsPoints->setSize(CEGUI::USize(CEGUI::UDim(0.90,0),CEGUI::UDim(0.70,0)));
+  recordsPoints->setXPosition(CEGUI::UDim(0.50f, 0.0f));
+  recordsPoints->setYPosition(CEGUI::UDim(0.34f, 0.0f));
+  recordsPoints->setProperty("FrameEnabled","False");
+  recordsPoints->setProperty("BackgroundEnabled", "False");
+  recordsPoints->setProperty("VertFormatting", "TopAligned");
 
   CEGUI::Window* butttonAcept = static_cast<CEGUI::Window*>(sheetBGed->createChild("OgreTray/Button"));
-  butttonAcept->setPosition(CEGUI::UVector2(CEGUI::UDim(0.40f, 0.0f),CEGUI::UDim(0.55f, 0)));
-  butttonAcept->setSize(CEGUI::USize(CEGUI::UDim(0.25,0),CEGUI::UDim(0.07,0)));
+  butttonAcept->setPosition(CEGUI::UVector2(CEGUI::UDim(0.45f, 0.0f),CEGUI::UDim(0.67f, 0)));
+  butttonAcept->setSize(CEGUI::USize(CEGUI::UDim(0.15,0),CEGUI::UDim(0.05,0)));
   butttonAcept->setText("[font='Carton_Six'] Accept");
   butttonAcept->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&PlayState::accept,this));
-
   sheetBGed->setVisible(false);
+  //----------------------------------------------------------------------------------------------------
+
+  //BackGround Next Level--------------------------------------------------------------------------------
+  CEGUI::Window* sheetBGnl = CEGUI::WindowManager::getSingleton().createWindow("TaharezLook/StaticImage","background_next");
+  sheetBGnl->setPosition(CEGUI::UVector2(cegui_reldim(0),cegui_reldim(0)));
+  sheetBGnl->setSize(CEGUI::USize(cegui_reldim(1),cegui_reldim(1)));
+  sheetBGnl->setProperty("Image","BackgroundNextLevel");
+  sheetBGnl->setProperty("FrameEnabled","False");
+  sheetBGnl->setProperty("BackgroundEnabled", "False");
+  sheetBGnl->setVisible(false);
+  //--------------------------------------------------------------------------------------
+
+  //Add Cegui-----------------
   sheetBG->addChild(textPoints);
   sheetBG->addChild(textLives);
-  sheet->addChild(textSuperCont);
   sheetBG->addChild(pauseButton);
   sheetBG->addChild(quitButton);
+  sheet->addChild(textSuperCont);
+  sheet->addChild(sheetBGnl);
   sheet->addChild(sheetBGed);
   sheet->addChild(sheetBG);
+  //--------------------------------
 
 }
 void 
@@ -532,10 +563,25 @@ Pacman::PlayState::frameStarted
     updatePj(_deltaT);
     //--------------------
     
+    //Next Level-----------------
+    if(_nextLevel==true){
+      CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+      sheet->getChild("background_next")->setVisible(true);
+      if(--_contNextLevel<=0){
+        _nextLevel=false;
+        sheet->getChild("background_next")->setVisible(false);
+      }
+    }
+    //--------------------------
+
     //Actualizacion de la puntuacion en la interfaz----
     CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-    sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_punt));
+    sheet->getChild("background_wnd2")->getChild("textPoints")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pointsRay));
     sheet->getChild("background_wnd2")->getChild("textLives")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pj->getLives()));
+    sheet->getChild("background_editbox")->getChild("pointsrecords")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_pointsRay)
+      +"\n\n"+Ogre::StringConverter::toString(_pointsGhost)+"\n\n\n"+Ogre::StringConverter::toString(_pointsGhost+_pointsRay));
+
+
     //-------------------------------------------------
   }
   //-------------------------------------
@@ -583,16 +629,17 @@ Pacman::PlayState::keyPressed
 (const OIS::KeyEvent &e)
 {
 
-  
-
-  
-
-
   //CEGUI--------------------------
   CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(e.key));
   CEGUI::System::getSingleton().getDefaultGUIContext().injectChar(e.text);
   //-------------------------------
   
+  // Tecla p --> PauseState.-------
+  if (e.key == OIS::KC_P) {
+    pushState(PauseState::getSingletonPtr());
+
+  }
+  //-----------------
   
   //Movimiento PJ----------------
  
@@ -611,6 +658,26 @@ Pacman::PlayState::keyPressed
         GameManager::getSingletonPtr()->_simpleEffect->play();
   }
 
+}
+  // Tecla g --> GameOverState.-------
+  if (e.key == OIS::KC_G) {
+    //Paso a los records-----------------------
+    _inRecords=true;
+    //-----------------------------------------
+    GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("game_over.wav");
+    GameManager::getSingletonPtr()->_simpleEffect->play();
+    
+    //Muestro la interfaz----------------------
+    CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+    sheet->getChild("background_editbox")->setVisible(true);
+    sheet->getChild("background_editbox")->getChild("editbox")->activate();
+    //----------------------------------------
+  }
+  //-----------------
+
+  
+  //Movimiento PJ----------------
+ 
   switch(e.key){
     case OIS::KC_S:{ 
     	mKeyDirection.z = 1;
@@ -711,7 +778,7 @@ Pacman::PlayState::keyPressed
 
       //-----------------------------------------------
       break;
-    } 
+    
   }
   //----------------------------
 
@@ -824,7 +891,7 @@ Pacman::PlayState::accept(const CEGUI::EventArgs &e)
   //-----------------------------------------------------------------------------------------
 
   //Paso al gameOver-------------------------------------------------------------------------
-  sheet->getChild("background_editbox")->setVisible("false") ;
+  sheet->getChild("background_editbox")->setVisible(false) ;
   changeState(GameOverState::getSingletonPtr());
   //-----------------------------------------------------------------------------------------
   return true;
@@ -1131,22 +1198,22 @@ Pacman::PlayState::updatePj(Real _deltaTime)
   if(_pj->getState()=="super"){
     //Muestro el super contador---
     CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-    sheet->getChild("textSuperCont")->setText("[font='Carton_Six']"+Ogre::StringConverter::toString(_contSuper/100));
+    sheet->getChild("textSuperCont")->setText("[font='Carton_Six-30']"+Ogre::StringConverter::toString(_contSuper/100));
     sheet->getChild("textSuperCont")->setVisible(true);
     //----------------------------
     //Cambiar material Ghost------------------------------
     Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
-    Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(0.0 ,0.0 ,0.0, 0.0));
-    Mat->getTechnique(0)->getPass(0)->setDiffuse(0.0 ,0.0 ,0.0, 0.0);
-    Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(0.0 ,0.0 ,0.0, 0.0));
+    Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue::Blue);
+    Mat->getTechnique(0)->getPass(0)->setDiffuse(5.0 ,1.0 ,1.0, 0.0);
+    Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue::Blue);
     //--------------------------------------------------------------
 
     if(--_contSuper<=0){
-      //Cambiar material Ghost------------------------------
+      //Cambiar material Ghost Blanco------------------------------
       Ogre::MaterialPtr  Mat = static_cast<Ogre::MaterialPtr> (Ogre::MaterialManager::getSingleton().getByName("MatCuerpo"));
-      Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue(1.0 ,1.0 ,1.0, 1.0));
+      Mat->getTechnique(0)->getPass(0)->setSpecular(Ogre::ColourValue::White);
       Mat->getTechnique(0)->getPass(0)->setDiffuse(1.0 ,1.0 ,1.0, 1.0);
-      Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue(1.0 ,1.0 ,1.0, 1.0));
+      Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue::White);
       //--------------------------------------------------------------
 
       _contSuper=1500;
@@ -1192,12 +1259,14 @@ Pacman::PlayState::updatePj(Real _deltaTime)
     //Paso a los records-----------------------
     _inRecords=true;
     //-----------------------------------------
-
+    GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("game_over.wav");
+    GameManager::getSingletonPtr()->_simpleEffect->play();
     //Muestrola interfaz----------------------
     CEGUI::Window* sheet=CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
-    sheet->getChild("background_editbox")->setVisible("true") ;
+    sheet->getChild("background_editbox")->setVisible(true);
+    sheet->getChild("background_editbox")->getChild("editbox")->activate();
     //----------------------------------------
-    
+
   }
   //-------------------------------------------
 
@@ -1218,6 +1287,7 @@ Pacman::PlayState::updateCollisions()
   //Colision Detectada ! -------------------------------------
   if(bbPj.intersects(bbGhost1) || bbPj.intersects(bbGhost2)|| bbPj.intersects(bbGhost3)){
   //----------------------------------------------------------   
+   
 
     //Colision en caso de Pj normal ---  
     if(_pj->getState()=="normal"){
@@ -1225,6 +1295,8 @@ Pacman::PlayState::updateCollisions()
       _collisionWithGhostDetected=true;
       _pj->hit();
       _pj->changeState("respawn");
+       GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("shout.wav");
+       GameManager::getSingletonPtr()->_simpleEffect->play();
     }
     //---------------------------------
 
@@ -1243,9 +1315,11 @@ Pacman::PlayState::updateCollisions()
         //Reseteo variables -----------------------
         _nowGhost=_respawnVertex[_go];
         _nextGhost=NULL;
-        _punt+=300;
+        _pointsRay+=300;
+        _pointsGhost+=1;
         //-----------------------------------------
-      
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("uncover.wav");
+        GameManager::getSingletonPtr()->_simpleEffect->play();
 
         //----------------------------------------------------------------------
       }
@@ -1262,9 +1336,11 @@ Pacman::PlayState::updateCollisions()
         //Reseteo variables -----------------------
         _nowGhost2=_respawnVertex[_go];
         _nextGhost2=NULL;
-        _punt+=300;
+        _pointsRay+=300;
+        _pointsGhost+=1;
         //-----------------------------------------
-      
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("uncover.wav");
+        GameManager::getSingletonPtr()->_simpleEffect->play();
 
         //----------------------------------------------------------------------
       }
@@ -1281,9 +1357,11 @@ Pacman::PlayState::updateCollisions()
         //Reseteo variables -----------------------
         _nowGhost3=_respawnVertex[_go];
         _nextGhost3=NULL;
-        _punt+=300;
+        _pointsRay+=300;
+        _pointsGhost+=1;
         //-----------------------------------------
-      
+        GameManager::getSingletonPtr()->_simpleEffect = GameManager::getSingletonPtr()->_pSoundFXManager->load("uncover.wav");
+        GameManager::getSingletonPtr()->_simpleEffect->play();
 
         //----------------------------------------------------------------------
       }
@@ -1317,8 +1395,8 @@ Pacman::PlayState::updateRayCollisions()
 
       _aux->setVisible(false);
       _rayVector.erase(_rayVector.begin()+i);
-      _punt+=100;
-      cout << "Puntuacion: " << _punt << endl;
+      _pointsRay+=100;
+      cout << "Puntuacion: " << _pointsRay << endl;
       cout << "Vidas: " << _pj->getLives() << endl;
       cout << "\nRayos restantes: " << (_rayVector.size()) << "\n" << endl;
     }
@@ -1329,6 +1407,7 @@ Pacman::PlayState::updateRayCollisions()
   // Si no quedan rayos por coger seria el final del nivel ----------------
   if(_rayVector.size()==0){
     cout << "\n Nivel Acabado \n" << endl;
+    _nextLevel=true;
     //Vacio el vector de Super Rayos------
     if(_superRayVector.size()>0){
       _superRayVector.clear();
@@ -1358,8 +1437,8 @@ Pacman::PlayState::updateRayCollisions()
     Ogre::AxisAlignedBox bbRay = _aux->_getWorldAABB();
     if(bbPjSceneNode.intersects(bbRay)){
       _superRayVector.erase(_superRayVector.begin()+i);
-      _punt+=300;
-      cout << "Puntuacion: " << _punt << endl;
+      _pointsRay+=300;
+      cout << "Puntuacion: " << _pointsRay << endl;
       cout << "Vidas: " << _pj->getLives() << endl;
       _aux->setVisible(false);
       _pj->changeState("super");
@@ -1372,7 +1451,7 @@ Pacman::PlayState::updateRayCollisions()
 void
 Pacman::PlayState::requestScore()
 {
-  fstream fichero;//Fichero
+    fstream fichero;//Fichero
     string frase;//Auxiliar
     bool reWrite=false;//Si debemos re-escribir el fichero o no
     String nombre;
@@ -1384,14 +1463,14 @@ Pacman::PlayState::requestScore()
         String nombre=Ogre::StringUtil::split (frase," ")[0];
         int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
         cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
-        if(_punt>punt && reWrite == false){
+        if(_pointsRay>punt && reWrite == false){
           cout << "Nuevo Record!!!"<< endl;
           reWrite=true;
 
           cout << "\nNombre?\n" << endl;
           //cin >> nombre;
           nombre=_name;
-          String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
+          String aux=nombre+" "+Ogre::StringConverter::toString(_pointsRay+_pointsGhost);
           cout << aux << endl;
           puntuaciones.push_back(aux);
         }
@@ -1413,13 +1492,13 @@ Pacman::PlayState::requestScore()
         String nombre=Ogre::StringUtil::split (frase," ")[0];
         int punt = Ogre::StringConverter::parseInt(Ogre::StringUtil::split (frase," ")[1]);
         cout << "\tNombre: "<< nombre << " Puntuacion " << punt << endl;
-        if(_punt>punt && reWrite == false){
+        if(_pointsRay>punt && reWrite == false){
           cout << "Nuevo Record!!!"<< endl;
           reWrite=true;
 
           nombre=_name;
           
-          String aux=nombre+" "+Ogre::StringConverter::toString(_punt);
+          String aux=nombre+" "+Ogre::StringConverter::toString(_pointsRay+_pointsGhost);
           cout << aux << endl;
           puntuaciones.push_back(aux);
         }
@@ -1440,4 +1519,5 @@ Pacman::PlayState::requestScore()
       }
       archivo.close();
     }
+
 }
