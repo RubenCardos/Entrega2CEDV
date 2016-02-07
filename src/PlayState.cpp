@@ -63,7 +63,7 @@ std::string _name="";
 //-------------------------------------
 
 //Next Level-------------------------
-int _contNextLevel=120;
+int _contNextLevel=180;
 bool _nextLevel=false;
 //-----------------------------------
 
@@ -1216,7 +1216,7 @@ Pacman::PlayState::updatePj(Real _deltaTime)
       Mat->getTechnique(0)->getPass(0)->setAmbient(Ogre::ColourValue::White);
       //--------------------------------------------------------------
 
-      _contSuper=1500;
+      _contSuper=3000;
       _pj->changeState("normal");
       cout << "Vuelvo al estado normal" << endl;
       sheet->getChild("textSuperCont")->setVisible(false);
